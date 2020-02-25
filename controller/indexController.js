@@ -1,0 +1,1 @@
+var connectionString = require("./config/connectionString.js");
