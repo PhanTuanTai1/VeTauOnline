@@ -1,5 +1,6 @@
 var express = require("express");
 var config = require("./config/connectionString");
+var controller = require("./controller/indexController");
 var app = express();
 
 app.use(express.static('node_modules'));
@@ -8,12 +9,7 @@ app.set('view engine',"ejs");
 
 
 app.get("/",function(req,res){
-    config.ConnectDB.authenticate().then(()=>{
-        console.log("Connect Success");
-        res.end("Connect Success");
-    })
-    
-    //res.render("index");
+    controller.index(req,res);
 })
 
 

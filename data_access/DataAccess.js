@@ -1,4 +1,4 @@
-var Sequelize = require('sequelize');
+var { Sequelize, Model, DataTypes } = require('sequelize');
 var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '79495291', {
     dialect: 'mssql',
     dialectOptions: {
@@ -17,7 +17,8 @@ Train.init({
 },
 { 
     sequelize, 
-    modelName: 'Train'
+    modelName: 'Train',
+    tableName: 'Train'
 });
 
 //2 Carriage Entity
@@ -28,7 +29,8 @@ Carriage.init({
 },
 { 
     sequelize, 
-    modelName: 'Carriage'
+    modelName: 'Carriage',
+    tableName: 'Carriage'
 });
 
 //3 Seat Entity
@@ -38,7 +40,8 @@ Seat.init({
 },
 { 
     sequelize, 
-    modelName: 'Seat'
+    modelName: 'Seat',
+    tableName: 'Seat'
 });
 
 //4 SeatType Entity
@@ -49,47 +52,51 @@ SeatType.init({
 },
 { 
     sequelize, 
-    modelName: 'SeatType'
+    modelName: 'SeatType',
+    tableName: 'SeatType'
 });
 
 //5 Schedule Entity
 class Schedule extends Model{}
-SeatType.init({
+Schedule.init({
     'ID' : {type: Sequelize.INTEGER,primaryKey: true},
     'DateDeparture' : Sequelize.DATE,
     'TimeDeparture' : Sequelize.TIME
 },
 { 
     sequelize, 
-    modelName: 'Schedule'
+    modelName: 'Schedule',
+    tableName: 'Schedule'
 });
 
 //6 ScheduleDetail Entity
 class ScheduleDetail extends Model{}
-SeatType.init({
+ScheduleDetail.init({
     'ID' : {type: Sequelize.INTEGER,primaryKey: true},
     'Length' : Sequelize.INTEGER,
-    'Time' : Sequelize.Time,
+    'Time' : Sequelize.TIME,
 },
 { 
     sequelize, 
-    modelName: 'ScheduleDetail'
+    modelName: 'ScheduleDetail',
+    tableName: 'ScheduleDetail'
 });
 
 //7 Station Entity
 class Station extends Model{}
-SeatType.init({
+Station.init({
     'ID' : {type: Sequelize.INTEGER,primaryKey: true},
-    'Name' : Sequelize.STRING,
+    'Name' : Sequelize.STRING
 },
 { 
     sequelize, 
-    modelName: 'Station'
+    modelName: 'Station',
+    tableName: 'Station'
 });
 
 //8 Ticket Entity
 class Ticket extends Model{}
-SeatType.init({
+Ticket.init({
     'ID' : {type: Sequelize.INTEGER,primaryKey: true},
     'Price' : Sequelize.FLOAT,
     'DepartureDate' : Sequelize.DATE,
@@ -99,33 +106,36 @@ SeatType.init({
 },
 { 
     sequelize, 
-    modelName: 'Ticket'
+    modelName: 'Ticket',
+    tableName: 'Ticket'
 });
 
 //9 TableCost Entity
 class TableCost extends Model{}
-SeatType.init({
+TableCost.init({
     'Cost' : Sequelize.FLOAT,
 },
 { 
     sequelize, 
-    modelName: 'TableCost'
+    modelName: 'TableCost',
+    tableName: 'TableCost'
 });
 
 //10 TypeObject Entity
 class TypeObject extends Model{}
-SeatType.init({
+TypeObject.init({
     'ID' : {type: Sequelize.INTEGER,primaryKey: true},
     'TypeObjectName' : Sequelize.STRING
 },
 { 
     sequelize, 
-    modelName: 'TypeObject'
+    modelName: 'TypeObject',
+    tableName: 'TypeObject'
 });
 
 //11 Representative Entity
 class Representative extends Model{}
-SeatType.init({
+Representative.init({
     'ID' : {type: Sequelize.INTEGER,primaryKey: true},
     'Email' : Sequelize.STRING,
     'Phone' : Sequelize.STRING,
@@ -134,19 +144,21 @@ SeatType.init({
 },
 { 
     sequelize, 
-    modelName: 'Representative'
+    modelName: 'Representative',
+    tableName: 'Representative'
 });
 
 //12 Customer Entity
 class Customer extends Model{}
-SeatType.init({
+Customer.init({
     'ID' : {type: Sequelize.INTEGER,primaryKey: true},
     'Name' : Sequelize.STRING,
     'Passport' : Sequelize.STRING,
 },
 { 
     sequelize, 
-    modelName: 'Customer'
+    modelName: 'Customer',
+    tableName: 'Customer'
 });
 
 Train.hasMany(Carriage,{foreignKey :"TrainID"});
@@ -163,4 +175,16 @@ Representative.hasMany(Customer,{foreignKey:"RepresentativeID"});
 Customer.belongsTo(TypeObject,{foreignKey:"TypeObjectID"});
 Ticket.belongsTo(Customer,{foreignKey:"CustomerID"});
 
+module.exports.Train = Train;
+module.exports.Carriage = Carriage;
+module.exports.Seat = Seat;
+module.exports.Schedule = Schedule;
+module.exports.ScheduleDetail = ScheduleDetail;
+module.exports.TableCost = TableCost;
+module.exports.Representative = Representative;
+module.exports.Customer = Customer;
+module.exports.Ticket = Ticket;
+module.exports.TypeObject = TypeObject;
+module.exports.Station = Station;
+module.exports.SeatType = SeatType;
 
