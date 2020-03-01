@@ -1,6 +1,8 @@
 var { Sequelize, Model, DataTypes } = require('sequelize');
-var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '79495291', {
+var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '123456', {
     dialect: 'mssql',
+    host: 'localhost',
+    port: '57031',
     dialectOptions: {
       options: {
         useUTC: false,
@@ -79,7 +81,7 @@ ScheduleDetail.init({
 { 
     sequelize, 
     modelName: 'ScheduleDetail',
-    tableName: 'ScheduleDetail'
+    tableName: 'ScheduleDetail',
 });
 
 //7 Station Entity
@@ -169,6 +171,7 @@ Schedule.belongsTo(Train,{foreignKey:"TrainID"});
 Schedule.hasMany(ScheduleDetail,{foreignKey:"ScheduleID"});
 ScheduleDetail.belongsTo(Station,{foreignKey:"DepartureStationID"});
 ScheduleDetail.belongsTo(Station,{foreignKey:"ArrivalStationID"});
+ScheduleDetail.belongsTo(Schedule);
 TableCost.belongsTo(SeatType,{primaryKey:"SeatTypeID"});
 TableCost.belongsTo(ScheduleDetail,{primaryKey:"ScheduleDetailID"});
 Representative.hasMany(Customer,{foreignKey:"RepresentativeID"});
