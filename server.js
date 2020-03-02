@@ -11,14 +11,14 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 var app = express();
 
-app.use(express.static('node_modules'));
+app.use(express.static('UI'));
 app.use(urlencodedParser);
 app.use(jsonParser);
 app.set('view engine',"ejs");
 
 
 app.get("/",function(req,res){
-    controller.index(req,res);
+   res.render('index');
 })
 
 app.post("/searchSchedule",function(req,res){
