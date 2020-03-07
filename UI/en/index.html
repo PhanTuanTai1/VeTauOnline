@@ -145,7 +145,7 @@
 <div id="main_container" >
 <div class="filter">
 <div class="global-wrap">
-<header id="main-header" class="transparent-header">
+<header id="main-header" class="header">
     <div class="header-bar" >
         <!-- Mobile Menu -->
         <div class="row mobile-header hidden-lg hidden-md">
@@ -166,78 +166,12 @@
                     </a>
                              </div>
         </div>
-        <!-- END Mobile Menu -->
-
-        <!-- Desktop Menu -->
-        <div class="container">
-            <div class="pull-left hidden-sm hidden-xs">
-                <a class="logo" href="index.html" target="_top">
-                    <img src="../images/logos/baolau/logo_white.svg" />
-                </a>
-            </div>
-        </div><!-- END Container -->
-
-                    <div class="back_to_top hidden-sm hidden-xs"><a href="#0" class="cd-top">Top</a></div>
-
-            <div class="sidebar-menu">
-                                    <div style="padding: 0 25px;" class="sidebar-menu-style pull-right hidden-sm hidden-xs">
-                        <a href="#login_popup" class="login_popup"  data-toggle="modal">
-                            <div class="users-img">
-                                <img class="img-circle" src="../images/avatars/profile-light.png" />
-                            </div>
-                            Login                        </a>
-                    </div>
-                
-                                    <div style="padding: 0 35px;" class="sidebar-menu-style dropdown pull-right hidden-sm hidden-xs">
-                        <a href="active.html" class="dropdown-toggle" type="button" data-toggle="dropdown">
-                            <div class="language-flag en">
-                                                            </div>
-                                &nbsp;<span>English&nbsp;<b class="caret"></b></span>
-                        </a>
-                        <div class="dropdown-menu dropdown-style">
-
-                                                                                                                            <li>
-                                    <a href="../es/index.html">
-                                        <div class="language-flag es"></div>
-                                        &nbsp;<span>Español</span>
-                                    </a>
-                                </li>
-                                                                                            <li>
-                                    <a href="../fr/index.html">
-                                        <div class="language-flag fr"></div>
-                                        &nbsp;<span>Français</span>
-                                    </a>
-                                </li>
-                                                                                            <li>
-                                    <a href="../vi/index.html">
-                                        <div class="language-flag vi"></div>
-                                        &nbsp;<span>Tiếng Việt</span>
-                                    </a>
-                                </li>
-                                                                                                                                                                                                                            <li>
-                                    <a href="../th/index.html">
-                                        <div class="language-flag th"></div>
-                                        &nbsp;<span>ไทย</span>
-                                    </a>
-                                </li>
-                                                    </div>
-                    </div>
-                    
-                
                   <!-- DESKTOP MANAGE BOOKING -->
                                     <div style="padding: 0 25px;" class="sidebar-menu-style pull-right hidden-sm hidden-xs">
                         <a href="https://www.baolau.vn/en/manage" target="_blank">
                             <i style="padding-right: 5px" class="fa fa-file-text" aria-hidden="true"></i>
                             Manage booking                        </a>
                     </div>
-                
-                <!-- DESKTOP CURRENCY -->
-                
-                <!-- DESKTOP VETAUTET -->
-                
-
-                <!-- DESKTOP TRANSPORTATION -->
-                 
                 <!-- DESKTOP DESTINATIONS -->
                                     <div style="padding: 0 25px;" class="sidebar-menu-style pull-right hidden-sm hidden-xs">                        
                         <a href="destinations.html">
@@ -246,8 +180,7 @@
                     </div>
                             </div><!-- sidebar-menu -->
             </div><!-- END sub-header -->
-</header> <!-- END main-header -->
-
+</header>
 
 <script type="text/javascript">
     inits.push('homepage');
@@ -255,28 +188,15 @@
     inits.push('owl_carousel');
 </script>
 
+<div class="row">
+  <div class="col-md-12 padding-0">
+      <img src="../images/man_tourist_backpack_mountains_travel_114250_1366x768.jpg" />
+  </div>    
+</div> 
 <div id="homepage">
-    <!-- BANNER -->
-    <div class="landing-banner--size js-landing-banner hidden-xs">
-          <div id="js-banner-carousel" role="listbox">            
-                        	                                <div class="item" >
-                    <div class="blur-top"></div>
-                    <img class="lazyload show-onload" data-src="D:\BookingWeb\booking\images\destinations\CEB.jpg"/>
-                    <div class="carousel-caption landing-banner__carousel-caption">
-                        <h1>BOOKING WEBSITE</h1>
-                        <h3 style="color:#fff;">Vietnam</h3>
-                    </div>
-                </div>
-                        	                                
-                    </div>        
-    </div>
-    
     <!-- SEARCH FORM  -->
     <div class="landing-banner__footer js-landing-banner__footer container">
         <div class="gap gap-medium-medium visible-xs"></div>
-       
-
-    <h2 class="visible-sm visible-xs" style="color:#a1a8ae">Where do you want to go?</h2>
 
 <form id="search_form" action="http://booking.baolau.com/en/results" method="get" >    
     
@@ -286,6 +206,7 @@
                 
     <input id="transports" name="transports" type="hidden" value="" />
     <input name="lang" type="hidden" value="en" />
+
     
     <!-- Big row of Booking Process -->
     <div class="widget-container">
