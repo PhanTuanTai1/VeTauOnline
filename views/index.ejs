@@ -30,9 +30,32 @@
     <link rel="stylesheet" type="text/css" href="../vendor/owl-carousel2/owl.carousel.css">
     <link rel="stylesheet" type="text/css" href="../vendor/owl-carousel2/owl.theme.default.css">
     <link rel="stylesheet" type="text/css" href="../vendor/lightgallery/lightgallery.css">
-
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="../dist/baolau.min6ffc.css">
-
+    <style>
+        .v-application--wrap{
+            min-height: 25px;
+        }
+        .v-menu__content{
+            top:70px !important;
+            left: 15px !important;
+            width: 100% !important;
+            box-shadow: none !important;
+        }
+        div[role*="menu1"]{
+            top:75px !important;
+            left: 15px !important;
+            width: 100% !important;
+            box-shadow: none !important;
+        }
+        div[role*="menu2"]{
+            top:75px !important;
+            left: 735px !important;
+            width: 100% !important;
+            box-shadow: none !important;
+        }
+    </style>
     <!-- jQuery -->
     <script type="text/javascript" src="../vendor/js/jquery.min.js"></script>
 
@@ -314,7 +337,7 @@
                             <!-- Big row of Booking Process -->
                             <div class="widget-container">
                                 <div class="row">
-                                    <div class="col-lg-8 col-md-7">
+                                    <div class="col-lg-12 col-md-12">
                                         <div class="row">
                                             <!-- WHERE Leaving From -->
                                             <div class="col-md-5_5 col-xs-12">
@@ -348,27 +371,78 @@
                                         </div>
 
                                         <!-- BEGIN WHEN -->
-                                        <div class="input-daterange">
+                                       
                                             <!-- BEGIN Row WHEN -->
                                             <div class="row">
                                                 <!-- WHEN Departing on -->
-                                                <div class="col-md-5_5 col-xs-6">
+                                                <div id="app"  class="col-lg-12 col-md-12">
+                                                    <v-app id="inspire">
+                                                        
+                                                        <v-row>
+                                                            <div class="col-md-5_5 col-xs-12">
+                                                                
+                                                        <v-menu
+                                                        v-model="menu"
+                                                            :close-on-content-click="false"                    
+                                                            transition="scale-transition"
+                                                            role="menu1"                                                        
+                                                        >
+                                                            <template v-slot:activator="{ on }">
+                                                            <v-text-field 
+                                                                label="Departure Date" 
+                                                                outlined                                           
+                                                                readonly
+                                                                v-model="departDate"
+                                                                v-on="on">
+                                                            </v-text-field>
+                                                            </template>
+                                                            <v-date-picker v-model="departDate" @input="menu = false" id="date1"></v-date-picker>
+                                                        </v-menu>
+                                                    
+                                                           </div>
+                                                            
+                                                           <div class="col-md-5_5 col-xs-12">
+                                                            <v-menu
+                                                        v-model="menu2"
+                                                            :close-on-content-click="false"                      
+                                                            transition="scale-transition"  
+                                                            role="menu2"                    
+                                                        >
+                                                            <template v-slot:activator="{ on }">
+                                                            <v-text-field 
+                                                                label="Return Date" 
+                                                                outlined
+                                                                readonly
+                                                                v-model="returnDate"                                                               
+                                                                v-on="on">
+                                                            </v-text-field>
+                                                            </template>
+                                                            <v-date-picker v-model="returnDate" @input="menu2 = false" id="date2"></v-date-picker>
+                                                        </v-menu>
+                                                        
+                                                        </div>
+                                                            
+                                                        </v-row>
+                                                    
+                                                    </v-app>                                    
+                                                    
+                                                <!-- <div class="col-md-5_5 col-xs-6">
                                                     <div class="form-group">
                                                         <label>DEPART</label>
-                                                        <input id="departure_date" name="departure_date" tabindex="3" class="form-control" type="text" value="24/02/2020" readonly />
+                                                        <input id="departure_date" name="departure_date" tabindex="3" class="form-control" type="text" value="24/02/2020" readonly/>
                                                         <button type="button" class="fa fa-calendar input-icon"></button>
                                                     </div>
-                                                </div>
+                                                </div> -->
                                                 <!-- END col-md-5_5 _departing on -->
-
+                                                
                                                 <!-- WHEN Arriving on -->
-                                                <div class="col-md-5_5 col-xs-6">
+                                                <!-- <div class="col-md-5_5 col-xs-6">
                                                     <div id="return_group" class="form-group ">
                                                         <label>RETURN</label>
                                                         <input id="return_date" name="return_date" tabindex="4" class="form-control" type="text" value="29/02/2020" readonly />
                                                         <button type="button" class="fa fa-calendar input-icon"></button>
                                                     </div>
-                                                </div>
+                                                </div> -->
                                                 <!-- END col-md-5_5 _arriving on -->
 
                                                 <!-- END Row WHEN -->
@@ -378,59 +452,12 @@
                                         <!-- END WHEN -->
                                     </div>
                                     <!-- END col-md-8_ WHERE & WHEN -->
-
+                                    
                                     <!-- BEGIN PASS & ROUND -->
-                                    <div class="col-lg-4 col-md-5 col-xs-12">
-                                        <div class="row">
-                                            <!-- Rountrip / One Way -->
-                                            <div class="col-xs-6 col-md-7">
-                                                <div class="form-group">
-                                                    <label>JOURNEY</label>
-                                                    <ul class="nav nav-pills">
-                                                        <li class="active">
-                                                            <a class="fa fa-exchange roundtrip_selector visible-xs" href="#roundtrip_yes" data-toggle="tab"></a>
-                                                            <a class="roundtrip_selector hidden-xs" href="#roundtrip_yes" data-toggle="tab">Round trip</a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="fa fa-long-arrow-right roundtrip_selector visible-xs" href="#roundtrip_no" data-toggle="tab"></a>
-                                                            <a class="roundtrip_selector hidden-xs" href="#roundtrip_no" data-toggle="tab">One way</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-
-                                                <div style="display:none">
-                                                    <input id="roundtrip_yes" type="radio" name="roundtrip" value="yes" checked="checked" />
-                                                    <input id="roundtrip_no" type="radio" name="roundtrip" value="no" />
-                                                </div>
+                                    
                                             </div>
 
-                                            <!-- Passengers -->
-                                            <div class="col-xs-6 col-md-7">
-                                                <div class="form-group form-group-select-plus">
-                                                    <label>PASSENGERS
-                                                        <span style="background: none; cursor: pointer;" data-toggle="modal" data-target="#travel_with_child" data-whatever="@getbootstrap">(<i class="icon-with-child"></i>)</span>
-                                                    </label>
-
-                                                    <div id="passenger_selector" class="input-group">
-                                                        <ul>
-                                                            <li>
-                                                                <button type="button" class="btn-circle minus" data-value="-1" data-target="#passengers_count" data-toggle="spinner">
-                                                                </button>
-                                                            </li>
-                                                            <li>
-                                                                <input id="passengers_count" type="text" readonly data-ride="spinner" name="passengers_count" class="input-number text-center" value="1" data-min="1" data-max="5"> </li>
-                                                            <li>
-                                                                <button type="button" class="btn-circle plus" data-value="1" data-target="#passengers_count" data-toggle="spinner" data-on="mousehold"></button>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div id="search_button_container" class="col-xs-12 col-md-5 text-right">
-                                                <label class="hidden-sm hidden-xs widget-hide">&nbsp;</label>
-                                                <button id="searchButton" class="btn icon-search fixed-width green btn-block bold" type="submit" name="input" value="Search">SEARCH</button>
-                                            </div>
+                                            
 
                                         </div>
                                         <!-- END col-md-9 -->
@@ -782,6 +809,8 @@
     <!-- Language dependant libraries -->
     <script type="text/javascript" src="../vendor/bootstrap-datepicker/locales/bootstrap-datepicker.en.min.js"></script>
     <script src="../dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="../dist/myVue.js"></script>
 </body>
 
 <!-- Mirrored from booking.baolau.com/en/ by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 24 Feb 2020 14:32:07 GMT -->
