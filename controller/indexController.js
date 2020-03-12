@@ -6,7 +6,7 @@ module.exports.index = function(req,res) {
     db.Station.findAll({
         attributes:["ID","Name"]
     }).then(station =>{       
-        res.end();
+        res.end(JSON.stringify(station));
     })
 }
 

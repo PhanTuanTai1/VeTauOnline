@@ -35,20 +35,21 @@
          }
          .v-menu__content{
          top:70px !important;
-         
+         box-shadow: none !important;
          }
-         div[role*="menu1"]{
+        
+         /* /* div[role*="menu1"]{
          top:175% !important;
          left: 5px !important;
          width: 100% !important;
          box-shadow: none !important;
-         }
-         div[role*="menu2"]{
-         top:175% !important;
-         left: 102.5% !important;
+         } */
+         div[role*="menu"]{
+         top:190% !important;
+         
          width: 100% !important;
          box-shadow: none !important;
-         }
+         } */
          /* .v-autocomplete__content:nth-child(2){
             left: 545px !important;
          } */
@@ -307,41 +308,55 @@
                            <div class="row">
                               <div class="col-lg-12 col-md-12">
                                 <div class="row">
-                                    <div id="app_from" class="col-md-6">
-                                        <v-app id="inspire_1">
-                                            <v-autocomplete
-                                                v-model="inspire_1"
-                                                :items="items"
-                                                outlined
-                                                label="FROM"
-                                                ></v-autocomplete>
+                                    <div id="app_from" class="col-md-4" >
+                                        <v-app id="inspire">
+                                           <v-container>
+                                          <v-autocomplete
+                                          
+                                          :items="items"
+                                          outlined
+                                          label="FROM"
+                                          w
+                                          ></v-autocomplete>
+                                       </v-container>
                                         </v-app>
                                     </div>
-                                    <div id="app_to" class="col-md-6">
-                                        <v-app id="inspire_2">
-                                            <v-autocomplete
-                                            v-model="inspire_2"
-                                            :items="items"
-                                            outlined
-                                            label="TO"
-                                            ></v-autocomplete>
-                                        </v-app>
+                                    <div id="app_to" class="col-md-4">
+                                        
+                                          <v-app id="inspire">
+                                             <v-container>
+                                             <v-autocomplete
+                                             :nudge-width="200"
+                                             :items="items"
+                                             outlined
+                                             label="TO"
+                                             offset-y
+                                          
+                                             ></v-autocomplete>
+                                          </v-container>
+                                         </v-app>
+                                        
+                                    </div>
+                                    <div id="app_switch" class="col-md-4">
+                                       <v-app id="inspire">
+                                          <v-switch v-model="switch1" inset :label="`Switch 1: ${switch1.toString()}`" style="margin-top:10px !important"></v-switch>
+                                       </v-app>
                                     </div>
                                 </div>
                                 </div>
                                  <!-- BEGIN WHEN -->
                                  <!-- BEGIN Row WHEN -->
-                                 <div class="row">
-                                    <!-- WHEN Departing on -->
-                                    <div id="app"  class="col-lg-12 col-md-12">
-                                       <v-app id="inspire">
-                                          <v-row>
-                                             <div class="col-md-5_5 col-xs-12">
+                                 <div class="col-lg-12 col-md-12" >
+                                    <div class="row" >
+                                       <div id="app_depart" class="col-lg-4 col-md-4">
+                                          <v-app id="inspire">
+                                             
                                                 <v-menu
                                                    v-model="menu"
                                                    :close-on-content-click="false"                    
                                                    transition="scale-transition"
-                                                   role="menu1"                                                        
+                                                   offset-y   
+                                                                                              
                                                    >
                                                    <template v-slot:activator="{ on }">
                                                        
@@ -356,58 +371,71 @@
                                                    </template>
                                                    <v-date-picker v-model="departDate" @input="menu = false" id="date1"></v-date-picker>
                                                 </v-menu>
-                                             </div>
-                                             <div class="col-md-5_5 col-xs-12">
+                                            
+                                          </v-app>
+                                       </div>
+                                       <div id="app_return" class="col-lg-4 col-md-4">
+                                          <v-app id="inspire">
+                                             
                                                 <v-menu
                                                    v-model="menu2"
-                                                   :close-on-content-click="false"                      
-                                                   transition="scale-transition"  
-                                                   role="menu2"                    
+                                                   :close-on-content-click="false"                    
+                                                   transition="scale-transition" 
+                                                   offset-y                    
                                                    >
                                                    <template v-slot:activator="{ on }">
+                                                       
                                                       <v-text-field 
-                                                        prepend-inner-icon="mdi-calendar"
+                                                         prepend-inner-icon="mdi-calendar"
                                                          label="Return Date" 
-                                                         outlined
+                                                         outlined                                           
                                                          readonly
-                                                         v-model="returnDate"                                                               
-                                                         v-on="on">
+                                                         v-model="returnDate"
+                                                         v-on="on"
+                                                         >
                                                       </v-text-field>
                                                    </template>
                                                    <v-date-picker v-model="returnDate" @input="menu2 = false" id="date2"></v-date-picker>
                                                 </v-menu>
-                                             </div>
-                                          </v-row>
-                                       </v-app>
-                                       <!-- <div class="col-md-5_5 col-xs-6">
-                                          <div class="form-group">
-                                              <label>DEPART</label>
-                                              <input id="departure_date" name="departure_date" tabindex="3" class="form-control" type="text" value="24/02/2020" readonly/>
-                                              <button type="button" class="fa fa-calendar input-icon"></button>
+                                             
+                                          </v-app>
+                                       </div>
+                                       <div class="col-md-2">
+                                          <div id="app_passenger">
+                                             <v-app id="inspire">
+                                                <v-text-field
+                                                   v-model="rows"
+                                                   label="Passenger"
+                                                   max="4"
+                                                   min="1"
+                                                   step="1"
+                                                   style="width: 125px"
+                                                   type="number"
+                                                ></v-text-field>
+                                             </v-app>
                                           </div>
-                                          </div> -->
-                                       <!-- END col-md-5_5 _departing on -->
-                                       <!-- WHEN Arriving on -->
-                                       <!-- <div class="col-md-5_5 col-xs-6">
-                                          <div id="return_group" class="form-group ">
-                                              <label>RETURN</label>
-                                              <input id="return_date" name="return_date" tabindex="4" class="form-control" type="text" value="29/02/2020" readonly />
-                                              <button type="button" class="fa fa-calendar input-icon"></button>
+                                       </div>
+                                       <div class="col-md-2">
+                                          <div id="app_btnSubmit">
+                                             <v-app id="inspire">
+                                                <div class="col-md-2">
+                                                   <v-btn color="success" fab x-medium dark >
+                                                      <v-icon>mdi-magnify</v-icon>
+                                                 </div>
+                                             </v-app>
                                           </div>
-                                          </div> -->
-                                       <!-- END col-md-5_5 _arriving on -->
-                                       <!-- END Row WHEN -->
+                                       </div>
                                     </div>
+                                    </div>
+                                
                                  </div>
-                                 <!-- END input-daterange -->
-                                 <!-- END WHEN -->
+                                 </div>
+                                 
                               </div>
-                              <!-- END col-md-8_ WHERE & WHEN -->
-                              <!-- BEGIN PASS & ROUND -->
+                              
                            </div>
                         </div>
-                        <!-- END col-md-9 -->
-                        <!-- END PASS & ROUND -->
+                        
                   </div>
                   <!-- END col-md-4_PASS & ROUND -->
                </div>

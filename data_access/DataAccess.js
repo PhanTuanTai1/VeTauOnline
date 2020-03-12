@@ -1,8 +1,8 @@
 var { Sequelize, Model, DataTypes } = require('sequelize');
-var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '79495291Z*z', {
+var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '79495291', {
     dialect: 'mssql',
     host: 'localhost',
-    port: '57031',
+    // port: '57031',
     dialectOptions: {
       options: {
         useUTC: false,
