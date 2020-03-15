@@ -45,3 +45,7 @@ module.exports.searchSchedule = function(req,res){
         })
     })     
 }
+
+module.exports.search = function(req,res){
+    console.log(req.query);
+}

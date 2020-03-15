@@ -1,9 +1,11 @@
+
 new Vue({
   el: "#app", 
   created: function(){
     axios.get('http://localhost:3000/getAllStation')
       .then(res => {
         this.Stations = res.data;
+        this.round_trip = true;
       })
       //alert(JSON.stringify(this.Stations))
   },
@@ -16,8 +18,21 @@ new Vue({
     depart_date: Date.now(),
     return_date: Date.now(),
     departureStationID: null,
-    arrivalStationID: null
+    arrivalStationID: null,
+    round_trip: null,
+    one_way: null,
+    passengers: 1,
 },
+
+  // computed: {
+  //   loadStation: function(){
+  //     axios.get('http://localhost:3000/getAllStation')
+  //     .then(res => {
+  //       this.Stations = res.data;
+  //     })
+  //     //alert(JSON.stringify(this.Stations))
+  //   }
+  // },
   methods: {
     searchFromStation(){
       if(this.FROM.trim() == "") {
@@ -41,13 +56,13 @@ new Vue({
       this.SearchTo = result;
     },
 
-    loadStation(){
-      axios.get('http://localhost:3000/getAllStation')
-      .then(function(res){
-        this.Stations = res.data;
-        //this.SearchTos = res.data;
-      })
-    },
+    // loadStation(){
+    //   axios.get('http://localhost:3000/getAllStation')
+    //   .then(function(res){
+    //     this.Stations = res.data;
+    //     //this.SearchTos = res.data;
+    //   })
+    // },
 
     selectStationFrom: function(station){
       this.FROM = station;
@@ -66,10 +81,51 @@ new Vue({
       this.TO = station;
       this.SearchTo = [];
       this.arrivalStationID = this.getStationID(station)[0].ID;
+    },
+
+    disabledReturnDay: function(){
+      this.round_trip = false;
+      this.one_way = true;
+      document.getElementById("dateTimePicker_2").setAttribute("disabled","");
+    },
+
+    enabledReturnDay: function(){
+      this.round_trip = true;
+      this.one_way = false;
+      document.getElementById("dateTimePicker_2").removeAttribute("disabled");
+    },
+
+    increasePassager: function(){
+      if(this.passengers <= 5) this.passengers += 1;
+    },
+
+    Search: function(){       
+      location.href = this.setParamQuery();  
+    },
+    
+    setParamQuery: function(){
+      var url = 'http://localhost:3000/searchSchedule?';
+      url += "FROM=" + this.departureStationID + "&";
+      url += "TO=" + this.arrivalStationID + "&";
+
+      if(this.round_trip == true){     
+        url += "DEPART=" + this.depart_date + "&";      
+        url += "RETURN=" + this.return_date + "&"; 
+        url += "ROUND_TRIP=" + this.round_trip + "&"; 
+      }
+      
+      if(this.one_way == true) {
+        url += "DEPART=" + this.depart_date + "&";     
+        url += "ONE_WAY=" + this.one_way + "&"; 
+      }
+
+      url += "PASSENGERS=" + this.passengers; 
+
+      return url;
     }
   },
   components: {
-  	vuejsDatepicker
+    vuejsDatepicker,
   }
 })
 

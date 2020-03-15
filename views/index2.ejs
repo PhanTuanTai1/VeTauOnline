@@ -304,17 +304,21 @@
                 	    	                <!-- Rountrip / One Way -->
                         <div class="col-xs-6 col-md-7">                	                        
                             <div class="form-group">
+                                
                                 <label>JOURNEY</label>
                                 <ul class="nav nav-pills">                                    
                                     <li class="active">
                                         <a class="fa fa-exchange roundtrip_selector visible-xs" href="#roundtrip_yes" data-toggle="tab"></a>
-                                        <a class="roundtrip_selector hidden-xs" href="#roundtrip_yes" data-toggle="tab">Round trip</a>
+                                        <!-- <a_roundtrip v-model="round_trip" v-on:click="enabledReturnDay()"></a_roundtrip> -->
+                                        <a class="roundtrip_selector hidden-xs" href="#roundtrip_yes" data-toggle="tab" @click="enabledReturnDay()">Round trip</a>
                                     </li>
                                     <li >
                                         <a class="fa fa-long-arrow-right roundtrip_selector visible-xs" href="#roundtrip_no" data-toggle="tab"></a>
-                                        <a class="roundtrip_selector hidden-xs" href="#roundtrip_no" data-toggle="tab">One way</a>
+                                        <!-- <a_oneway  v-model="one_way" @click="disabledReturnDay()" ></a_oneway> -->
+                                        <a class="roundtrip_selector hidden-xs" href="#roundtrip_no" data-toggle="tab" @click="disabledReturnDay()">One way</a>
                                     </li>                                
                                 </ul>
+                            
                             </div>
         
                             <div style="display:none">
@@ -334,8 +338,8 @@
                                     <ul>
                                         <li><button type="button" class="btn-circle minus" data-value="-1" data-target="#passengers_count" data-toggle="spinner"> 
                                         </button></li>
-                                        <li><input id="passengers_count" type="text" readonly data-ride="spinner" name="passengers_count" class="input-number text-center" value="1" data-min="1" data-max="5" > </li>
-                                        <li><button type="button" class="btn-circle plus" data-value="1" data-target="#passengers_count" data-toggle="spinner" data-on="mousehold"></button></li>
+                                        <li><input id="passengers_count" type="text" readonly data-ride="spinner" name="passengers_count" class="input-number text-center" value="1" data-min="1" data-max="5" v-model="passengers"> </li>
+                                        <li><button type="button" class="btn-circle plus" data-value="1" data-target="#passengers_count" data-toggle="spinner" data-on="mousehold" v-on:click="increasePassager()"></button></li>
                                     </ul>
                                 </div>
                             </div>
@@ -343,7 +347,7 @@
     				                                    
                     <div id="search_button_container" class="col-xs-12 col-md-5 text-right">
                         <label class="hidden-sm hidden-xs widget-hide">&nbsp;</label>
-                        <button id="searchButton" class="btn icon-search fixed-width green btn-block bold" type="submit" name="input" value="Search">SEARCH</button>
+                        <button id="searchButton" class="btn icon-search fixed-width green btn-block bold" type="button" name="input" value="Search" v-on:click="Search()">SEARCH</button>
                     </div>                
                     
                 </div>
@@ -695,6 +699,7 @@
 <!-- END WINDOW POPUP -->
 
 <script src="../dist/vue.js"></script>
+<script src="https://unpkg.com/vue-router@2.0.0/dist/vue-router.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://unpkg.com/vuejs-datepicker"></script>	
             <script type="text/javascript" src="../dist/baolau.min6ffc.js?v=2020-02-21"></script>

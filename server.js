@@ -22,9 +22,8 @@ app.get("/",function(req,res){
    res.render('index2');
 })
 
-app.post("/searchSchedule",function(req,res){
-    //console.log(req.body);
-    controller.searchSchedule(req,res);
+app.get("/searchSchedule",function(req,res){
+    controller.search(req,res);
 })
 
 app.get("/getAllStation",function(req,res){
