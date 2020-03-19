@@ -1,8 +1,17 @@
 var { Sequelize, Model, DataTypes } = require('sequelize');
-var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '123456', {
+
+Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
+    date = this._applyTimezone(date, options);
+  
+    // Z here means current timezone, _not_ UTC
+    // return date.format('YYYY-MM-DD HH:mm:ss.SSS Z');
+    return date.format('YYYY-MM-DD');
+  };
+
+var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '79495291', {
     dialect: 'mssql',
     host: 'localhost',
-    port: '57031',
+    //port: '57031',
     dialectOptions: {
       options: {
         useUTC: false,
@@ -177,6 +186,7 @@ TableCost.belongsTo(ScheduleDetail,{primaryKey:"ScheduleDetailID"});
 Representative.hasMany(Customer,{foreignKey:"RepresentativeID"});
 Customer.belongsTo(TypeObject,{foreignKey:"TypeObjectID"});
 Ticket.belongsTo(Customer,{foreignKey:"CustomerID"});
+Ticket.belongsTo(Seat,{foreignKey: "SeatID"});
 
 module.exports.Train = Train;
 module.exports.Carriage = Carriage;

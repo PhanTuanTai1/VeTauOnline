@@ -8,11 +8,16 @@ new Vue({
         this.round_trip = true;
       })
       //alert(JSON.stringify(this.Stations))
+    axios.get('http://localhost:3000/getAllTrain')
+    .then(res => {
+      this.Trains = res.data;
+    })
   },
   data: {   
     FROM: '',
     TO: '',
     Stations: null,
+    Trains: null,
     SearchFrom: null,
     SearchTo: null,
     depart_date: Date.now(),
@@ -20,7 +25,7 @@ new Vue({
     departureStationID: null,
     arrivalStationID: null,
     round_trip: null,
-    one_way: null,
+    one_way: null,   
     passengers: 1,
 },
 
@@ -96,13 +101,25 @@ new Vue({
     },
 
     increasePassager: function(){
-      if(this.passengers <= 5) this.passengers += 1;
+      if(this.passengers < 6) this.passengers += 1;
     },
 
     Search: function(){       
       location.href = this.setParamQuery();  
+      // axios.post(this.setParamQuery())
+      // .then(res => {
+      //   alert(res.data.redirect);
+      // })
     },
-    
+
+    createElementFromHTML: function(htmlString){
+      var div = document.createElement('div');
+      div.innerHTML = htmlString.trim();
+
+      // Change this to div.childNodes to support multiple top-level nodes
+      return div.firstChild; 
+    },
+
     setParamQuery: function(){
       var url = 'http://localhost:3000/searchSchedule?';
       url += "FROM=" + this.departureStationID + "&";

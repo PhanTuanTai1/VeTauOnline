@@ -30,6 +30,10 @@ app.get("/getAllStation",function(req,res){
     controller.index(req,res);
 })
 
+app.get("/getAllTrain",function(req,res){
+    controller.train(req,res);
+})
+
 var server = app.listen(3000,function(){
     console.log("Run");
 });
