@@ -34,6 +34,10 @@ app.get("/getAllTrain",function(req,res){
     controller.train(req,res);
 })
 
+app.get("/admin",function(req,res){
+    res.render('admin');
+})
+
 var server = app.listen(3000,function(){
     console.log("Run");
 });
