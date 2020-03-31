@@ -8,7 +8,7 @@ Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
     return date.format('YYYY-MM-DD');
   };
 
-var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '123456', {
+var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '123456789', {
     dialect: 'mssql',
     host: 'localhost',
     //port: '57031',
@@ -29,7 +29,8 @@ Train.init({
 { 
     sequelize, 
     modelName: 'Train',
-    tableName: 'Train'
+    tableName: 'Train',
+    timestamps: false,
 });
 
 //2 Carriage Entity
@@ -41,7 +42,8 @@ Carriage.init({
 { 
     sequelize, 
     modelName: 'Carriage',
-    tableName: 'Carriage'
+    tableName: 'Carriage',
+    timestamps: false,
 });
 
 //3 Seat Entity
@@ -52,7 +54,8 @@ Seat.init({
 { 
     sequelize, 
     modelName: 'Seat',
-    tableName: 'Seat'
+    tableName: 'Seat',
+    timestamps: false,
 });
 
 //4 SeatType Entity
@@ -64,7 +67,8 @@ SeatType.init({
 { 
     sequelize, 
     modelName: 'SeatType',
-    tableName: 'SeatType'
+    tableName: 'SeatType',
+    timestamps: false,
 });
 
 //5 Schedule Entity
@@ -77,7 +81,8 @@ Schedule.init({
 { 
     sequelize, 
     modelName: 'Schedule',
-    tableName: 'Schedule'
+    tableName: 'Schedule',
+    timestamps: false,
 });
 
 //6 ScheduleDetail Entity
@@ -91,6 +96,7 @@ ScheduleDetail.init({
     sequelize, 
     modelName: 'ScheduleDetail',
     tableName: 'ScheduleDetail',
+    timestamps: false,
 });
 
 //7 Station Entity
@@ -102,7 +108,8 @@ Station.init({
 { 
     sequelize, 
     modelName: 'Station',
-    tableName: 'Station'
+    tableName: 'Station',
+    timestamps: false,
 });
 
 //8 Ticket Entity
@@ -118,7 +125,8 @@ Ticket.init({
 { 
     sequelize, 
     modelName: 'Ticket',
-    tableName: 'Ticket'
+    tableName: 'Ticket',
+    timestamps: false,
 });
 
 //9 TableCost Entity
@@ -129,7 +137,8 @@ TableCost.init({
 { 
     sequelize, 
     modelName: 'TableCost',
-    tableName: 'TableCost'
+    tableName: 'TableCost',
+    timestamps: false,
 });
 
 //10 TypeObject Entity
@@ -141,7 +150,8 @@ TypeObject.init({
 { 
     sequelize, 
     modelName: 'TypeObject',
-    tableName: 'TypeObject'
+    tableName: 'TypeObject',
+    timestamps: false,
 });
 
 //11 Representative Entity
@@ -156,7 +166,8 @@ Representative.init({
 { 
     sequelize, 
     modelName: 'Representative',
-    tableName: 'Representative'
+    tableName: 'Representative',
+    timestamps: false,
 });
 
 //12 Customer Entity
@@ -169,7 +180,8 @@ Customer.init({
 { 
     sequelize, 
     modelName: 'Customer',
-    tableName: 'Customer'
+    tableName: 'Customer',
+    timestamps: false,
 });
 
 Train.hasMany(Carriage,{foreignKey :"TrainID"});
