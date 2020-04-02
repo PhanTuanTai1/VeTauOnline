@@ -7,11 +7,11 @@ new Vue({
         this.Stations = res.data;
         this.round_trip = true;
       })
-      //alert(JSON.stringify(this.Stations))
-    axios.get('http://localhost:3000/getAllTrain')
-    .then(res => {
-      this.Trains = res.data;
-    })
+    //   //alert(JSON.stringify(this.Stations))
+    // axios.get('http://localhost:3000/getAllTrain')
+    // .then(res => {
+    //   this.Trains = res.data;
+    // })
   },
   data: {   
     FROM: '',
@@ -20,8 +20,8 @@ new Vue({
     Trains: null,
     SearchFrom: null,
     SearchTo: null,
-    depart_date: Date.now(),
-    return_date: Date.now(),
+    depart_date: new Date(),
+    return_date: new Date(),
     departureStationID: null,
     arrivalStationID: null,
     round_trip: null,
@@ -29,15 +29,6 @@ new Vue({
     passengers: 1,
 },
 
-  // computed: {
-  //   loadStation: function(){
-  //     axios.get('http://localhost:3000/getAllStation')
-  //     .then(res => {
-  //       this.Stations = res.data;
-  //     })
-  //     //alert(JSON.stringify(this.Stations))
-  //   }
-  // },
   methods: {
     searchFromStation(){
       if(this.FROM.trim() == "") {
@@ -111,15 +102,7 @@ new Vue({
       //   alert(res.data.redirect);
       // })
     },
-
-    createElementFromHTML: function(htmlString){
-      var div = document.createElement('div');
-      div.innerHTML = htmlString.trim();
-
-      // Change this to div.childNodes to support multiple top-level nodes
-      return div.firstChild; 
-    },
-
+    
     setParamQuery: function(){
       var url = 'http://localhost:3000/searchSchedule?';
       url += "FROM=" + this.departureStationID + "&";

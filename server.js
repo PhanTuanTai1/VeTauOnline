@@ -34,6 +34,9 @@ app.get("/getAllTrain",function(req,res){
     controller.train(req,res);
 })
 
+app.get("/scheduleDetail",function(req,res){
+    controller.scheduleDetail(req,res);
+})
 var server = app.listen(3000,function(){
     console.log("Run");
 });

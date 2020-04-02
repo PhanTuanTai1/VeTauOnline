@@ -124,6 +124,8 @@ Ticket.init({
 //9 TableCost Entity
 class TableCost extends Model{}
 TableCost.init({
+    'ScheduleID' : {type: Sequelize.INTEGER, primaryKey: true},
+    'SeatTypeID' : {type: Sequelize.INTEGER, primaryKey: true},
     'Cost' : Sequelize.FLOAT,
 },
 { 
@@ -181,12 +183,13 @@ Schedule.hasMany(ScheduleDetail,{foreignKey:"ScheduleID"});
 ScheduleDetail.belongsTo(Station,{foreignKey:"DepartureStationID"});
 ScheduleDetail.belongsTo(Station,{foreignKey:"ArrivalStationID"});
 ScheduleDetail.belongsTo(Schedule);
-TableCost.belongsTo(SeatType,{primaryKey:"SeatTypeID"});
-TableCost.belongsTo(ScheduleDetail,{primaryKey:"ScheduleDetailID"});
+TableCost.belongsTo(SeatType,{foreignKey:"ID"});
+TableCost.belongsTo(ScheduleDetail,{foreignKey:"ID"});
 Representative.hasMany(Customer,{foreignKey:"RepresentativeID"});
 Customer.belongsTo(TypeObject,{foreignKey:"TypeObjectID"});
 Ticket.belongsTo(Customer,{foreignKey:"CustomerID"});
 Ticket.belongsTo(Seat,{foreignKey: "SeatID"});
+ScheduleDetail.hasMany(TableCost,{foreignKey:"ScheduleID"})
 
 module.exports.Train = Train;
 module.exports.Carriage = Carriage;

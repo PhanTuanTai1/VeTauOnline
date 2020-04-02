@@ -182,7 +182,7 @@
             </div><!-- END sub-header -->
 </header>
 
-<div class="subpage panel-dark search_result_page">
+<div class="subpage panel-dark search_result_page" id="app">
 
     <!-- PC progress-bar-holder -->
     <div class="container">
@@ -240,22 +240,18 @@
     </div> -->
         <div class="gap-section hidden-sm hidden-xs"></div>
 
-        <script type="text/javascript">
-            // Required language strings:	
-            lang_strings['CLOSE'] = "CLOSE";
-
-            // Inits:
-            inits.push("your_search");
-        </script>
+        
 
         <div id="search-modify" class="toggle-container">
             <div class="mobile visible-xs visible-sm">
                 <div class="row panel padded-panel">
                     <!-- MOBILE -->
                     <div class="col-sm-9 col-xs-9">
-                        <div class="mobile-destination mobile-usersearch-info-item bold" style="padding-left: 0px;">
-                            <span v-model="departure"></span> <i class="fa fa-long-arrow-right"></i> <span v-model="arrival"></span>
-                        </div>
+                        <template>
+                            <div class="mobile-destination mobile-usersearch-info-item bold" style="padding-left: 0px;">
+                                <span >{{ departure }}</span> <i class="fa fa-long-arrow-right"></i> <span >{{ arrival }}</span>
+                            </div>
+                        </template>
 
                         <div class="mobile-usersearch-info-item pull-left">
                             <span>     
@@ -342,9 +338,6 @@
         <div class="toggle-container">
             <div id="searchmodify-collapse" class="row panel padded-panel collapse">
                 <div class="col-xs-12">
-                    <script type="text/javascript">
-                        inits.push("search_form");
-                    </script>
 
                     <h2 class="visible-sm visible-xs" style="color:#a1a8ae">Where do you want to go?</h2>
 
@@ -527,7 +520,7 @@
         </div>
         <div id="filter-transport" class="row main relative">
             <h1 style="margin-top: 0" class="booking-desp big-text col-md-7 col-sm-12">
-					Results from <span class="blue-text super-bold" v-model="departure"></span> to <span class="blue-text super-bold" v-model="arrival"></span> on <span class="bold">Wednesday, 18 March 2020</span>
+					Results from <span class="blue-text super-bold" >{{ departure }}</span> to <span class="blue-text super-bold" >{{ arrival }}</span> on <span class="bold">Wednesday, 18 March 2020</span>
 			</h1>
             
             <!--  filters-view-->
@@ -599,10 +592,10 @@
                                 <span class="sort-by" data-toggle="popover" data-container="body" data-placement="auto" data-trigger="hover" data-content="Sort by: Departure" data-original-title="" title="">Departure</span>
 
                             </th>
-                            <th class="text-right" data-sort="arrival">
+                            <!-- <th class="text-right" data-sort="arrival">
                                 <i class="caret private-show hidden-xs"></i>
                                 <span class="sort-by" data-toggle="popover" data-container="body" data-placement="auto" data-trigger="hover" data-content="Sort by: Arrival" data-original-title="" title="">Arrival</span>
-                            </th>
+                            </th> -->
                             <th class="text-center" data-sort="duration">
                                 <span class="sort-by" data-toggle="popover" data-container="body" data-placement="auto" data-trigger="hover" data-content="Sort by: Duration" data-original-title="" title="">Duration</span>
                                 <i class="caret private-show hidden-xs"></i>
@@ -618,159 +611,34 @@
                             <th class="hidden-sm hidden-xs button-alignment border-right"></th>
                         </tr>
                     </thead>
-
-                    <tbody>
-
-                        <!-- Pre-loader -->
-                        <tr style="border:0">
-                            <td colspan="7" style="border: 0px; padding: 0px; background-color: rgb(204, 204, 204); width: 1639px;">
-                                <div class="js-search-table__progress progress" style="width: 1137px;">&nbsp;</div>
+                    <tbody v-if="listTrain" id="parent">
+                        <tr v-for="(train, i) in listTrain" id="train.ID" v-on:click="loadScheduleDetail(i,train.ID)" data-target="#collapse-c5757fa13cef086d24dae54aef64e30e" data-score="17205333.333333" data-departure="1584544800" data-arrival="1584657900" data-duration="1885" data-itinerary="1" data-price="922000" data-allow-price-zero="" data-step="Vietnam Railways" class="result clickable_tr train vr direct">
+                            <td style="text-align: center; width: 158px;"><img src="https://booking.baolau.com/images/logos/transports/logo-vr.png" class="searchresult-logo">
+                                <div style="font-size: 13px;" v-text="train.Name"></div>
                             </td>
-                        </tr>
-                        <!-- END Pre-loader -->
-
-                        <!-- <tr id="gap-1" class="result-gap" style="display:none">
-                                <td colspan="7"></td>
-                            </tr> -->
-
-                        <tr id="c5757fa13cef086d24dae54aef64e30e" class="result clickable_tr train vr direct unavailable-book" data-target="#collapse-c5757fa13cef086d24dae54aef64e30e" data-score="17205333.333333" data-departure="1584544800" data-arrival="1584657900" data-duration="1885" data-itinerary="1" data-price="922000" data-allow-price-zero="" data-step="Vietnam Railways">
-                            <td style="text-align: center; width: 158px;">
-                                <img class="searchresult-logo" src="https://booking.baolau.com/images/logos/transports/logo-vr.png">
-                                <div style="font-size: 13px">SE1</div>
-                            </td>
-
                             <td class="text-right" style="width: 187px;">
                                 <div class="super-bold">22:20</div>
                                 <div>We, 18/03</div>
                             </td>
-                            <td class="text-right" style="width: 154px;">
+                            <!-- <td class="text-right" style="width: 154px;">
                                 <div class="super-bold">05:45</div>
                                 <div>Fr, 20/03</div>
-                            </td>
+                            </td> -->
                             <td class="text-center" style="width: 203px;">
                                 31h 25m </td>
-                            <td class="searchresult-itenerary hidden-sm hidden-xs" style="width: 366px;">
-                                <span style="display:inline-block">HANOI<br><span style="font-size:13px">Hanoi</span></span> <i class="icon have-node-code icon-train inline"></i> <span style="display:inline-block">HO CHI MINH<br><span style="font-size:13px">Saigon</span></span>
+                            <td class="searchresult-itenerary hidden-sm hidden-xs" style="width: 366px;"><span style="display: inline-block;">{{departure}}<br><span style="font-size: 13px;">{{departure}}</span></span> 
+                                <i class="icon have-node-code icon-train inline"></i> <span style="display: inline-block;">{{arrival}}<br><span style="font-size: 13px;">{{arrival}}</span></span>
                             </td>
-                            <td class="total_price yellow-text super-bold price-alignment" style="width: 438px;">
-                                <span class="money" data-currency="VND">Not available</span> <i class="js-result_promo_tag fa fa-tag yellow-text" style="display:none"></i> </td>
+                            <td class="total_price yellow-text super-bold price-alignment" style="width: 438px;"><span data-currency="VND" class="money">Not available</span> <i class="js-result_promo_tag fa fa-tag yellow-text" style="display: none;"></i></td>
                             <td class="text-right button-alignment" style="width: 133px;">
-                                <i class="fa button-direct hidden-xs hidden-sm fa-repeat"></i>
-
-                                <div class="spinner">
-                                    <img src="https://booking.baolau.com/images/genaral/spinner-2.gif" style="width:27px">
-                                </div>
-
-                                <input type="hidden" name="price_breakdown" class="price_breakdown" value="eyI2ODQ0NjU2NCI6eyJ0eXBlIjoidHJhaW4iLCJwcmljZSI6IjkyMjAwMCIsImZhcmUiOiJOTUw1NiJ9fQ==">
-
-                                <input type="hidden" name="coordinates" class="coordinates" value="W1siMjEuMDIzMjY4IiwiMTA1Ljg0MDQyNCIsIkhBTk9JIiwidHJhaW4iXSxbIjEwLjc4MjM1MiIsIjEwNi42Nzc4NzkiLCJITyBDSEkgTUlOSCIsInRyYWluIl1d">
+                                <i class="fa button-direct hidden-xs hidden-sm " id="icon_1">
+                                    
+                                </i>
+                                <img src="../images/genaral/spinner-2.gif" style="width: 27px;" id="icon_2" hidden>
                             </td>
-                        </tr>
-                        <tr id="collapse-c5757fa13cef086d24dae54aef64e30e" data-id="c5757fa13cef086d24dae54aef64e30e" class="result-collapse" style="display:none; border-bottom:1px solid #e8e8e8">
-                            <td colspan="7" style="padding-top: 0px; padding-bottom: 0px; width: 0px;">
-                                <div class="route_details" style="display:none" data-transport="vr" data-vessel="SE1">
-                                </div>
-                            </td>
-                        </tr>
-                        <tr id="gap-c5757fa13cef086d24dae54aef64e30e" class="result-gap" style="display:none">
-                            <td colspan="7" style="width: 0px;"></td>
-                        </tr>
-                        <tr id="755a4f9131876a54b43cccbd1e1a1506" class="result clickable_tr train vr" data-target="#collapse-755a4f9131876a54b43cccbd1e1a1506" data-score="39338000" data-departure="1584546300" data-arrival="1584696600" data-duration="2505" data-itinerary="2" data-price="988000" data-allow-price-zero="" data-step="Vietnam Railways">
-                            <td style="text-align: center; width: 158px;">
-                                <div class="searchresult-logo inline-block">
-                                    <div class="logo_slideshow">
-                                        <img class="searchresult-logo active" src="https://www.baolau.com/images/logos/transports/logo-vr.png"> 2 Steps </div>
-                                </div>
-                            </td>
-
-                            <td class="text-right" style="width: 187px;">
-                                <div class="super-bold">22:45</div>
-                                <div>We, 18/03</div>
-                            </td>
-                            <td class="text-right" style="width: 154px;">
-                                <div class="super-bold">16:30</div>
-                                <div>Fr, 20/03</div>
-                            </td>
-                            <td class="text-center" style="width: 203px;">
-                                41h 45m </td>
-                            <td class="searchresult-itenerary hidden-sm hidden-xs" style="width: 366px;">
-                                <span style="display:inline-block">HANOI<br><span style="font-size:13px">Hanoi</span></span> <i class="icon have-node-code icon-train inline"></i> <i style="padding-left:0;" class="icon have-node-code icon-train inline"></i> <span style="display:inline-block">HO CHI MINH<br><span style="font-size:13px">Saigon</span></span>
-                            </td>
-                            <td class="total_price yellow-text super-bold price-alignment" style="width: 438px;">
-                                <span class="money" data-amount="988000" data-currency="VND">988,000&nbsp;đ</span> <i class="js-result_promo_tag fa fa-tag yellow-text" style="display:none"></i> </td>
-                            <td class="text-right button-alignment" style="width: 133px;">
-                                <i class="fa button-direct hidden-xs hidden-sm"></i>
-
-                                <div class="spinner">
-                                    <img src="https://www.baolau.com/images/genaral/spinner-2.gif" style="width:27px">
-                                </div>
-
-                                <input type="hidden" name="price_breakdown" class="price_breakdown" value="eyI2NTE5NzE4OSI6eyJ0eXBlIjoidHJhaW4iLCJwcmljZSI6IjI0MDAwMCIsImZhcmUiOiJOTUw1NiJ9LCI2NTE5NzE4MSI6eyJ0eXBlIjoidHJhaW4iLCJwcmljZSI6Ijc0ODAwMCIsImZhcmUiOiJOTUwifX0=">
-
-                                <input type="hidden" name="coordinates" class="coordinates" value="W1siMjEuMDIzMjY4IiwiMTA1Ljg0MDQyNCIsIkhBTk9JIiwidHJhaW4iXSxbIjE4LjY4ODI1IiwiMTA1LjY2NDM2NCIsIlZJTkgiLCJ0cmFpbiJdLFsiMTAuNzgyMzUyIiwiMTA2LjY3Nzg3OSIsIkhPIENISSBNSU5IIiwidHJhaW4iXV0=">
-                            </td>
-                        </tr>
-
-                        <tr id="collapse-755a4f9131876a54b43cccbd1e1a1506" data-id="755a4f9131876a54b43cccbd1e1a1506" class="result-collapse" style="display:none; border-bottom:1px solid #e8e8e8">
-                            <td colspan="7" style="padding-top: 0px; padding-bottom: 0px; width: 0px;">
-                                <div class="route_details" style="display:none" data-transport="vr" data-vessel="NA1">
-                                    <div class="route_details" style="display:none" data-transport="vr" data-vessel="SE7">
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr id="gap-755a4f9131876a54b43cccbd1e1a1506" class="result-gap" style="display:none">
-                            <td colspan="7" style="width: 0px;"></td>
-                        </tr>
-
-                        <tr id="96681c6ec441208810c289f7d8de51d6" class="result clickable_tr train vr" data-target="#collapse-96681c6ec441208810c289f7d8de51d6" data-score="39304333.333333" data-departure="1584544800" data-arrival="1584696600" data-duration="2530" data-itinerary="2" data-price="871000" data-allow-price-zero="" data-step="Vietnam Railways">
-                            <td style="text-align: center; width: 158px;">
-                                <div class="searchresult-logo inline-block">
-                                    <div class="logo_slideshow">
-                                        <img class="searchresult-logo active" src="https://www.baolau.com/images/logos/transports/logo-vr.png"> 2 Steps </div>
-                                </div>
-                            </td>
-
-                            <td class="text-right" style="width: 187px;">
-                                <div class="super-bold">22:20</div>
-                                <div>We, 18/03</div>
-                            </td>
-                            <td class="text-right" style="width: 154px;">
-                                <div class="super-bold">16:30</div>
-                                <div>Fr, 20/03</div>
-                            </td>
-                            <td class="text-center" style="width: 203px;">
-                                42h 10m </td>
-                            <td class="searchresult-itenerary hidden-sm hidden-xs" style="width: 366px;">
-                                <span style="display:inline-block">HANOI<br><span style="font-size:13px">Hanoi</span></span> <i class="icon have-node-code icon-train inline"></i> <i style="padding-left:0;" class="icon have-node-code icon-train inline"></i> <span style="display:inline-block">HO CHI MINH<br><span style="font-size:13px">Saigon</span></span>
-                            </td>
-                            <td class="total_price yellow-text super-bold price-alignment" style="width: 438px;">
-                                <span class="money" data-amount="871000" data-currency="VND">871,000&nbsp;đ</span> <i class="js-result_promo_tag fa fa-tag yellow-text" style="display:none"></i> </td>
-                            <td class="text-right button-alignment" style="width: 133px;">
-                                <i class="fa button-direct hidden-xs hidden-sm"></i>
-
-                                <div class="spinner">
-                                    <img src="https://www.baolau.com/images/genaral/spinner-2.gif" style="width:27px">
-                                </div>
-
-                                <input type="hidden" name="price_breakdown" class="price_breakdown" value="eyI3Mjc0NzQxNiI6eyJ0eXBlIjoidHJhaW4iLCJwcmljZSI6IjY2MDAwIiwiZmFyZSI6Ik5NTDU2In0sIjY1NDE2NDUyIjp7InR5cGUiOiJ0cmFpbiIsInByaWNlIjoiODA1MDAwIiwiZmFyZSI6Ik5NTCJ9fQ==">
-
-                                <input type="hidden" name="coordinates" class="coordinates" value="W1siMjEuMDIzMjY4IiwiMTA1Ljg0MDQyNCIsIkhBTk9JIiwidHJhaW4iXSxbIjIwLjQyMTY2OSIsIjEwNi4xNjQxNjYiLCJOQU0gRElOSCIsInRyYWluIl0sWyIxMC43ODIzNTIiLCIxMDYuNjc3ODc5IiwiSE8gQ0hJIE1JTkgiLCJ0cmFpbiJdXQ==">
-                            </td>
-                        </tr>
-
-                        <tr id="collapse-96681c6ec441208810c289f7d8de51d6" data-id="96681c6ec441208810c289f7d8de51d6" class="result-collapse" style="display:none; border-bottom:1px solid #e8e8e8">
-                            <td colspan="7" style="padding-top: 0px; padding-bottom: 0px; width: 0px;">
-                                <div class="route_details" style="display:none" data-transport="vr" data-vessel="SE1">
-                                    <div class="route_details" style="display:none" data-transport="vr" data-vessel="SE7">
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr id="gap-96681c6ec441208810c289f7d8de51d6" class="result-gap" style="display:none">
-                            <td colspan="7" style="width: 0px;"></td>
                         </tr>
                     </tbody>
+                    
                 </table>
             </div>
         </div>
@@ -959,13 +827,13 @@
 
 <!-- END WINDOW POPUP -->
 
-<script src="../dist/vue.js"></script>
-<script src="https://unpkg.com/vue-router@2.0.0/dist/vue-router.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="https://unpkg.com/vuejs-datepicker"></script>	
-            <script type="text/javascript" src="../dist/baolau.min6ffc.js?v=2020-02-21"></script>
-            <script src="../dist/myVue2.js"></script>
-            <script src="../dist/myDate.js"></script>
+    <script src="../dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-router@2.0.0/dist/vue-router.js"></script>
+    <script src="../dist/axios.js"></script>
+    <script src="../dist/vuejs-datepickker.js"></script>	
+    <script type="text/javascript" src="../dist/baolau.min6ffc.js?v=2020-02-21"></script>
+    <script src="../dist/myVue2.js"></script>
+    <script src="../dist/myDate.js"></script>            
     <!-- Language dependant libraries -->
     <script type="text/javascript" src="../vendor/bootstrap-datepicker/locales/bootstrap-datepicker.en.min.js"></script>
    
