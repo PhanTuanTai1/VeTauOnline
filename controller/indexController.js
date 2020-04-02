@@ -1,6 +1,5 @@
 var { Sequelize, Model, DataTypes } = require('sequelize');
 var db = require("../data_access/DataAccess");
-var formidable = require("formidable");
 
 module.exports.index = function(req,res) {
     db.Station.findAll({
@@ -17,97 +16,79 @@ module.exports.train = function(req,res){
         res.end(JSON.stringify(train));
     })
 }
-// module.exports.searchSchedule = function(req,res){
-
-//     let form = new formidable.IncomingForm();
-
-//     form.parse(req, function(err, fields, files){
-//         var departureStationID = fields.departureStation;
-//         var arrivalStationID = fields.arrivalStation;
-//         var departureDate = fields.departureDate;
-//         var numberOfPassenger = fields.numberOfPassenger;
-
-//         // console.log(fields);
-//         // console.log(departureStationID);
-//         // console.log(arrivalStationID);
-
-//         db.ScheduleDetail.findAll({
-//             attributes: ['ID','ScheduleID'],
-//             where: {
-//                 DepartureStationID : departureStationID, 
-//                 ArrivalStationID : arrivalStationID
-//             },
-//             include:{
-//                 model: db.Schedule,
-//                 attributes: ['ID','TrainID','DateDeparture','TimeDeparture'],
-                
-//             }
-//         }).then(ScheduleDetail => {
-
-//             console.log(JSON.stringify(ScheduleDetail));
-
-//             // ScheduleDetail.forEach(element => {
-//             //     console.log(JSON.stringify());
-//             // });
-//         })
-//     })     
-// }
 
 module.exports.search =  function(req,res){
     console.log(req.query);
     
     if(typeof(req.query.ONE_WAY) != "undefined"){
-        var departDate = new Date(parseInt(req.query.DEPART));
-        console.log(departDate.toISOString());
+        
         db.Schedule.findAll({
             attributes: ['ID','DateDeparture','TrainID'],
             where:{
-                DateDeparture: departDate
+                DateDeparture: req.query.DEPART
             },
             include:[{
                 model: db.ScheduleDetail,
-                attributes: ['DepartureStationID', 'ArrivalStationID'],
+                attributes: ['ID','ScheduleID','DepartureStationID', 'ArrivalStationID'],
                 where:{
                     DepartureStationID: parseInt(req.query.FROM),
                     ArrivalStationID: parseInt(req.query.TO)
                 }
             }],
-        }).then(Schedule => {        
-            console.log(Schedule);   
+        }).then(Schedule => {   
+            if(Schedule.length == 0) {
+                res.render('searchResultOneWay',{result : []});
+                res.end();
+            }     
             var result = [];
             var count = 0;
             Schedule.forEach((schedule, index, array )=> {
-                checkSeat(schedule.TrainID,req.query.PASSENGERS, departDate).then(check =>{
-                    console.log(check);
+                checkSeat(schedule.TrainID,req.query.PASSENGERS, req.query.DEPART).then(check =>{
+                    
                     if(check){
-                        result.push({
-                            "TrainID": schedule.ID,
-                            "DepartureStationID": schedule.ScheduleDetails[0].DepartureStationID,
-                            "ArrivalStationID": schedule.ScheduleDetails[0].ArrivalStationID,
-                        })
+                        result.push(schedule)
                     }
                     count++;
-                    if(count === array.length){
+                    if(count == array.length){
                         if(result.length == 0) {
                             res.render('searchResultOneWay',{result : JSON.stringify(result)});
                         }
                         res.render('searchResultOneWay',{result : JSON.stringify(Schedule)});
                     }
                 });                
-            })
-            res.render('searchResultOneWay', {result : {"status": "404"}});
-        })
-    }
+            })          
+        })      
+    }   
+}
+
+module.exports.scheduleDetail = function(req,res) {
+    db.Schedule.findAll({
+        attributes: ['ID','TrainID'],
+        where: {
+            ID: req.query.SCHEDULEID,
+            TrainID: req.query.TRAINID
+        },
+        include:[{
+            model: db.ScheduleDetail,
+            attributes: ['ID'],
+            where:{
+                DepartureStationID: parseInt(req.query.DepartID),
+                ArrivalStationID: parseInt(req.query.ArrivalID)
+            },
+            include:[{
+                model: db.TableCost,
+                attributes: ['SeatTypeID','Cost']
+            }]
+        }]
+    }).then(result =>{
+        res.render('scheduleDetail', {result: JSON.stringify(result)});
+    })
 }
 
 async function checkSeat(trainID, numberOfPassenger, departDate){
     var Trains = await getListCarriageAndSeat(trainID);
     for(var i = 0; i < Trains[0].Carriages.length; i++){
         var Tickets = await getListTicketByDepartureDate(departDate, Trains[0].Carriages[i].ID);  
-        // console.log(Trains[0].Carriages[i].Seats.length);
-        // console.log(Tickets.length);
-        // console.log(numberOfPassenger);
-        // console.log((Trains[0].Carriages[i].Seats.length < Tickets.length));
         if((Trains[0].Carriages[i].Seats.length - Tickets.length) > 0 && (Trains[0].Carriages[i].Seats.length - Tickets.length) >= parseInt(numberOfPassenger)) return true;  
     }   
     return false;

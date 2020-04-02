@@ -29,7 +29,8 @@ Train.init({
 { 
     sequelize, 
     modelName: 'Train',
-    tableName: 'Train'
+    tableName: 'Train',
+    timestamps: false,
 });
 
 //2 Carriage Entity
@@ -41,7 +42,8 @@ Carriage.init({
 { 
     sequelize, 
     modelName: 'Carriage',
-    tableName: 'Carriage'
+    tableName: 'Carriage',
+    timestamps: false,
 });
 
 //3 Seat Entity
@@ -52,7 +54,8 @@ Seat.init({
 { 
     sequelize, 
     modelName: 'Seat',
-    tableName: 'Seat'
+    tableName: 'Seat',
+    timestamps: false,
 });
 
 //4 SeatType Entity
@@ -64,7 +67,8 @@ SeatType.init({
 { 
     sequelize, 
     modelName: 'SeatType',
-    tableName: 'SeatType'
+    tableName: 'SeatType',
+    timestamps: false,
 });
 
 //5 Schedule Entity
@@ -77,7 +81,8 @@ Schedule.init({
 { 
     sequelize, 
     modelName: 'Schedule',
-    tableName: 'Schedule'
+    tableName: 'Schedule',
+    timestamps: false,
 });
 
 //6 ScheduleDetail Entity
@@ -91,6 +96,7 @@ ScheduleDetail.init({
     sequelize, 
     modelName: 'ScheduleDetail',
     tableName: 'ScheduleDetail',
+    timestamps: false,
 });
 
 //7 Station Entity
@@ -102,7 +108,8 @@ Station.init({
 { 
     sequelize, 
     modelName: 'Station',
-    tableName: 'Station'
+    tableName: 'Station',
+    timestamps: false,
 });
 
 //8 Ticket Entity
@@ -118,18 +125,22 @@ Ticket.init({
 { 
     sequelize, 
     modelName: 'Ticket',
-    tableName: 'Ticket'
+    tableName: 'Ticket',
+    timestamps: false,
 });
 
 //9 TableCost Entity
 class TableCost extends Model{}
 TableCost.init({
+    'ScheduleID' : {type: Sequelize.INTEGER, primaryKey: true},
+    'SeatTypeID' : {type: Sequelize.INTEGER, primaryKey: true},
     'Cost' : Sequelize.FLOAT,
 },
 { 
     sequelize, 
     modelName: 'TableCost',
-    tableName: 'TableCost'
+    tableName: 'TableCost',
+    timestamps: false,
 });
 
 //10 TypeObject Entity
@@ -141,7 +152,8 @@ TypeObject.init({
 { 
     sequelize, 
     modelName: 'TypeObject',
-    tableName: 'TypeObject'
+    tableName: 'TypeObject',
+    timestamps: false,
 });
 
 //11 Representative Entity
@@ -156,7 +168,8 @@ Representative.init({
 { 
     sequelize, 
     modelName: 'Representative',
-    tableName: 'Representative'
+    tableName: 'Representative',
+    timestamps: false,
 });
 
 //12 Customer Entity
@@ -169,7 +182,8 @@ Customer.init({
 { 
     sequelize, 
     modelName: 'Customer',
-    tableName: 'Customer'
+    tableName: 'Customer',
+    timestamps: false,
 });
 
 Train.hasMany(Carriage,{foreignKey :"TrainID"});
@@ -181,12 +195,13 @@ Schedule.hasMany(ScheduleDetail,{foreignKey:"ScheduleID"});
 ScheduleDetail.belongsTo(Station,{foreignKey:"DepartureStationID"});
 ScheduleDetail.belongsTo(Station,{foreignKey:"ArrivalStationID"});
 ScheduleDetail.belongsTo(Schedule);
-TableCost.belongsTo(SeatType,{primaryKey:"SeatTypeID"});
-TableCost.belongsTo(ScheduleDetail,{primaryKey:"ScheduleDetailID"});
+TableCost.belongsTo(SeatType,{foreignKey:"ID"});
+TableCost.belongsTo(ScheduleDetail,{foreignKey:"ID"});
 Representative.hasMany(Customer,{foreignKey:"RepresentativeID"});
 Customer.belongsTo(TypeObject,{foreignKey:"TypeObjectID"});
 Ticket.belongsTo(Customer,{foreignKey:"CustomerID"});
 Ticket.belongsTo(Seat,{foreignKey: "SeatID"});
+ScheduleDetail.hasMany(TableCost,{foreignKey:"ScheduleID"})
 
 module.exports.Train = Train;
 module.exports.Carriage = Carriage;
