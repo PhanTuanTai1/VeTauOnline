@@ -95,6 +95,7 @@ module.exports.search =  function(req,res){
                     }
                 });                
             })
+            res.render('searchResultOneWay', {result : {"status": "404"}});
         })
     }
 }
