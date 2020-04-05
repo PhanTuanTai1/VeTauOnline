@@ -1,7 +1,7 @@
 <tr id="collapse-1f38e1631532974a701fa783bcb1c1cc" data-id="1f38e1631532974a701fa783bcb1c1cc" class="result-collapse" style="border-bottom: 1px solid rgb(232, 232, 232);display: table-row;" >
-    <input type="hidden" value="<%=result%>" id="schedule_result">
+    
     <td colspan="7" style="padding-top: 0px; padding-bottom: 0px; width: 161px;">
-        <div class="route_details" style="display: block;" data-transport="vr" data-vessel="SE1">
+        <div class="route_details" style="display: block;" data-transport="vr" data-vessel="<%=train[0].Name%>">
             <!-- Details Desktop -->
             <div style="color: #7a8085;" class="hidden-sm hidden-xs">
                 <table style="width:100%; padding:0;">
@@ -24,7 +24,7 @@
                             <td colspan="2" class="padded-left" style="width: 542px;">
                                 <!-- style="border-right:1px solid #ddd;" -->
                                 <h4 class="station-text bold">
-                                                {{ departure }}                       
+                                                <%=departureStation[0].Name%>                       
                                 </h4>
                                 <!-- <span>120 Lê Duẩn, Quận Hoàn Kiếm, Hà Nội</span> -->
                             </td>
@@ -94,7 +94,7 @@
                         <tr style="border:none">
                             <td style="text-align: center; width: 161px; height: 94px;">
                                 <img class="searchresult-logo" src="https://booking.baolau.com/images/logos/transports/logo-vr.png">
-                                <div style="font-size: 13px">SE1</div>
+                                <div style="font-size: 13px"><%=train[0].Name%></div>
                             </td>
                             <td class="text-right" style="width: 190px;">
                                 <span>
@@ -109,7 +109,7 @@
                                 <!-- style="border-right:1px solid #ddd; overflow:hidden"-->
                                 <!--<div class="side_point">
                                                 <span class="side_line">-->
-                                <span class="bold">Vietnam Railways</span> {{ trainName }}
+                                <span class="bold">Vietnam Railways</span> <%=train[0].Name%>
                                 <!--</span>
                                         </div>-->
                             </td>
@@ -129,7 +129,7 @@
                             </td>
                             <td colspan="2" class="padded-left" style="width: 542px;">
                                 <h4 class="station-text bold">
-                                                {{ arrival }}                                           
+                                                <%=arrivalStation[0].Name%>                                           
                                 </h4>
                                 <!-- <span>01 Nguyễn Thông, Phường 9, Quận 3, Thành phố Hồ Chí Minh</span> -->
                             </td>

@@ -582,7 +582,6 @@
         <div>
             <div class="table__search-results">
                 <table id="search_results" class="table">
-
                     <thead>
                         <tr id="results_headers" style="border:0">
                             <th class="border-left">&nbsp;</th>
@@ -612,7 +611,15 @@
                         </tr>
                     </thead>
                     <tbody v-if="listTrain" id="parent">
-                        <tr v-for="(train, i) in listTrain" id="train.ID" v-on:click="loadScheduleDetail(i,train.ID)" data-target="#collapse-c5757fa13cef086d24dae54aef64e30e" data-score="17205333.333333" data-departure="1584544800" data-arrival="1584657900" data-duration="1885" data-itinerary="1" data-price="922000" data-allow-price-zero="" data-step="Vietnam Railways" class="result clickable_tr train vr direct">
+                        <tr v-for="(train, i) in listTrain" v-bind:id="train.ID" v-on:click="loadScheduleDetail(i,train.ID)" data-target="#collapse-c5757fa13cef086d24dae54aef64e30e" 
+                        data-score="17205333.333333" 
+                        data-departure="1584544800" 
+                        data-arrival="1584657900" 
+                        data-duration="1885" 
+                        data-itinerary="1" 
+                        data-price="922000" 
+                        data-allow-price-zero="" 
+                        data-step="Vietnam Railways" class="result clickable_tr train vr direct">
                             <td style="text-align: center; width: 158px;"><img src="https://booking.baolau.com/images/logos/transports/logo-vr.png" class="searchresult-logo">
                                 <div style="font-size: 13px;" v-text="train.Name"></div>
                             </td>
