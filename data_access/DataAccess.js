@@ -8,10 +8,10 @@ Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
     return date.format('YYYY-MM-DD');
   };
 
-var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '123456', {
+var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '123456789', {
     dialect: 'mssql',
     host: 'localhost',
-    port: '57031',
+    // port: '57031',
     dialectOptions: {
       options: {
         useUTC: false,
@@ -197,7 +197,8 @@ ScheduleDetail.belongsTo(Station,{foreignKey:"ArrivalStationID"});
 ScheduleDetail.belongsTo(Schedule);
 TableCost.belongsTo(SeatType,{foreignKey:"ID"});
 TableCost.belongsTo(ScheduleDetail,{foreignKey:"ID"});
-Representative.hasMany(Customer,{foreignKey:"RepresentativeID"});
+//Representative.hasMany(Customer,{foreignKey:"RepresentativeID"});
+Customer.belongsTo(Representative,{foreignKey:"ID"});
 Customer.belongsTo(TypeObject,{foreignKey:"TypeObjectID"});
 Ticket.belongsTo(Customer,{foreignKey:"CustomerID"});
 Ticket.belongsTo(Seat,{foreignKey: "SeatID"});

@@ -1,6 +1,7 @@
 var express = require("express");
 var config = require("./config/connectionString");
 var controller = require("./controller/indexController");
+var managerCtrler = require("./controller/managerController");
 var bodyParser = require("body-parser");
 
 // create application/json parser
@@ -37,10 +38,36 @@ app.get("/getAllTrain",function(req,res){
 app.get("/scheduleDetail",function(req,res){
     controller.scheduleDetail(req,res);
 })
+//get List
+app.get("/getAllCus",function(req,res){
+    managerCtrler.getAllCustomer(req,res);
+})
+app.get("/getAllSta",function(req,res){
+    managerCtrler.getAllStation(req,res);
+})
+app.get("/getAllTrain",function(req,res){
+    managerCtrler.getAllTrain(req,res);
+})
+
+
+//render
 app.get("/admin",function(req,res){
     res.render('admin');
 })
+app.get("/CustomerManager",function(req,res){
+    res.render('customerAdmin');
+})
+app.get("/StationManager",function(req,res){
+    res.render('stationAdmin')
+})
+app.get("/TrainManager",function(req,res){
+    res.render('trainAdmin')
+})
 
+
+app.post("/CustomerManager",function(req,res){
+    managerCtrler.createCustomer(req,res);
+})
 var server = app.listen(3000,function(){
     console.log("Run");
 });
