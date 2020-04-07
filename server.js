@@ -64,6 +64,9 @@ app.get("/TrainManager",function(req,res){
     res.render('trainAdmin')
 })
 
+app.delete("/CustomerManager", function(req,res){
+    managerCtrler.delCustomerByID(req,res)
+});
 
 app.post("/CustomerManager",function(req,res){
     managerCtrler.createCustomer(req,res);

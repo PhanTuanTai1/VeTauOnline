@@ -25,30 +25,45 @@
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper p-4">
-            <div class="row">
-                <h3>Customer List</h3>
-
-            </div>
-            <div id="app" class="card">
+            <h3>Customer List</h3>
+            <div class="card card-solid">
                 <div class="card-body pb-0">
-                    <div class="text-right"><button type="button" class="btn btn-success"><i class="fa fa-plus"></i> Create</button></div>
-                <table v-if="Customers" class="table table-striped">
-                    <thead class="font-weight-bold table-info">
-                        <td>#</td>
-                        <td>Name</td>
-                        <td class="text-right">....</td>
-                    </thead>
-                    <tr v-for="item in Customers">
-                        <td>{{item.ID}}</td>
-                        <td>{{item.Name}}</td>
-                        <td class="text-right"><button type="button" class="btn btn-warning"><i class="fa fa-edit"></i> Edit</button> <button type="button"
-                                class="btn btn-info"><i class="fa fa-trash"></i> Delete</button></td>
-                    </tr>
-                </table>
+                    <div id="app" class="card">
+                        <div class="card-header">
+                            <button type="button" class="btn btn-success"><i class="fa fa-plus"></i> Create</button>
+                            <div class="card-tools">
+                                <ul class="pagination pagination-sm float-right">
+                                    <li class="page-item"><a class="page-link" href="#">«</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">»</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <table v-if="Customers" class="table">
+                            <thead class="font-weight-bold table-info">
+                                <td>#</td>
+                                <td>Name</td>
+                                <td class="text-right">....</td>
+                            </thead>
+                            <tr v-for="item in Customers">
+                                <td v-text="item.ID"></td>
+                                <td v-text="item.Name"></td>
+                                <td class="text-right"><button type="button" class="btn btn-warning"><i
+                                            class="fa fa-edit"></i> Edit</button> <button type="button"
+                                        class="btn btn-info" @click="delCus(item.ID)"><i class="fa fa-trash"></i> Delete</button></td>
+                            </tr>
+                        </table>
+                    </div>
+
                 </div>
             </div>
-            
-            <!-- <div id="app" class="card card-solid">
+
+        </div>
+
+        <!-- <div id="app" class="card card-solid">
                
                  <div v-if="Customers" class="card card-solid">
                     
@@ -101,8 +116,6 @@
                 </div> 
             </div> -->
 
-        </div>
-
         <!-- /.content-wrapper -->
 
         <!-- Control Sidebar -->
@@ -140,6 +153,8 @@
     <script src="https://unpkg.com/vuejs-datepicker"></script>
     <script type="module" src="../dist/@CustomerVue/cusVue.js"></script>
     <script src="../dist/sidebar.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="../dist/sweetalert2.all.min.js"></script>
     <!-- Language dependant libraries -->
 </body>
 

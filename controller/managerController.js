@@ -11,6 +11,37 @@ module.exports.getAllCustomer = function (req, res) {
         res.end(JSON.stringify(cus));
     })
 }
+module.exports.createCustomer = (req, res) => {
+    // Validate request
+    if (!req.query) {
+      res.status(400).send({
+        message: "Content can not be empty!"
+      });
+      return;
+    }
+  
+    // Create a customer
+    const cus = {
+      Name:req.query.Name
+    };
+  
+    // Save customer in the database
+    db.Customer.create(cus)
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while creating the customer."
+        });
+      });
+  };
+module.exports.delCustomerByID = function(req,res){
+    db.Customer.destroy({
+        where: { ID:req.query.ID}
+    })
+}
 //#endregion
 
 //#region Station
