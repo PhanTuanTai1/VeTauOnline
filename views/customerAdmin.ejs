@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>AdminLTE 3 | Dashboard 2</title>
+
+
+    <link rel="stylesheet" href="dist/css/adminlte.min.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <div  id="sidebar">
+            <my-sidebar></my-sidebar>
+        </div>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper p-4">
+            <h3>Customer List</h3>
+            <div class="card card-solid">
+                <div class="card-body pb-0">
+                    <div id="app" class="card">
+                        <div class="card-header">
+                            <button type="button" class="btn btn-success" @click="createCus"><i class="fa fa-plus"></i> Create</button>
+                            <div class="card-tools">
+                                <ul class="pagination pagination-sm float-right">
+                                    <li class="page-item"><a class="page-link" href="#">«</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">»</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <table v-if="Customers" class="table">
+                            <thead class="font-weight-bold table-info">
+                                <td>#</td>
+                                <td>Name</td>
+                                <td class="text-right">....</td>
+                            </thead>
+                            <tr v-for="item in Customers">
+                                <td v-text="item.ID"></td>
+                                <td v-text="item.Name"></td>
+                                <td class="text-right"><button type="button" class="btn btn-warning"><i
+                                            class="fa fa-edit"></i> Edit</button> <button type="button"
+                                        class="btn btn-info" @click="delCus(item.ID)"><i class="fa fa-trash"></i> Delete</button></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- <div id="app" class="card card-solid">
+               
+                 <div v-if="Customers" class="card card-solid">
+                    
+                    <div class="card-body pb-0">
+                        <div class="text-right">
+                            <a href="#" class="btn btn-sm btn-success">
+                                <i class="fas fa-user"></i> Create
+                              </a>
+                            </div>
+                        <div class="row d-flex align-items-stretch">
+                            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch {active : activeTab==index}" v-for="(item,index) in Customers">
+                                <div class="card bg-light">
+                                    <div class="card-header text-muted border-bottom-0" v-text="item.ID"></div>
+                                    <div class="card-body pt-0">
+                                        <div class="row">
+                                            <div class="col-7">
+                                                <h2 class="lead">{{item.Name}}</h2>
+                                                <p class="text-muted text-sm">
+                                                    Passport: {{item.Passport}}
+                                                </p>
+                                                <ul class="ml-4 mb-0 fa-ul text-muted">
+                                                    <li class="small">
+                                                        <span class="fa-li ">Email: {{item.Representative.Email}}</span>
+                                                    </li>
+                                                    <li class="small">
+                                                        <span class="fa-li ">Phone: {{item.Representative.Phone}}</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-5 text-center">
+                                                
+                                                <img src="../images/avatars/avatar.jpg" class="img-circle img-fluid">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="text-right">
+                                            <a href="#" class="btn btn-sm bg-teal">
+                                                <i class="fas fa-comments"></i> Delelte
+                                              </a>
+                                              <a href="#" class="btn btn-sm btn-primary">
+                                                <i class="fas fa-user"></i> Edit
+                                              </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+            </div> -->
+
+        <!-- /.content-wrapper -->
+        <!-- Main Footer -->
+        <footer  id="myfooter" class="main-footer">
+            <my-footer></my-footer>
+        </footer>
+    </div>
+
+    <!-- ./wrapper -->
+    <!-- AdminLTE App -->
+    <script src="dist/js/adminlte.js"></script>
+
+    <!-- PAGE SCRIPTS -->
+    <script src="dist/js/pages/dashboard2.js"></script>
+
+    <script src="../dist/vue.js"></script>
+    <script src="../dist/vue-router.js"></script>
+    <script src="../dist/axios.js"></script>
+    <script type="module" src="../dist/@CustomerVue/cusVue.js"></script>
+    <script src="../dist/sidebar.js"></script>
+    <script src="../dist/footer.js"></script>
+    <script src="../dist/sweetalert2.all.min.js"></script>
+    <!-- Language dependant libraries -->
+</body>
+
+</html>
