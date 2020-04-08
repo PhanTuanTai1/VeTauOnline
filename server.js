@@ -2,7 +2,7 @@ var express = require("express");
 var config = require("./config/connectionString");
 var controller = require("./controller/indexController");
 var bodyParser = require("body-parser");
-
+var port = process.env.PORT || 3000;
 // create application/json parser
 var jsonParser = bodyParser.json();
  
@@ -16,6 +16,7 @@ app.use(express.static('node_modules'));
 app.use(urlencodedParser);
 app.use(jsonParser);
 app.set('view engine',"ejs");
+app.locals.moment = require('moment');
 
 
 app.get("/",function(req,res){
@@ -41,6 +42,6 @@ app.get("/admin",function(req,res){
     res.render('admin');
 })
 
-var server = app.listen(3000,function(){
-    console.log("Run");
+var server = app.listen(port,function(){
+    console.log("Run on port " + port);
 });

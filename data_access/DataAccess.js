@@ -8,10 +8,10 @@ Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
     return date.format('YYYY-MM-DD');
   };
 
-var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '123456', {
+var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '79495291', {
     dialect: 'mssql',
     host: 'localhost',
-    port: '57031',
+    //port: '57031',
     dialectOptions: {
       options: {
         useUTC: false,
@@ -76,7 +76,7 @@ class Schedule extends Model{}
 Schedule.init({
     'ID' : {type: Sequelize.INTEGER,primaryKey: true},
     'DateDeparture' : Sequelize.DATE,
-    'TimeDeparture' : Sequelize.TIME
+    'TimeDeparture' : Sequelize.STRING
 },
 { 
     sequelize, 

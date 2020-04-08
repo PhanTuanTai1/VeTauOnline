@@ -35,8 +35,9 @@
     <script type="text/javascript" src="../vendor/js/jquery.min.js"></script>
 </head>
 
-<body class="" >
+<body>
     <input type="hidden" id="myData" value="<%=result%>"/>
+    <input type="hidden" id="moment" value="<%=moment%>"/>
     <div id="errors" class="modal fade">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -610,8 +611,8 @@
                             <th class="hidden-sm hidden-xs button-alignment border-right"></th>
                         </tr>
                     </thead>
-                    <tbody v-if="listTrain" id="parent">
-                        <tr v-for="(train, i) in listTrain" v-bind:id="train.ID" v-on:click="loadScheduleDetail(i,train.ID)" data-target="#collapse-c5757fa13cef086d24dae54aef64e30e" 
+                    <tbody v-if="listTrain" v-for="(train, i) in listTrain" v-bind:id="'parent' + train.ID">
+                        <tr v-bind:id="train.ID" v-on:click="loadScheduleDetail(i,train.ID)" v-bind:data-target="'#collapse_' + train.ID" 
                         data-score="17205333.333333" 
                         data-departure="1584544800" 
                         data-arrival="1584657900" 
@@ -624,8 +625,8 @@
                                 <div style="font-size: 13px;" v-text="train.Name"></div>
                             </td>
                             <td class="text-right" style="width: 187px;">
-                                <div class="super-bold">22:20</div>
-                                <div>We, 18/03</div>
+                                <div class="super-bold">{{getScheduleDetailByTrainID(train.ID)[0].TimeDeparture}}</div>
+                                <div>{{getScheduleDetailByTrainID(train.ID)[0].DateDeparture}}</div>
                             </td>
                             <!-- <td class="text-right" style="width: 154px;">
                                 <div class="super-bold">05:45</div>
@@ -643,6 +644,8 @@
                                 </i>
                                 <img src="../images/genaral/spinner-2.gif" style="width: 27px;" id="icon_2" hidden>
                             </td>
+                        </tr>
+                        <tr v-bind:id="'collapse_' + train.ID" data-id="1f38e1631532974a701fa783bcb1c1cc" class="result-collapse" style="border-bottom: 1px solid rgb(232, 232, 232);display: none;">
                         </tr>
                     </tbody>
                     

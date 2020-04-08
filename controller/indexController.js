@@ -24,21 +24,21 @@ module.exports.search =  function(req,res){
     console.log(req.query);
     
     if(typeof(req.query.ONE_WAY) != "undefined"){
-        moment(req.query.DEPART).format('YYYY-MM-DD')
         db.Schedule.findAll({
-            attributes: ['ID','DateDeparture','TrainID'],
+            attributes: ['ID','DateDeparture','TimeDeparture','TrainID'],
             where:{
                 DateDeparture: req.query.DEPART
             },
             include:[{
                 model: db.ScheduleDetail,
-                attributes: ['ID','ScheduleID','DepartureStationID', 'ArrivalStationID'],
+                attributes: ['ID','ScheduleID','DepartureStationID', 'ArrivalStationID','Time'],
                 where:{
                     DepartureStationID: parseInt(req.query.FROM),
                     ArrivalStationID: parseInt(req.query.TO)
                 }
             }],
         }).then(Schedule => {   
+            console.log(JSON.stringify(Schedule));
             if(Schedule.length === 0) {
                 res.render('searchResultOneWay',{result : []});
                 res.end();
@@ -46,13 +46,14 @@ module.exports.search =  function(req,res){
             var result = [];
             var count = 0;
             Schedule.forEach((schedule, index, array ) => {
-                checkSeat(schedule.TrainID,req.query.PASSENGERS, moment(req.query.DEPART).format('YYYY-MM-DD')).then(check =>{
-                    console.log(check);
+                //schedule.DateDeparture = moment(schedule.DateDeparture).format("DD-MM-YYYY");
+                // schedule.DateFormat = moment(schedule.DateDeparture).format("DD-MM-YYYY");             
+                console.log("JSON " + JSON.stringify(schedule));
+                checkSeat(schedule.TrainID,req.query.PASSENGERS, req.query.DEPART).then(check =>{
                     if(check){
-                        result.push(schedule)
-                    }
-                    count++;
-                    if(count === array.length){
+                        result.push(schedule);                   
+                    }           
+                    if(index + 1 === array.length){
                         if(result.length === 0) {
                             res.render('searchResultOneWay',{result : JSON.stringify(result)});
                         }
