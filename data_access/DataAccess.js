@@ -197,7 +197,7 @@ ScheduleDetail.belongsTo(Station,{foreignKey:"ArrivalStationID"});
 ScheduleDetail.belongsTo(Schedule);
 TableCost.belongsTo(SeatType,{foreignKey:"ID"});
 TableCost.belongsTo(ScheduleDetail,{foreignKey:"ID"});
-//Representative.hasMany(Customer,{foreignKey:"RepresentativeID"});
+Representative.hasMany(Customer,{foreignKey:"RepresentativeID"});
 Customer.belongsTo(Representative,{foreignKey:"ID"});
 Customer.belongsTo(TypeObject,{foreignKey:"TypeObjectID"});
 Ticket.belongsTo(Customer,{foreignKey:"CustomerID"});

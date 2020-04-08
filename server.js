@@ -64,13 +64,22 @@ app.get("/TrainManager",function(req,res){
     res.render('trainAdmin')
 })
 
+//action customer
 app.delete("/CustomerManager", function(req,res){
     managerCtrler.delCustomerByID(req,res)
 });
-
 app.post("/CustomerManager",function(req,res){
     managerCtrler.createCustomer(req,res);
 })
+
+//action train
+app.post("/TrainManager",function(req,res){
+    managerCtrler.createTrain(req,res);
+})
+app.delete("/TrainManager", function(req,res){
+    managerCtrler.delTrain(req,res)
+});
+
 var server = app.listen(3000,function(){
     console.log("Run");
 });

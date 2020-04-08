@@ -1,4 +1,4 @@
-var temp = Vue.component('my-component', {
+Vue.component('my-sidebar', {
     template: `<div><nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <ul class="navbar-nav">
         <li class="nav-item">
@@ -146,13 +146,7 @@ var temp = Vue.component('my-component', {
         </nav>
     </div>
   </aside></div>`
-  })
-  new Vue({
+})
+new Vue({
     el: "#sidebar",
-    data: {
-
-    },
-    components: {
-      sidebar : temp
-  }
-  })
+})

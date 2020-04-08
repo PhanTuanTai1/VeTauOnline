@@ -12,6 +12,7 @@ new Vue({
     Customers: null,
   },
   methods: {
+    //Test toast
     show() {
       const Toast = Swal.mixin({
         toast: true,
@@ -28,6 +29,41 @@ new Vue({
         icon: 'success',
         title: 'Signed in successfully'
       })
+    },
+    async createCus() {
+      const { value: cus } = await Swal.fire({
+        title: 'Multiple inputs',
+        html:
+          '<label for="fname">ID:</label><br>'+
+          '<input type="text" id="ID""><br>'+
+          '<label for="fname">Name:</label><br>'+
+          '<input type="text" id="Name""><br>'+
+          '<label for="lname">Passport:</label><br>'+
+          '<input type="text" id="Passport"><br><br>'+
+          '<label for="lname">Repre:</label><br>'+
+          '<input type="text" id="Repre" value="1"><br><br>',
+        focusConfirm: false,
+        preConfirm: () => {
+          return [
+            document.getElementById('ID').value,
+            document.getElementById('Name').value,
+            document.getElementById('Passport').value,
+            document.getElementById('Repre').value,
+          ]
+        }
+      })
+
+      if (cus) {
+        axios.post('http://localhost:3000/CustomerManager?ID=' + cus[0]+'&Name='+cus[1]+'&Passport='+cus[2]+'&RepresentativeID='+cus[3]);
+        swal.fire(
+          'Created!',
+          'New customer arrived.',
+          'success',
+
+        ).then(function () {
+          location.reload();
+        });
+      }
     },
     delCus(IDinput) {
       const swalWithBootstrapButtons = Swal.mixin({
@@ -54,7 +90,7 @@ new Vue({
             'Deleted!',
             'Your file has been deleted.',
             'success',
-            
+
           ).then(function () {
             location.reload();
           });

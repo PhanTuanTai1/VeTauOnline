@@ -4,27 +4,26 @@ var moment = require('moment');
 //#region Customer
 module.exports.getAllCustomer = function (req, res) {
     db.Customer.findAll({
-        // include: [{
-        //     model: db.Representative
-        // }]
     }).then(cus => {
         res.end(JSON.stringify(cus));
     })
 }
 module.exports.createCustomer = (req, res) => {
     // Validate request
-    if (!req.query) {
+    if (!req.query.Name) {
       res.status(400).send({
         message: "Content can not be empty!"
       });
       return;
     }
-  
-    // Create a customer
+   
+    //Create a customer
     const cus = {
-      Name:req.query.Name
+      ID:req.query.ID,
+      Name:req.query.Name,
+      Passport:req.query.Passport,
+      RepresentativeID: req.query.RepresentativeID,
     };
-  
     // Save customer in the database
     db.Customer.create(cus)
       .then(data => {
@@ -50,6 +49,11 @@ module.exports.getAllStation = function (req, res) {
         res.end(JSON.stringify(sta));
     })
 }
+module.exports.delStation = function(req,res){
+  db.Station.destroy({
+      where: { ID:req.query.ID}
+  })
+}
 //#endregion
 
 //#region Train
@@ -58,4 +62,35 @@ module.exports.getAllTrain = function (req, res) {
         res.end(JSON.stringify(train));
     })
 }
+module.exports.delTrain = function(req,res){
+  db.Train.destroy({
+      where: { ID:req.query.ID}
+  })
+}
+module.exports.createTrain = (req, res) => {
+  // Validate request
+  if (!req.query.Name) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+    return;
+  }
+ 
+  //Create a customer
+  const train = {
+    ID:req.query.ID,
+    Name:req.query.Name
+  };
+  // Save customer in the database
+  db.Train.create(train)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while creating the customer."
+      });
+    });
+};
 //#endregion

@@ -19,7 +19,7 @@
     <div class="wrapper">
         <!-- Navbar -->
         <div id="sidebar">
-            <sidebar></sidebar>
+            <my-sidebar></my-sidebar>
         </div>
 
         <!-- Content Wrapper. Contains page content -->
@@ -71,12 +71,8 @@
         <!-- /.control-sidebar -->
 
         <!-- Main Footer -->
-        <footer class="main-footer">
-            <strong>Copyright &copy; 2014-2019 <a href="http://adminlte.io">AdminLTE.io</a>.</strong>
-            All rights reserved.
-            <div class="float-right d-none d-sm-inline-block">
-                <b>Version</b> 3.0.2
-            </div>
+        <footer  id="myfooter" class="main-footer">
+            <my-footer></my-footer>
         </footer>
     </div>
 
@@ -84,21 +80,16 @@
     <!-- AdminLTE App -->
     <script src="dist/js/adminlte.js"></script>
 
-
-    <!-- PAGE PLUGINS -->
-    <!-- jQuery Mapael -->
-
-    <!-- ChartJS -->
-
     <!-- PAGE SCRIPTS -->
     <script src="dist/js/pages/dashboard2.js"></script>
 
     <script src="../dist/vue.js"></script>
-    <script src="https://unpkg.com/vue-router@2.0.0/dist/vue-router.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://unpkg.com/vuejs-datepicker"></script>
+    <script src="../dist/vue-router.js"></script>
+    <script src="../dist/axios.js"></script>
     <script type="module" src="../dist/@StationVue/staVue.js"></script>
     <script src="../dist/sidebar.js"></script>
+    <script src="../dist/footer.js"></script>
+    <script src="../dist/sweetalert2.all.min.js"></script>
     <!-- Language dependant libraries -->
 </body>
 
