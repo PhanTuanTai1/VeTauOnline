@@ -1,13 +1,14 @@
 new Vue({
   el: "#app",
   created: function () {
-    axios.get('http://localhost:3000/getAllTrain')
+    axios.get(window.origin + '/getAllTrain')
       .then(res => {
         this.Trains = res.data;
       })
   },
   data: {
     Trains: null,
+    TrainByID: null
   },
   methods: {
     async createTrain() {
@@ -17,7 +18,7 @@ new Vue({
           '<label for="fname">ID:</label><br>' +
           '<input type="text" id="ID""><br>' +
           '<label for="fname">Name:</label><br>' +
-          '<input type="text" id="Name""><br>' ,
+          '<input type="text" id="Name""><br>',
         focusConfirm: false,
         preConfirm: () => {
           return [
@@ -26,9 +27,8 @@ new Vue({
           ]
         }
       })
-
       if (train) {
-        axios.post('http://localhost:3000/TrainManager?ID=' + train[0] + '&Name=' + train[1]);
+        axios.post(window.origin + '/TrainManager?ID=' + train[0] + '&Name=' + train[1]);
         swal.fire(
           'Created!',
           'New train can be on duty.',
@@ -38,6 +38,44 @@ new Vue({
           location.reload();
         });
       }
+    },
+    async updateTrain(IDinput) {
+      axios.get(window.origin + '/getTrain?ID=' + IDinput)
+        .then(async res => {
+          var trainId = res.data.ID;
+          var trainName = res.data.Name;
+          const { value: temp } = await Swal.fire({
+            title: 'Update train',
+            html:
+              '<label for="fname">ID:</label><br>' +
+              `<input type="text" id="ID" value="${trainId}" disabled><br>` +
+              '<label for="fname">Name:</label><br>' +
+              `<input type="text" value="${trainName}" id="Name""><br>`,
+            focusConfirm: false,
+            preConfirm: () => {
+              return [
+                document.getElementById('ID').value,
+                document.getElementById('Name').value,
+              ]
+            }
+          })
+          console.log(temp);
+          if (temp) {
+            axios.put(window.origin + '/TrainManager?ID=' + trainId + '&Name=' + temp[1]).then(
+              function () {
+                swal.fire(
+                  'Updated!',
+                  `Your train is updated.`,
+                  'success',
+
+                ).then(function () {
+                  location.reload();
+                });
+              }
+            )
+
+          }
+        })
     },
     delTrain(IDinput) {
       const swalWithBootstrapButtons = Swal.mixin({
@@ -58,7 +96,7 @@ new Vue({
         reverseButtons: true
       }).then((result) => {
         if (result.value) {
-          axios.delete('http://localhost:3000/TrainManager?ID=' + IDinput);
+          axios.delete(window.origin + '/TrainManager?ID=' + IDinput);
 
           swalWithBootstrapButtons.fire(
             'Deleted!',

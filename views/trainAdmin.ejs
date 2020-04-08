@@ -29,7 +29,8 @@
                 <div class="card-body pb-0">
                     <div id="app" class="card">
                         <div class="card-header">
-                            <button type="button" @click="createTrain" class="btn btn-success"><i class="fa fa-plus"></i> Create</button>
+                            <button type="button" @click="createTrain" class="btn btn-success"><i
+                                    class="fa fa-plus"></i> Create</button>
                             <div class="card-tools">
                                 <ul class="pagination pagination-sm float-right">
                                     <li class="page-item"><a class="page-link" href="#">«</a></li>
@@ -50,9 +51,10 @@
                             <tr v-for="item in Trains">
                                 <td>{{item.ID}}</td>
                                 <td>{{item.Name}}</td>
-                                <td class="text-right"><button type="button" class="btn btn-warning"><i
+                                <td class="text-right"><button type="button" class="btn btn-warning"  @click="updateTrain(item.ID)"><i
                                             class="fa fa-edit"></i> Edit</button> <button type="button"
-                                        class="btn btn-info" @click="delTrain(item.ID)"><i class="fa fa-trash"></i> Delete</button></td>
+                                        class="btn btn-info" @click="delTrain(item.ID)"><i class="fa fa-trash"></i>
+                                        Delete</button></td>
                             </tr>
                         </table>
                     </div>
@@ -71,7 +73,7 @@
         <!-- /.control-sidebar -->
 
         <!-- Main Footer -->
-        <footer  id="myfooter" class="main-footer">
+        <footer id="myfooter" class="main-footer">
             <my-footer></my-footer>
         </footer>
     </div>

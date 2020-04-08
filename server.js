@@ -73,12 +73,19 @@ app.post("/CustomerManager",function(req,res){
 })
 
 //action train
+app.get("/getTrain",function(req,res){
+    managerCtrler.getTrainByID(req,res);
+})
 app.post("/TrainManager",function(req,res){
     managerCtrler.createTrain(req,res);
 })
 app.delete("/TrainManager", function(req,res){
     managerCtrler.delTrain(req,res)
 });
+app.put("/TrainManager",function(req,res){
+    managerCtrler.updateTrain(req,res);
+})
+
 
 var server = app.listen(3000,function(){
     console.log("Run");

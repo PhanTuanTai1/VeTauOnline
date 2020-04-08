@@ -67,6 +67,29 @@ module.exports.delTrain = function(req,res){
       where: { ID:req.query.ID}
   })
 }
+module.exports.updateTrain = function(req,res){
+  const train ={
+    Name : req.query.Name
+  }
+  db.Train.update(train,{
+    where:{
+      ID:req.query.ID
+    }
+  }).then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while creating the customer."
+    });
+  });
+}
+module.exports.getTrainByID = function(req,res){
+  db.Train.findByPk(req.query.ID).then(train=>{
+    res.end(JSON.stringify(train))
+  })
+}
 module.exports.createTrain = (req, res) => {
   // Validate request
   if (!req.query.Name) {
