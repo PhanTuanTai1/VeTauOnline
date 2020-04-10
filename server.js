@@ -32,6 +32,10 @@ app.get("/getAllStation",function(req,res){
     controller.index(req,res);
 })
 
+app.get("/getFirstCost", function(req,res){
+    controller.getFirstCost(req,res);
+});
+
 app.get("/getAllTrain",function(req,res){
     controller.train(req,res);
 })

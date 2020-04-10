@@ -5,6 +5,7 @@ new Vue({
 
         this.result = JSON.parse(document.getElementById("myData").value);
         document.getElementById("myData").replaceWith("");
+
         await axios.get('http://localhost:3000/getAllTrain')
         .then(res => {                 
         this.train = res.data;
@@ -18,7 +19,7 @@ new Vue({
         this.departure = this.getStationName(this.result[0].ScheduleDetails[0].DepartureStationID);
         this.arrival = this.getStationName(this.result[0].ScheduleDetails[0].ArrivalStationID);
         this.listTrain = this.loadListTrain();
-        alert(JSON.stringify(this.result));
+        //alert(JSON.stringify(this.result));
         
     },
     data:{
@@ -106,6 +107,17 @@ new Vue({
 
         formatDate: function(date){
             return moment(date).format('DD-MM-YYYY');
+        },
+
+        formatTime: function(dateTime){
+            return moment(dateTime).format("LT");
+        },
+
+        getFirstCost: async function(scheduleDetailID){
+            axios.get('http://localhost:3000/getFirstCost?ScheduleID=' + scheduleDetailID)
+            .then(res =>{
+                document.getElementById('cost' + scheduleDetailID).innerHTML = JSON.stringify(res.data.Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " VND";
+            })
         }
     },
     components: {

@@ -505,7 +505,7 @@
                         </div>
                     </div>
                     <!-- END Modal children-->
-                </div>
+                </div>      
             </div>
         </div>
         <!--  toggle-container-->
@@ -625,8 +625,8 @@
                                 <div style="font-size: 13px;" v-text="train.Name"></div>
                             </td>
                             <td class="text-right" style="width: 187px;">
-                                <div class="super-bold">{{getScheduleDetailByTrainID(train.ID)[0].TimeDeparture}}</div>
-                                <div>{{getScheduleDetailByTrainID(train.ID)[0].DateDeparture}}</div>
+                                <div class="super-bold">{{formatTime(getScheduleDetailByTrainID(train.ID)[0].TimeDeparture)}}</div>
+                                <div>{{formatDate(getScheduleDetailByTrainID(train.ID)[0].DateDeparture)}}</div>
                             </td>
                             <!-- <td class="text-right" style="width: 154px;">
                                 <div class="super-bold">05:45</div>
@@ -637,7 +637,7 @@
                             <td class="searchresult-itenerary hidden-sm hidden-xs" style="width: 366px;"><span style="display: inline-block;">{{departure}}<br><span style="font-size: 13px;">{{departure}}</span></span> 
                                 <i class="icon have-node-code icon-train inline"></i> <span style="display: inline-block;">{{arrival}}<br><span style="font-size: 13px;">{{arrival}}</span></span>
                             </td>
-                            <td class="total_price yellow-text super-bold price-alignment" style="width: 438px;"><span data-currency="VND" class="money">Not available</span> <i class="js-result_promo_tag fa fa-tag yellow-text" style="display: none;"></i></td>
+                            <td class="total_price yellow-text super-bold price-alignment" style="width: 438px;"><span data-currency="VND" class="money" v-bind:id="'cost'+getScheduleDetailByTrainID(train.ID)[0].ScheduleDetails[0].ScheduleID">{{getFirstCost(getScheduleDetailByTrainID(train.ID)[0].ScheduleDetails[0].ScheduleID)}}</span> <i class="js-result_promo_tag fa fa-tag yellow-text" style="display: none;"></i></td>
                             <td class="text-right button-alignment" style="width: 133px;">
                                 <i class="fa button-direct hidden-xs hidden-sm " id="icon_1">
                                     
@@ -843,7 +843,7 @@
     <script src="../dist/vuejs-datepickker.js"></script>	
     <script type="text/javascript" src="../dist/baolau.min6ffc.js?v=2020-02-21"></script>
     <script src="../dist/myVue2.js"></script>
-    <script src="../dist/myDate.js"></script>            
+    <script src="../dist/moment.js"></script>            
     <!-- Language dependant libraries -->
     <script type="text/javascript" src="../vendor/bootstrap-datepicker/locales/bootstrap-datepicker.en.min.js"></script>
    

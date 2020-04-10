@@ -99,6 +99,18 @@ module.exports.scheduleDetail = function(req,res) {
     })
 }
 
+module.exports.getFirstCost = function(req,res){
+    console.log(req.query.ScheduleID);
+    db.TableCost.findOne({
+        attributes: ['Cost'],
+        where: {
+            ScheduleID: req.query.ScheduleID
+        }
+    }).then(cost =>{
+        // console.log(JSON.stringify(cost));
+        res.end(JSON.stringify(cost));
+    })
+}
 async function checkSeat(trainID, numberOfPassenger, departDate){
     var Trains = await getListCarriageAndSeat(trainID);
     for(var i = 0; i < Trains[0].Carriages.length; i++){
