@@ -11,8 +11,8 @@
                             <td style="width: 161px; height: 94px;">&nbsp;</td>
 
                             <td class="text-right" style="width: 190px;">
-                                <span class="blue-text super-bold">22:15</span>
-                                <p>T5, 26/03</p>
+                                <span class="blue-text super-bold"><%=moment(result[0].TimeDeparture).format('LT')%></span>
+                                <p><%=moment(result[0].DateDeparture).format('DD-MM-YYYY')%></p>
                             </td>
 
                             <td class="relative text-center" style="width: 163px;">
@@ -28,62 +28,48 @@
                                 </h4>
                                 <!-- <span>120 Lê Duẩn, Quận Hoàn Kiếm, Hà Nội</span> -->
                             </td>
-
+                            <td colspan="2" rowspan="3" style="padding: 20px; width: 381px;">
+                                <div class="fares">
+                                    
+                                </div>
+                            </td>
                             <!-- Fares -->
                             <td colspan="2" rowspan="3" style="padding: 20px; width: 583px;">
-                                <div class="fares" data-route="66890155">
+                                <div class="fares">
                                     <div class="desktop-fares">
-                                        <div class="relative fares-choose-items
-                                                                    active                                                                                                                                                                                                        ">
-                                            <div class="fares-choose radio">
-                                                <input id="fare_1f38e1631532974a701fa783bcb1c1cc_66890155_NML56" type="radio" name="fares_1f38e1631532974a701fa783bcb1c1cc_66890155" class="fare_radio" data-fare="NML56" data-price="995000" data-label="Ngồi mềm" data-has_promotion="0" data-basefare="995000" checked="">
-
-                                                <label for="fare_1f38e1631532974a701fa783bcb1c1cc_66890155_NML56"></label>
-                                            </div>
-                                            <label class="fares-description">
-                                                <p>Ngồi mềm</p>
-                                                <span class="yellow-text js-fare_price money" data-amount="995000" data-currency="VND">995,000&nbsp;đ</span>
-                                                <div class="fare-info-button" data-origin_country_code="VN" data-destination_country_code="VN" data-transport="vr" data-alert="eyJvcmlnaW5faWQiOiIyODEiLCJkZXN0aW5hdGlvbl9pZCI6IjMyNCIsInRyYXZlbF9kYXRlIjoiMjAyMC0wMy0yNiIsInRyYW5zcG9ydF9jb2RlIjoidnIiLCJ2ZXNzZWwiOiJTRTEifQ==" data-fare="NML56" data-status="1" data-overwrites="ZmFsc2U=" data-container="body" data-placement="auto" data-trigger="hover" data-template="<span class='farerule popover-style'><span> <i style ='font-size:20px' class='fa-info-circle'></i></span><span class='farerule-content popover-content small-text'></span></span>" data-html="true" data-content="">
-                                                    <div><i style="font-size: 20px" class="fa-info-circle" aria-hidden="true"></i></div>
-                                                    <div>Điều kiện giá vé</div>
+                                        <%var index = 0%>
+                                        <%result[0].ScheduleDetails[0].TableCosts.forEach(function(cost){%>
+                                            <div class="relative fares-choose-items" >
+                                                <div class="fares-choose radio">
+                                                    <%if(index == 0){%>
+                                                        <input type="radio" id="cost_fare<%=index%>"
+                                                        name="cost" 
+                                                        class="fare_radio"
+                                                        value="<%=cost.Cost%>"  checked>
+                                                        <label for="cost_fare<%=index%>" onclick="changeHref('<%=SCHEDULEDETAILID%>', '<%=cost.SeatTypeID%>')"></label>
+                                                    <%}else {%>
+                                                        <input type="radio" id="cost_fare<%=index%>"
+                                                        name="cost" 
+                                                        class="fare_radio"
+                                                        value="<%=cost.Cost%>"  
+                                                        >
+                                                        <label for="cost_fare<%=index%>" onclick="changeHref('<%=SCHEDULEDETAILID%>', '<%=cost.SeatTypeID%>')"></label>
+                                                    <%}%>
+                                                    <%index++%>
+                                                    
                                                 </div>
-                                            </label>
 
-                                        </div>
-                                        <div class="relative fares-choose-items
-                                                                                                                                                                                                                                                                            ">
-                                            <div class="fares-choose radio">
-                                                <input id="fare_1f38e1631532974a701fa783bcb1c1cc_66890155_BnL" type="radio" name="fares_1f38e1631532974a701fa783bcb1c1cc_66890155" class="fare_radio" data-fare="BnL" data-price="1356000" data-label="Nằm khoang 6" data-has_promotion="0">
+                                                <label class="fares-description">
+                                                <p><%=dic.get(cost.SeatTypeID)%></p>
+                                                <span class="yellow-text js-fare_price money">
+                                                    <%=JSON.stringify(cost.Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%>&nbsp;VND
+                                                </span>                                               
+                                                </label>
 
-                                                <label for="fare_1f38e1631532974a701fa783bcb1c1cc_66890155_BnL"></label>
-                                            </div>
-                                            <label class="fares-description">
-                                                <p>Nằm khoang 6</p>
-                                                <span class="yellow-text js-fare_price money" data-amount="1356000" data-currency="VND">1,356,000&nbsp;đ</span>
-                                                <div class="fare-info-button" data-origin_country_code="VN" data-destination_country_code="VN" data-transport="vr" data-alert="eyJvcmlnaW5faWQiOiIyODEiLCJkZXN0aW5hdGlvbl9pZCI6IjMyNCIsInRyYXZlbF9kYXRlIjoiMjAyMC0wMy0yNiIsInRyYW5zcG9ydF9jb2RlIjoidnIiLCJ2ZXNzZWwiOiJTRTEifQ==" data-fare="BnL" data-status="1" data-overwrites="ZmFsc2U=" data-container="body" data-placement="auto" data-trigger="hover" data-template="<span class='farerule popover-style'><span> <i style ='font-size:20px' class='fa-info-circle'></i></span><span class='farerule-content popover-content small-text'></span></span>" data-html="true" data-content="">
-                                                    <div><i style="font-size: 20px" class="fa-info-circle" aria-hidden="true"></i></div>
-                                                    <div>Điều kiện giá vé</div>
                                                 </div>
-                                            </label>
-
-                                        </div>
-                                        <div class="relative fares-choose-items
-                                                                                                                                                                                                                                                                            ">
-                                            <div class="fares-choose radio">
-                                                <input id="fare_1f38e1631532974a701fa783bcb1c1cc_66890155_AnL" type="radio" name="fares_1f38e1631532974a701fa783bcb1c1cc_66890155" class="fare_radio" data-fare="AnL" data-price="1506000" data-label="Nằm khoang 4" data-has_promotion="0">
-
-                                                <label for="fare_1f38e1631532974a701fa783bcb1c1cc_66890155_AnL"></label>
-                                            </div>
-                                            <label class="fares-description">
-                                                <p>Nằm khoang 4</p>
-                                                <span class="yellow-text js-fare_price money" data-amount="1506000" data-currency="VND">1,506,000&nbsp;đ</span>
-                                                <div class="fare-info-button" data-origin_country_code="VN" data-destination_country_code="VN" data-transport="vr" data-alert="eyJvcmlnaW5faWQiOiIyODEiLCJkZXN0aW5hdGlvbl9pZCI6IjMyNCIsInRyYXZlbF9kYXRlIjoiMjAyMC0wMy0yNiIsInRyYW5zcG9ydF9jb2RlIjoidnIiLCJ2ZXNzZWwiOiJTRTEifQ==" data-fare="AnL" data-status="1" data-overwrites="ZmFsc2U=" data-container="body" data-placement="auto" data-trigger="hover" data-template="<span class='farerule popover-style'><span> <i style ='font-size:20px' class='fa-info-circle'></i></span><span class='farerule-content popover-content small-text'></span></span>" data-html="true" data-content="">
-                                                    <div><i style="font-size: 20px" class="fa-info-circle" aria-hidden="true"></i></div>
-                                                    <div>Điều kiện giá vé</div>
-                                                </div>
-                                            </label>
-
-                                        </div>
+                                                
+                                        <%});%>
+                                     
                                     </div>
 
                                 </div>
@@ -264,10 +250,14 @@
 
         <!-- <div class="gap gap-small hidden-sm hidden-xs"></div> -->
         <div style="padding:0px 15px;" class="searchresult-button">
-            <a class="btn full-width btn-select green" href="https://booking.baolau.com/vi/results?sess_key=917a22bb6971cf6092da111ae9d7e343&amp;departure=1f38e1631532974a701fa783bcb1c1cc" target="_self" data-way="departure" data-result="1f38e1631532974a701fa783bcb1c1cc">
+            <a class="btn full-width btn-select green" 
+            href="/passenger?ONE_WAY=<%=ONE_WAY%>&PASSENGERS=<%=PASSENGERS%>&SCHEDULEID=<%=SCHEDULEID%>&TRAINID=<%=TrainID%>&SCHEDULEDETAILID=<%=SCHEDULEDETAILID%>&costID=<%=result[0].ScheduleDetails[0].TableCosts[0].SeatTypeID%>"
+            target="_self" 
+            id="bookLink<%=SCHEDULEDETAILID%>"
+            data-href="/passenger?ONE_WAY=<%=ONE_WAY%>&PASSENGERS=<%=PASSENGERS%>&SCHEDULEID=<%=SCHEDULEID%>&TRAINID=<%=TrainID%>&SCHEDULEDETAILID=<%=SCHEDULEDETAILID%>">
                 <span class="bold">ĐẶT VÉ TRỰC TUYẾN</span>
             </a>
-
+            
         </div>
 
         <div class="gap gap-mini"></div>

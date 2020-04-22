@@ -1,23 +1,17 @@
 var { Sequelize, Model, DataTypes } = require('sequelize');
-
+var moment = require('moment');
 Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
     date = this._applyTimezone(date, options);
   
     // Z here means current timezone, _not_ UTC
     // return date.format('YYYY-MM-DD HH:mm:ss.SSS Z');
-    return date.format('YYYY-MM-DD');
+    return moment(date).format('YYYY-MM-DD');
   };
 
-var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '79495291', {
+var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '123456', {
     dialect: 'mssql',
     host: 'localhost',
-    //port: '57031',
-    dialectOptions: {
-      options: {
-        useUTC: false,
-        dateFirst: 1,
-      }
-    }
+    port: '57031'
 })
 
 //1 Train Entity
@@ -50,6 +44,7 @@ Carriage.init({
 class Seat extends Model{}
 Seat.init({
     'ID' : {type: Sequelize.INTEGER,primaryKey: true},
+    'SeatNumber' : Sequelize.INTEGER
 },
 { 
     sequelize, 

@@ -24,12 +24,21 @@ app.get("/",function(req,res){
    res.render('index2');
 })
 
+app.get("/passenger", function(req,res){
+    //res.render('passengers');
+    controller.passenger(req,res);
+})
+
 app.get("/searchSchedule",function(req,res){
     controller.search(req,res);
 })
 
 app.get("/getAllStation",function(req,res){
     controller.index(req,res);
+})
+
+app.get("/getAllSeatType",function(req,res){
+    controller.getAllSeatType(req,res);
 })
 
 app.get("/getFirstCost", function(req,res){
@@ -43,6 +52,23 @@ app.get("/getAllTrain",function(req,res){
 app.get("/scheduleDetail",function(req,res){
     controller.scheduleDetail(req,res);
 })
+
+app.get("/getListCarriage", function(req,res){
+    controller.getAllCarriage(req,res);
+})
+
+app.get("/getListSeat", function(req,res){
+    controller.getAllSeat(req,res);
+})
+
+app.get("/getAllTypeObject", function(req,res){
+    controller.getAllTypeObject(req,res);
+})
+
+app.get("/getListSeatSold", function(req,res){
+    controller.getListSeatSold(req,res);
+})
+
 //get List
 app.get("/getAllCus",function(req,res){
     managerCtrler.getAllCustomer(req,res);

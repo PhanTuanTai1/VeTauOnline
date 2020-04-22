@@ -1,4 +1,4 @@
-
+Vue.component()
 new Vue({
   el: "#app", 
   created: function(){
@@ -7,11 +7,6 @@ new Vue({
         this.Stations = res.data;
         this.round_trip = true;
       })
-    //   //alert(JSON.stringify(this.Stations))
-    // axios.get('http://localhost:3000/getAllTrain')
-    // .then(res => {
-    //   this.Trains = res.data;
-    // })
   },
   data: {   
     FROM: '',

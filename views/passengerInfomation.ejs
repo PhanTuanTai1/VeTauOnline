@@ -1,0 +1,70 @@
+
+    <div class="panel-light passenger-info" v-for="obj in numberPass">
+        
+        <div style="padding: 14px 3% 5px 3%" class="padded-heading relative border-bottom">
+            <div style="line-height: 40px;" class="row">
+                <div class="col-md-6 col-xs-6">
+                    <span class="bold" >Passenger {{obj.index}}</span>
+                </div>
+                <div class="col-md-6 col-xs-6">
+                </div>
+            </div>
+        </div>
+        <div class="padded-heading relative">
+            <div class="row passenger-input">
+                <div class="pull-left gender-selector">
+                    
+                    <div class="btn-group bootstrap-select">
+                        <button type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown" title="&amp;nbsp;—&amp;nbsp;">
+                            <span class="filter-option pull-left" name="typeSelected" v-bind:id="'TypeObject'+obj.index">
+                                        &nbsp;—&nbsp;
+                            </span>&nbsp;<i class="caret"></i></button>
+                            <input type="hidden" name="typeID" v-bind:id="'TypeObjectID'+obj.index">
+                        <div class="dropdown-menu open">
+                            <ul class="dropdown-menu inner" role="menu" v-if="typeObject">
+                                <li class="hidden is-hidden selected" data-original-index="0">
+                                    <a tabindex="0" data-tokens="null">
+                                        <div class="checkbox">
+                                            <label></label>
+                                        </div><span class="checkbox-label"><span class="text">
+                                        &nbsp;—&nbsp;                                                </span></span>
+                                    </a>
+                                </li>
+                                <li  v-for="(type,index) in typeObject" v-bind:data-original-index="index + 1" v-on:click="selectedType('TypeObject'+obj.index,'TypeObjectID'+obj.index, type.ID, type.TypeObjectName)" data-index="index"> 
+                                    <a tabindex="0" data-tokens="null">
+                                        <div class="checkbox">
+                                            <label></label>
+                                        </div><span class="checkbox-label"><span class="text">
+                                        {{type.TypeObjectName}}                                               </span></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="passenger-fields pull-left" style="width: 80%;">
+                    <div class="pull-left passenger-name passenger-input-col passenger-input-col-left" style="width: 33.3333%;">
+                        <div class="form-group">
+                            <input class="form-control english" id="passenger_index_last_name" v-bind:name="'passenger_' + obj.index + '_last_name'" type="text" placeholder="surname (last name)" value="">
+                        </div>
+                    </div>
+                    <div class="pull-left passenger-name passenger-input-col passenger-input-col-right" style="width: 33.3333%;">
+                        <div class="form-group">
+                            <input class="form-control english" id="passenger_index_first_name" v-bind:name="'passenger_' + obj.index + '_first_name'" type="text" placeholder="given name (first &amp; middle name)" value="">
+                        </div>
+                    </div>
+    
+                    <!-- Passport -->
+                    <div class="pull-left passenger-input-col passenger-input-col-right" style="width: 33.3333%;">
+                        <div class="form-group">
+                            <input class="form-control passport_number" id="passenger_index_passport" v-bind:name="'passenger_' + obj.index + '_passport'" type="text" placeholder="passport number" value="">
+                        </div>
+                    </div>
+    
+                </div>
+    
+            </div>
+            <!-- End passenger-input -->
+        </div>
+    </div>

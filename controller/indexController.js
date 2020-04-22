@@ -1,6 +1,7 @@
 var { Sequelize, Model, DataTypes } = require('sequelize');
 var db = require("../data_access/DataAccess");
 var moment = require('moment');
+var bucketjs = require('../node_modules/buckets-js/dist/buckets');
 
 module.exports.index = function(req,res) {
     db.Station.findAll({
@@ -38,27 +39,25 @@ module.exports.search =  function(req,res){
                 }
             }],
         }).then(Schedule => {   
-            console.log(JSON.stringify(Schedule));
+            // console.log(JSON.stringify(Schedule));
             if(Schedule.length === 0) {
-                res.render('searchResultOneWay',{result : []});
+                res.render('searchResultOneWay',{result : [], query: JSON.stringify(req.query)});
                 res.end();
             }     
             var result = [];
             var count = 0;
-            Schedule.forEach((schedule, index, array ) => {
-                //schedule.DateDeparture = moment(schedule.DateDeparture).format("DD-MM-YYYY");
-                // schedule.DateFormat = moment(schedule.DateDeparture).format("DD-MM-YYYY");             
-                console.log("JSON " + JSON.stringify(schedule));
+            Schedule.forEach((schedule, index, array ) => {     
+
                 checkSeat(schedule.TrainID,req.query.PASSENGERS, req.query.DEPART).then(check =>{
                     if(check){
                         result.push(schedule);                   
                     }           
                     if(index + 1 === array.length){
                         if(result.length === 0) {
-                            res.render('searchResultOneWay',{result : JSON.stringify(result)});
+                            res.render('searchResultOneWay',{result : JSON.stringify(result), query: JSON.stringify(req.query)});
                         }
                         else {
-                            res.render('searchResultOneWay',{result : JSON.stringify(Schedule)});
+                            res.render('searchResultOneWay',{result : JSON.stringify(Schedule), query: JSON.stringify(req.query)});
                         }
                     }
                 });                
@@ -69,7 +68,7 @@ module.exports.search =  function(req,res){
 
 module.exports.scheduleDetail = function(req,res) {
     db.Schedule.findAll({
-        attributes: ['ID','TrainID'],
+        attributes: ['ID','TrainID','TimeDeparture','DateDeparture'],
         where: {
             ID: req.query.SCHEDULEID,
             TrainID: req.query.TRAINID
@@ -83,19 +82,28 @@ module.exports.scheduleDetail = function(req,res) {
             },
             include:[{
                 model: db.TableCost,
-                attributes: ['SeatTypeID','Cost']
+                attributes: ['SeatTypeID','Cost',"ScheduleID"]
             }]
         }]
     }).then(async result => {
         var DepartureStation = await getStationByID(result[0].ScheduleDetails[0].DepartureStationID);
         var ArrivalStation = await getStationByID(result[0].ScheduleDetails[0].ArrivalStationID);
         var Train = await getTrainByID(result[0].TrainID);
-        console.log(JSON.stringify(DepartureStation));
-        console.log(JSON.stringify(ArrivalStation));
-        // console.log(JSON.stringify(Train));
-        // console.log(JSON.stringify(result));
+        var dic = await getAllSeatType();
+        console.log(dic.get(1));
+        console.log(req.query.query);
         res.render('scheduleDetail', 
-            {result: result, departureStation: DepartureStation, arrivalStation: ArrivalStation, train: Train});
+            {result: result, 
+            departureStation: DepartureStation, 
+            arrivalStation: ArrivalStation, 
+            train: Train, 
+            moment: moment, 
+            dic: dic, 
+            ONE_WAY: req.query.ONE_WAY, 
+            PASSENGERS: req.query.PASSENGERS, 
+            SCHEDULEID: req.query.SCHEDULEID,
+            TrainID:  req.query.TRAINID,
+            SCHEDULEDETAILID: result[0].ScheduleDetails[0].ID});
     })
 }
 
@@ -107,8 +115,74 @@ module.exports.getFirstCost = function(req,res){
             ScheduleID: req.query.ScheduleID
         }
     }).then(cost =>{
-        // console.log(JSON.stringify(cost));
         res.end(JSON.stringify(cost));
+    })
+}
+
+module.exports.getAllSeatType = function(req,res){
+    db.SeatType.findAll({
+        attributes: ['ID','TypeName']
+    }).then(seatType =>{
+        res.end(JSON.stringify(seatType));
+    })
+}
+
+module.exports.passenger = function(req,res){
+    db.Schedule.findOne({
+        attributes: ['ID','TrainID','DateDeparture','TimeDeparture'],
+        where: {
+            ID: parseInt(req.query.SCHEDULEID)
+        },
+        include:[{
+            model: db.ScheduleDetail,
+            attributes: ['ID', 'DepartureStationID', 'ArrivalStationID', 'Length', 'Time'],
+            where: {
+                ID: parseInt(req.query.SCHEDULEDETAILID)
+            },
+            include: [{
+                model: db.TableCost,
+                attributes: ['ScheduleID','SeatTypeID','Cost'],
+                where: {
+                    SeatTypeID: parseInt(req.query.costID)
+                }
+            }]
+        }]
+    }).then(result => {
+        console.log(JSON.stringify(result));
+        res.render('passengers', {result: result, moment: moment, SeatTypeID: req.query.costID})
+    })
+}
+
+module.exports.getAllCarriage = function(req,res) {
+    getAllCarriage().then(data => {
+        res.end(JSON.stringify(data));
+    });
+    
+}
+
+module.exports.getAllTypeObject = function(req,res){
+    db.TypeObject.findAll({
+        attributes: ['ID','TypeObjectName']
+    }).then(data =>{
+        res.end(JSON.stringify(data));
+    })
+}
+
+module.exports.getListSeatSold = function(req,res){
+    
+    db.Ticket.findAll({
+        attributes: ['SeatID'],
+        where: {
+            DepartureDate : JSON.parse(req.query.dateDepart)
+        }
+    }).then(data => {
+        res.end(JSON.stringify(data));
+    })
+}
+
+module.exports.getAllSeat = function(req,res){
+    getAllSeat().then(data => {
+        res.end(JSON.stringify(data));
     })
 }
 async function checkSeat(trainID, numberOfPassenger, departDate){
@@ -123,6 +197,24 @@ async function checkSeat(trainID, numberOfPassenger, departDate){
     return false;
 }
 
+function getAllCarriage(){
+    return new Promise(resolve => {
+        db.Carriage.findAll({
+            attributes: ['ID','Name','TrainID']
+    }).then(result => {       
+        resolve(result);
+    })})
+}
+
+function getAllSeat(){
+    return new Promise(resolve => {
+        db.Seat.findAll({
+            attributes: ['ID','CarriageID','SeatTypeID','SeatNumber'],
+        }).then(data => {
+            resolve(data);
+        })
+    })
+}
 function getListCarriageAndSeat(trainID){
     return new Promise(resolve => {
         db.Train.findAll({
@@ -135,8 +227,7 @@ function getListCarriageAndSeat(trainID){
             attributes: ['ID'],
             include:{
                 model: db.Seat,
-                attributes: ['ID','CarriageID','SeatTypeID'],
-                as: "Seats"
+                attributes: ['ID','CarriageID','SeatTypeID','SeatNumber']
             }
         }
     }).then(Train => {       
@@ -187,4 +278,34 @@ function getTrainByID(TrainID){
             resolve(Train);
         })
     })  
+}
+
+function getAllSeatType(){
+    return new Promise(resolve => {
+        db.SeatType.findAll({
+            attributes: ['ID','TypeName']
+        }).then(seatType =>{
+            var dic = new bucketjs.Dictionary();
+            seatType.forEach((seat, index, array) =>{
+                dic.set(seat.ID, seat.TypeName);
+    
+                if(index + 1 == array.length) {
+                    resolve(dic);
+                }
+            })
+        })
+    })
+}
+
+function convertTypeObjectToDictionary(object){
+    return new Promise(resolve => {
+        var dic = new bucketjs.Dictionary();
+        object.forEach((data,index,array) => {
+            dic.set(object.ID, object.TypeObjectName);
+
+            if(index + 1 == array.length){
+                resolve(dic);
+            }
+        })
+    })
 }

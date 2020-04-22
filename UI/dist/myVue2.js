@@ -5,15 +5,16 @@ new Vue({
 
         this.result = JSON.parse(document.getElementById("myData").value);
         document.getElementById("myData").replaceWith("");
+        this.query = JSON.parse(document.getElementById("query").value);
 
         await axios.get('http://localhost:3000/getAllTrain')
         .then(res => {                 
-        this.train = res.data;
+            this.train = res.data;
         })
 
         await axios.get('http://localhost:3000/getAllStation')
         .then(res => {
-        this.Stations = res.data;
+            this.Stations = res.data;
         }) 
 
         this.departure = this.getStationName(this.result[0].ScheduleDetails[0].DepartureStationID);
@@ -29,7 +30,8 @@ new Vue({
         arrival: null,  
         Stations: null,
         listTrain: [],
-        listScheduleDetail: new Set(),
+        seatType: null,
+        query: null,
     },
 
     methods:{
@@ -52,17 +54,21 @@ new Vue({
         },
 
         loadScheduleDetail: function(index,trainID){
-            
+            if(document.getElementById('collapse_' + trainID).innerHTML.trim() != "") {
+                return;
+            }
             // obj.setAttribute("class", "result clickable_tr train vr clicked checking");
             var tr = document.getElementById('parent' + trainID).childNodes.item(0);
             tr.setAttribute("class","result clickable_tr train vr clicked checking");
 
             var train = this.getScheduleDetailByTrainID(trainID);
-            
+
             var url = "http://localhost:3000/scheduleDetail?TRAINID=" 
                         + train[0].TrainID + "&SCHEDULEID=" + train[0].ID + "&DepartID=" 
                         + train[0].ScheduleDetails[0].DepartureStationID
-                        + "&ArrivalID=" + train[0].ScheduleDetails[0].ArrivalStationID;
+                        + "&ArrivalID=" + train[0].ScheduleDetails[0].ArrivalStationID
+                        + "&ONE_WAY=" + this.query.ONE_WAY
+                        + "&PASSENGERS=" + this.query.PASSENGERS; 
 
             axios.get(url)
             .then( resp => {
@@ -70,7 +76,8 @@ new Vue({
                 // document.getElementById('icon_2').removeAttribute("hidden");
 
                 this.displaySchedule(resp.data, trainID);
-                document.getElementById('collapse_' + trainID).setAttribute("style", "border-bottom: 1px solid rgb(232, 232, 232);display: table-row;");
+                $("#collapse_" + trainID).collapse('show');
+                // document.getElementById('collapse_' + trainID).setAttribute("style", "border-bottom: 1px solid rgb(232, 232, 232);display: table-row;");
             })
             .then(() => {
                 tr.setAttribute("class","result clickable_tr train vr clicked");
@@ -113,9 +120,11 @@ new Vue({
             return moment(dateTime).format("LT");
         },
 
-        getFirstCost: async function(scheduleDetailID){
+        getFirstCost: function(scheduleDetailID){
+            
             axios.get('http://localhost:3000/getFirstCost?ScheduleID=' + scheduleDetailID)
             .then(res =>{
+                //alert(JSON.stringify(res.data.Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " VND");
                 document.getElementById('cost' + scheduleDetailID).innerHTML = JSON.stringify(res.data.Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " VND";
             })
         }
@@ -124,3 +133,4 @@ new Vue({
         vuejsDatepicker,
       }
 })
+

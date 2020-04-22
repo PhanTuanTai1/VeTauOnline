@@ -37,7 +37,7 @@
 
 <body>
     <input type="hidden" id="myData" value="<%=result%>"/>
-    <input type="hidden" id="moment" value="<%=moment%>"/>
+    <input type="hidden" id="query" value="<%=query%>"/>
     <div id="errors" class="modal fade">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -612,7 +612,7 @@
                         </tr>
                     </thead>
                     <tbody v-if="listTrain" v-for="(train, i) in listTrain" v-bind:id="'parent' + train.ID">
-                        <tr v-bind:id="train.ID" v-on:click="loadScheduleDetail(i,train.ID)" v-bind:data-target="'#collapse_' + train.ID" 
+                        <tr v-bind:id="train.ID" data-toggle="collapse" v-on:click="loadScheduleDetail(i,train.ID)" v-bind:data-target="'#collapse_' + train.ID" 
                         data-score="17205333.333333" 
                         data-departure="1584544800" 
                         data-arrival="1584657900" 
@@ -637,7 +637,11 @@
                             <td class="searchresult-itenerary hidden-sm hidden-xs" style="width: 366px;"><span style="display: inline-block;">{{departure}}<br><span style="font-size: 13px;">{{departure}}</span></span> 
                                 <i class="icon have-node-code icon-train inline"></i> <span style="display: inline-block;">{{arrival}}<br><span style="font-size: 13px;">{{arrival}}</span></span>
                             </td>
-                            <td class="total_price yellow-text super-bold price-alignment" style="width: 438px;"><span data-currency="VND" class="money" v-bind:id="'cost'+getScheduleDetailByTrainID(train.ID)[0].ScheduleDetails[0].ScheduleID">{{getFirstCost(getScheduleDetailByTrainID(train.ID)[0].ScheduleDetails[0].ScheduleID)}}</span> <i class="js-result_promo_tag fa fa-tag yellow-text" style="display: none;"></i></td>
+                            <td class="total_price yellow-text super-bold price-alignment" style="width: 438px;">
+                                <span data-currency="VND" class="money" v-bind:id="'cost'+getScheduleDetailByTrainID(train.ID)[0].ScheduleDetails[0].ID">
+                                    {{getFirstCost(getScheduleDetailByTrainID(train.ID)[0].ScheduleDetails[0].ID)}}</span> 
+                                    <i class="js-result_promo_tag fa fa-tag yellow-text" style="display: none;"></i>
+                                </td>
                             <td class="text-right button-alignment" style="width: 133px;">
                                 <i class="fa button-direct hidden-xs hidden-sm " id="icon_1">
                                     
@@ -645,7 +649,7 @@
                                 <img src="../images/genaral/spinner-2.gif" style="width: 27px;" id="icon_2" hidden>
                             </td>
                         </tr>
-                        <tr v-bind:id="'collapse_' + train.ID" data-id="1f38e1631532974a701fa783bcb1c1cc" class="result-collapse" style="border-bottom: 1px solid rgb(232, 232, 232);display: none;">
+                        <tr v-bind:id="'collapse_' + train.ID" class="result-collapse collapse">
                         </tr>
                     </tbody>
                     
@@ -838,12 +842,14 @@
 <!-- END WINDOW POPUP -->
 
     <script src="../dist/vue.js"></script>
-    <script src="https://unpkg.com/vue-router@2.0.0/dist/vue-router.js"></script>
-    <script src="../dist/axios.js"></script>
-    <script src="../dist/vuejs-datepickker.js"></script>	
-    <script type="text/javascript" src="../dist/baolau.min6ffc.js?v=2020-02-21"></script>
+    <script src="../dist/axios.js"></script> 	
+    <script src="../dist/vuejs-datepickker.js"></script>
+    <script type="text/javascript" src="../dist/baolau.min6ffc.js"></script>
     <script src="../dist/myVue2.js"></script>
+    <script src="../dist/myJS.js"></script>
     <script src="../dist/moment.js"></script>            
+    <script src="https://unpkg.com/vue-router@2.0.0/dist/vue-router.js"></script>   
+    
     <!-- Language dependant libraries -->
     <script type="text/javascript" src="../vendor/bootstrap-datepicker/locales/bootstrap-datepicker.en.min.js"></script>
    
