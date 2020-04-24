@@ -8,10 +8,10 @@ Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
     return moment(date).format('YYYY-MM-DD');
   };
 
-var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '123456', {
+var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '79495291', {
     dialect: 'mssql',
     host: 'localhost',
-    port: '57031'
+    port: '1433'
 })
 
 //1 Train Entity

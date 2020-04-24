@@ -409,8 +409,11 @@
                                                 <div class="diagram-number">...</div>
                                             </div>
                                            <span v-if="carriageDisplay" v-for="(carriage, index) in carriageDisplay">
-                                            <div style="cursor: pointer;" class="diagram_cell train-block selectable selected">
-                                                <div class="diagram-number" >{{index + 1}}</div>
+                                            <div style="cursor: pointer;" onclick="change(this)" v-bind:id="carriageDisplay[carriageDisplay.length - (index + 1)].ID" class="diagram_cell train-block selectable selected" v-if="carriageDisplay.length - (index + 1) == 0">
+                                                <div class="diagram-number" >{{carriageDisplay.length - index}}</div>
+                                            </div>
+                                            <div style="cursor: pointer;" onclick="change(this)" class="diagram_cell train-block available" v-bind:id="carriageDisplay[carriageDisplay.length - (index + 1)].ID" v-else>
+                                                <div class="diagram-number" >{{carriageDisplay.length - index}}</div>
                                             </div>
                                             <!-- <div style="cursor: pointer;" class="diagram_cell train-block selectable selected">
                                                 <div class="diagram-number" data-carriage-id="5179">2</div>

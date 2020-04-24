@@ -1,4 +1,14 @@
-new Vue({
+function select(element){
+    vm.selectSeat(element);
+}
+function change(element){
+    // $(element).attr('id', 'transform: translate3d(0px, -10px, 0px); transition: all 0.8s ease 0s;')
+    document.getElementsByName('activeDiv')[0].setAttribute('style', 'transform: translate3d(0px, 300px, 0px); transition: all 0.8s ease 0s');
+    document.getElementsByName('activeDiv')[0].removeAttribute('name');
+    document.getElementById('carriage_' + $(element).attr('id')).setAttribute('style', 'transform: translate3d(0px, -30px, 0px); transition: all 0.8s ease 0s');
+    document.getElementById('carriage_' + $(element).attr('id')).setAttribute('name', 'activeDiv');
+}
+var vm = new Vue({
     el: "#app",
     created: async function(){
        this.total = document.getElementById('number').value;
@@ -25,28 +35,32 @@ new Vue({
        axios.get('http://localhost:3000/getAllTypeObject').then(res =>{
            this.typeObject = res.data;
        })
-       axios.get('http://localhost:3000/getListSeatSold?dateDepart=' + document.getElementById('dateDepart').value).then(res => {          
+       await axios.get('http://localhost:3000/getListSeatSold?dateDepart=' + document.getElementById('dateDepart').value).then(res => {          
            this.seatSold = res.data;
        })
-       this.setCarriageDisplay();
+
+       await this.setCarriageDisplay();
        this.numberPass = new Array();
-       this.loadSeat();
+       
        for(var i = 0; i < this.total;i++){
            this.numberPass.push({'index': i + 1});
        }
+       this.loadSeat();
+       this.listSelected = new Array();
     },
     data:{
         train: [],
         seatType: [],
         typeObject: [],
         seatSold: [],
-        listCarriageAndSeat: [],
+        listCarriage: [],
         station: [],
         listSeat: [],
         numberPass: null,
         total: null,
         result: null,
         carriageDisplay: null,
+        listSelected: null
     },
 
     methods:{
@@ -89,10 +103,46 @@ new Vue({
             this.carriageDisplay = result;
         },
         loadSeat: function(){
-            // var obj = document.getElementsByClassName("seat");
-            // for(var i = 0; i < obj.length; i++){
-            //     if(obj)
-            // }
+            this.listCarriage.forEach(element => {
+                var object = document.getElementsByName('carriage_' + element.ID);
+                for(var i = 0; i < object.length - 1;i++){
+                    var seat =  this.listSeat.filter(seat => {
+                        return seat.SeatNumber == object[i].firstChild.innerHTML && seat.CarriageID == element.ID;
+                    })
+                    var result = this.seatSold.filter(data => {
+                        return data.SeatID == seat[0].ID;
+                    })
+
+                    if(result.length > 0){
+                        object[i].setAttribute('class','train_cell seat can_block soft_seat_right sold_out');
+                        object[i].setAttribute('style','pointer-events: none;');
+                    }
+                }
+            });
+        },
+        getListSeatByCarriageID: function(carriageID){
+            var result = this.listSeat.filter(seat => {
+                return seat.CarriageID === carriageID;
+            })
+        },
+        selectSeat: function(element){
+            if($(element).attr('class') == 'train_cell seat can_block soft_seat_right sold_out') return;
+
+            if($(element).attr('class') == "train_cell seat can_block soft_seat_right available"){
+                if(this.numberPass.length > this.listSelected.length){
+                    $(element).attr('class','train_cell seat can_block soft_seat_right selected');
+                    this.listSelected.push($(element).attr('name') + $(element).children().html());
+                }else {
+                    alert("Vượt quá số lượng");
+                }
+            }
+            else {
+                $(element).attr('class','train_cell seat can_block soft_seat_right available');
+                var filteredItems  = this.listSelected.filter(data => {
+                    return data != $(element).attr('name') + $(element).children().html();
+                })
+                this.listSelected = filteredItems;
+            }
         }
     }
 })
