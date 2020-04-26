@@ -19,7 +19,7 @@
                             <span class="filter-option pull-left" name="typeSelected" v-bind:id="'TypeObject'+obj.index">
                                         &nbsp;—&nbsp;
                             </span>&nbsp;<i class="caret"></i></button>
-                            <input type="hidden" name="typeID" v-bind:id="'TypeObjectID'+obj.index">
+                            <input type="hidden" name="typeID" v-bind:id="'TypeObjectID'+obj.index" value="2">
                         <div class="dropdown-menu open">
                             <ul class="dropdown-menu inner" role="menu" v-if="typeObject">
                                 <li class="hidden is-hidden selected" data-original-index="0">
@@ -35,7 +35,8 @@
                                         <div class="checkbox">
                                             <label></label>
                                         </div><span class="checkbox-label"><span class="text">
-                                        {{type.TypeObjectName}}                                               </span></span>
+                                        {{type.TypeObjectName}}                                               
+                                    </span></span>
                                     </a>
                                 </li>
                             </ul>
@@ -46,19 +47,19 @@
                 <div class="passenger-fields pull-left" style="width: 80%;">
                     <div class="pull-left passenger-name passenger-input-col passenger-input-col-left" style="width: 33.3333%;">
                         <div class="form-group">
-                            <input class="form-control english" id="passenger_index_last_name" v-bind:name="'passenger_' + obj.index + '_last_name'" type="text" placeholder="surname (last name)" value="">
+                            <input class="form-control english" v-bind:id="'passenger_' + obj.index + '_last_name'" v-bind:name="'passenger_' + obj.index + '_last_name'" type="text" placeholder="surname (last name)" value="Last Name Test">
                         </div>
                     </div>
                     <div class="pull-left passenger-name passenger-input-col passenger-input-col-right" style="width: 33.3333%;">
                         <div class="form-group">
-                            <input class="form-control english" id="passenger_index_first_name" v-bind:name="'passenger_' + obj.index + '_first_name'" type="text" placeholder="given name (first &amp; middle name)" value="">
+                            <input class="form-control english" v-bind:id="'passenger_' + obj.index + '_first_name'" v-bind:name="'passenger_' + obj.index + '_first_name'" type="text" placeholder="given name (first &amp; middle name)" value="First Name Test">
                         </div>
                     </div>
     
                     <!-- Passport -->
                     <div class="pull-left passenger-input-col passenger-input-col-right" style="width: 33.3333%;">
                         <div class="form-group">
-                            <input class="form-control passport_number" id="passenger_index_passport" v-bind:name="'passenger_' + obj.index + '_passport'" type="text" placeholder="passport number" value="">
+                            <input class="form-control passport_number" v-bind:id="'passenger_' + obj.index + '_passport'" v-bind:name="'passenger_' + obj.index + '_passport'" type="text" placeholder="passport number" value="123456789">
                         </div>
                     </div>
     

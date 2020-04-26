@@ -2,6 +2,13 @@ var { Sequelize, Model, DataTypes } = require('sequelize');
 var db = require("../data_access/DataAccess");
 var moment = require('moment');
 var bucketjs = require('../node_modules/buckets-js/dist/buckets');
+var formidable = require('formidable');
+var UUID = require('uuidjs');
+var STATUS = {
+    "NOTPRINT" : "1",
+    "PRINTED" : "2",
+    "CANCEL" : "3"
+}
 
 module.exports.index = function(req,res) {
     db.Station.findAll({
@@ -90,8 +97,7 @@ module.exports.scheduleDetail = function(req,res) {
         var ArrivalStation = await getStationByID(result[0].ScheduleDetails[0].ArrivalStationID);
         var Train = await getTrainByID(result[0].TrainID);
         var dic = await getAllSeatType();
-        console.log(dic.get(1));
-        console.log(req.query.query);
+        var data = JSON.parse(req.query.Query);
         res.render('scheduleDetail', 
             {result: result, 
             departureStation: DepartureStation, 
@@ -101,9 +107,13 @@ module.exports.scheduleDetail = function(req,res) {
             dic: dic, 
             ONE_WAY: req.query.ONE_WAY, 
             PASSENGERS: req.query.PASSENGERS, 
+            DEPART: data.DEPART,
+            FROM: data.FROM,
+            TO: data.TO,
             SCHEDULEID: req.query.SCHEDULEID,
             TrainID:  req.query.TRAINID,
             SCHEDULEDETAILID: result[0].ScheduleDetails[0].ID});
+        
     })
 }
 
@@ -148,8 +158,15 @@ module.exports.passenger = function(req,res){
             }]
         }]
     }).then(result => {
-        console.log(JSON.stringify(result));
-        res.render('passengers', {result: result, moment: moment, SeatTypeID: req.query.costID})
+       
+        res.render('passengers', {result: result, 
+            moment: moment, 
+            SeatTypeID: req.query.costID, 
+            passengers: req.query.PASSENGERS,
+            FROM: req.query.FROM, 
+            TO: req.query.TO, 
+            DEPART: req.query.DEPART,
+            ONE_WAY: req.query.ONE_WAY})
     })
 }
 
@@ -185,6 +202,92 @@ module.exports.getAllSeat = function(req,res){
         res.end(JSON.stringify(data));
     })
 }
+
+module.exports.createSession = function(req,res){   
+    var Representative = req.body.data.Representative;
+    var ListPassenger = req.body.data.ListPassenger;
+    var ListSeat = req.body.data.ListSeat;
+    var TicketInfo = req.body.data.TicketInfo
+    var RepresentativeID = RandomRepresentativeID();
+    console.log('TicketInfo: ' + JSON.stringify(TicketInfo));
+
+    var RepresentativeModel = db.Representative.build({
+        'Name' : Representative.FullName,
+        'Passport' : Representative.Passport,
+        'Email' : Representative.Email,
+        'Phone' : Representative.Phone,
+        'ID' : RepresentativeID
+    })
+
+    CreateListPassengerModel(ListPassenger, RepresentativeID).then(data =>{
+        CreateTicket(data, TicketInfo, ListSeat).then(data2 => {
+            res.cookie('data', RepresentativeModel, {maxAge: 60000});
+            res.cookie('data2', data, {maxAge: 60000});
+            res.cookie('data3', data2, {maxAge: 60000});
+            res.end('/payment');
+        })
+    });
+}
+
+function CreateListPassengerModel(ListPassenger, RepresentativeID){
+    var ListPassengerModel = [];
+    return new Promise(resolve => {
+        ListPassenger.forEach(data => {
+            RandomCustomerID().then(ID => {
+                var PassengerModel = db.Customer.build({
+                    'Name' : data.Name,
+                    'Passport' : data.Passport,
+                    'TypeObjectID' : data.TypeObject,
+                    'RepresentativeID' : RepresentativeID,
+                    'ID' : ID
+                })
+
+                ListPassengerModel.push(PassengerModel);
+            })        
+        })
+        resolve(ListPassengerModel);
+    })
+}
+
+function CreateTicket(ListPassengerModel, TicketInfo, ListSeat){
+    var ListTicketInfo = [];
+    
+    return new Promise(resolve => {
+        ListPassengerModel.forEach((data, index) => {
+            var ID = UUID.genV4().intFields.timeLow;
+
+            var TicketModel = db.Ticket.build({
+                'ID' : ID,
+                'CustomerID' : data.ID,
+                'SeatID' : ListSeat[index].ID,
+                'DepartureDate' : TicketInfo.DateDeparture,
+                'DepartureTime' : TicketInfo.DepartureTime,
+                'Price' : TicketInfo.Price,
+                'Status' : STATUS["NOTPRINT"],
+                'DepartureStationID': TicketInfo.DepartureStationID,
+                'ArrivalStationID': TicketInfo.ArrivalStationID,
+                'TrainName' : TicketInfo.TrainName
+            })
+            ListTicketInfo.push(TicketModel);
+        })
+        resolve(ListTicketInfo);
+    })
+}
+function RandomRepresentativeID(){
+    return '_' + Math.random().toString(36).substr(2, 9);
+}
+
+function RandomTicketID(){
+    return '_' + Math.random().toString(36).substr(2, 9);
+}
+
+function RandomCustomerID(){
+    return new Promise(resolve => {
+        resolve('_' + Math.random().toString(36).substr(2, 9));
+    })
+}
+
+
 async function checkSeat(trainID, numberOfPassenger, departDate){
     var Trains = await getListCarriageAndSeat(trainID);
     for(var i = 0; i < Trains[0].Carriages.length; i++){
@@ -200,7 +303,11 @@ async function checkSeat(trainID, numberOfPassenger, departDate){
 function getAllCarriage(){
     return new Promise(resolve => {
         db.Carriage.findAll({
-            attributes: ['ID','Name','TrainID']
+            attributes: ['ID','Name','TrainID'],
+            include: {
+                model: db.Seat,
+                attributes: ['SeatTypeID']
+            }
     }).then(result => {       
         resolve(result);
     })})
@@ -309,3 +416,4 @@ function convertTypeObjectToDictionary(object){
         })
     })
 }
+

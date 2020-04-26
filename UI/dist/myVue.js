@@ -2,7 +2,7 @@ Vue.component()
 new Vue({
   el: "#app", 
   created: function(){
-    axios.get('http://localhost:3000/getAllStation')
+    axios.get('/getAllStation')
       .then(res => {
         this.Stations = res.data;
         this.round_trip = true;
@@ -46,14 +46,6 @@ new Vue({
       });
       this.SearchTo = result;
     },
-
-    // loadStation(){
-    //   axios.get('http://localhost:3000/getAllStation')
-    //   .then(function(res){
-    //     this.Stations = res.data;
-    //     //this.SearchTos = res.data;
-    //   })
-    // },
 
     selectStationFrom: function(station){
       this.FROM = station;
@@ -99,7 +91,7 @@ new Vue({
     },
     
     setParamQuery: function(){
-      var url = 'http://localhost:3000/searchSchedule?';
+      var url = '/searchSchedule?';
       url += "FROM=" + this.departureStationID + "&";
       url += "TO=" + this.arrivalStationID + "&";
 

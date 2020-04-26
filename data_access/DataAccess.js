@@ -8,10 +8,11 @@ Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
     return moment(date).format('YYYY-MM-DD');
   };
 
-var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '79495291', {
+var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '123456', {
     dialect: 'mssql',
     host: 'localhost',
-    port: '1433'
+    //port: '1433',
+    port: '57031'
 })
 
 //1 Train Entity
@@ -158,7 +159,8 @@ Representative.init({
     'Email' : Sequelize.STRING,
     'Phone' : Sequelize.STRING,
     'Passport' : Sequelize.STRING,
-    'TotalCost' : Sequelize.FLOAT
+    'TotalCost' : Sequelize.FLOAT,
+    'Name' : Sequelize.STRING
 },
 { 
     sequelize, 
@@ -198,6 +200,8 @@ Customer.belongsTo(TypeObject,{foreignKey:"TypeObjectID"});
 Ticket.belongsTo(Customer,{foreignKey:"CustomerID"});
 Ticket.belongsTo(Seat,{foreignKey: "SeatID"});
 ScheduleDetail.hasMany(TableCost,{foreignKey:"ScheduleID"})
+Ticket.belongsTo(Station, {foreignKey: 'DepartureStationID'})
+Ticket.belongsTo(Station, {foreignKey: 'ArrivalStationID'})
 
 module.exports.Train = Train;
 module.exports.Carriage = Carriage;

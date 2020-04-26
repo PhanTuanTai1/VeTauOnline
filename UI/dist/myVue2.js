@@ -6,22 +6,20 @@ new Vue({
         this.result = JSON.parse(document.getElementById("myData").value);
         document.getElementById("myData").replaceWith("");
         this.query = JSON.parse(document.getElementById("query").value);
-
-        await axios.get('http://localhost:3000/getAllTrain')
+        
+        await axios.get('/getAllTrain')
         .then(res => {                 
             this.train = res.data;
         })
 
-        await axios.get('http://localhost:3000/getAllStation')
+        await axios.get('/getAllStation')
         .then(res => {
             this.Stations = res.data;
         }) 
 
         this.departure = this.getStationName(this.result[0].ScheduleDetails[0].DepartureStationID);
         this.arrival = this.getStationName(this.result[0].ScheduleDetails[0].ArrivalStationID);
-        this.listTrain = this.loadListTrain();
-        //alert(JSON.stringify(this.result));
-        
+        this.listTrain = this.loadListTrain();       
     },
     data:{
         result: null,
@@ -63,12 +61,13 @@ new Vue({
 
             var train = this.getScheduleDetailByTrainID(trainID);
 
-            var url = "http://localhost:3000/scheduleDetail?TRAINID=" 
+            var url = "/scheduleDetail?TRAINID=" 
                         + train[0].TrainID + "&SCHEDULEID=" + train[0].ID + "&DepartID=" 
                         + train[0].ScheduleDetails[0].DepartureStationID
                         + "&ArrivalID=" + train[0].ScheduleDetails[0].ArrivalStationID
                         + "&ONE_WAY=" + this.query.ONE_WAY
-                        + "&PASSENGERS=" + this.query.PASSENGERS; 
+                        + "&PASSENGERS=" + this.query.PASSENGERS
+                        + "&Query=" + JSON.stringify(this.query); 
 
             axios.get(url)
             .then( resp => {
@@ -122,7 +121,7 @@ new Vue({
 
         getFirstCost: function(scheduleDetailID){
             
-            axios.get('http://localhost:3000/getFirstCost?ScheduleID=' + scheduleDetailID)
+            axios.get('/getFirstCost?ScheduleID=' + scheduleDetailID)
             .then(res =>{
                 //alert(JSON.stringify(res.data.Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " VND");
                 document.getElementById('cost' + scheduleDetailID).innerHTML = JSON.stringify(res.data.Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " VND";

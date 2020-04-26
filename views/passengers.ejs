@@ -38,8 +38,13 @@
     <div id="errors" class="modal fade">
         <input type="hidden" value="<%=JSON.stringify(result.DateDeparture)%>" id="dateDepart">
         <input type="hidden" value="<%=JSON.stringify(result)%>" id="result">
-        <input type="hidden" value="2" id="number">
+        <input type="hidden" value="<%=passengers%>" id="number">
         <input type="hidden" value="<%=SeatTypeID%>" id="SeatTypeID">
+        <input type="hidden" value="<%=FROM%>" id="FROM">
+        <input type="hidden" value="<%=TO%>" id="TO">
+        <input type="hidden" value="<%=DEPART%>" id="DEPART">
+        <input type="hidden" value="<%=ONE_WAY%>" id="ONE_WAY">
+
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                <div class="modal-header">
@@ -88,12 +93,7 @@
             <img src="../images/genaral/white-spinner.gif" style="width:35px">
         </div>
     </div>
-    
-        
-    
-
 <!-- Sidebar Content -->
-
 
 <section class="left side-nav">
     <button type="button" class="close visible-xs visible-sm">&times;</button>
@@ -250,7 +250,7 @@
             </div>
             <!-- END MOBILE progress-bar-holder -->
     
-            <form action="/passenger" id="booking_form" data-passengers="1" method="post" accept-charset="utf-8">
+            <form action="/payment" id="booking_form" data-passengers="1" method="post" accept-charset="utf-8">
     
                 <div class="container">
                     <div id="search_results" class="row">
@@ -409,10 +409,10 @@
                                                 <div class="diagram-number">...</div>
                                             </div>
                                            <span v-if="carriageDisplay" v-for="(carriage, index) in carriageDisplay">
-                                            <div style="cursor: pointer;" onclick="change(this)" v-bind:id="carriageDisplay[carriageDisplay.length - (index + 1)].ID" class="diagram_cell train-block selectable selected" v-if="carriageDisplay.length - (index + 1) == 0">
+                                            <div style="cursor: pointer;" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this)" v-bind:id="carriageDisplay[carriageDisplay.length - (index + 1)].ID" name="carriageSelected" class="diagram_cell train-block selectable selected" v-if="carriageDisplay.length - (index + 1) == 0">
                                                 <div class="diagram-number" >{{carriageDisplay.length - index}}</div>
                                             </div>
-                                            <div style="cursor: pointer;" onclick="change(this)" class="diagram_cell train-block available" v-bind:id="carriageDisplay[carriageDisplay.length - (index + 1)].ID" v-else>
+                                            <div style="cursor: pointer;" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this)" class="diagram_cell train-block available" v-bind:id="carriageDisplay[carriageDisplay.length - (index + 1)].ID" v-else>
                                                 <div class="diagram-number" >{{carriageDisplay.length - index}}</div>
                                             </div>
                                             <!-- <div style="cursor: pointer;" class="diagram_cell train-block selectable selected">
@@ -434,7 +434,9 @@
                             </div>
     
                             <div class="gap gap-medium hidden-sm hidden-xs"></div>
-                            <%- include('chooseSeat') %>
+                            <div style="position: relative; height: 300px;">
+                                <%- include('chooseSeat') %>
+                            </div>
                         </div>
                     </div>
                     <br>
@@ -466,24 +468,24 @@
                             <div class="row">
                                 <div class="col-sm-6 col-xs-6">
                                     <div class="form-group">
-                                        <input id="book_last_name" class="form-control english" name="book_last_name" type="text" placeholder="surname (last name)" value="">
+                                        <input id="book_full_name" class="form-control english" name="book_full_name" type="text" placeholder="Full Name" value="Full Name Test">
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-xs-6">
                                     <div class="form-group">
-                                        <input id="book_first_name" class="form-control english" name="book_first_name" type="text" placeholder="given name (first &amp; middle name)" value="">
+                                        <input id="book_passport" class="form-control english" name="book_passport" type="text" placeholder="Passport" value="123456789">
                                     </div>
                                 </div>
     
                                 <div class="col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
-                                        <input id="book_email" onpaste="return false;" class="form-control" name="book_email" type="email" placeholder="email" value="">
+                                        <input id="book_email" onpaste="return false;" class="form-control" name="book_email" type="email" placeholder="email" value="emailtest@gmail.com">
                                     </div>
                                 </div>
     
                                 <div class="col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
-                                        <input id="verify_email" onpaste="return false;" class="form-control" name="verify_email" type="email" placeholder="confirm email" value="">
+                                        <input id="verify_email" onpaste="return false;" class="form-control" name="verify_email" type="email" placeholder="confirm email" value="emailtest@gmail.com">
                                     </div>
                                 </div>
     
@@ -491,13 +493,13 @@
                                     <div class="row">
                                         <div class="col-md-4 col-md-offset-0 col-sm-2 col-sm-offset-4 col-xs-4">
                                             <div class="form-group">
-                                                <input id="book_country_code" class="form-control" name="book_country_code" type="tel" maxlength="3" placeholder="+00" value="">
+                                                <input id="book_country_code" class="form-control" name="book_country_code" type="tel" maxlength="3" placeholder="+00" value="84">
                                             </div>
                                         </div>
     
                                         <div class="col-md-8 col-sm-6 col-xs-8">
                                             <div class="form-group">
-                                                <input id="book_phone" class="form-control" name="book_phone" type="tel" maxlength="11" placeholder="phone" value="">
+                                                <input id="book_phone" class="form-control" name="book_phone" type="tel" maxlength="11" placeholder="phone" value="3664338283">
                                             </div>
                                         </div>
                                     </div>
@@ -509,7 +511,7 @@
                     <div class="gap gap-small"></div>
     
                     <input type="hidden" name="submit" value="submit">
-                    <button type="submit" class="btn green full-width">CONTINUE</button>
+                    <button type="button" class="btn green full-width" v-on:click="submitForm()">CONTINUE</button>
     
                     <div class="gap gap-footer"></div>
     
