@@ -216,7 +216,8 @@ module.exports.createSession = function(req,res){
         'Passport' : Representative.Passport,
         'Email' : Representative.Email,
         'Phone' : Representative.Phone,
-        'ID' : RepresentativeID
+        'ID' : RepresentativeID,
+        'TotalCost' : TicketInfo.Price * ListPassenger.length
     })
 
     CreateListPassengerModel(ListPassenger, RepresentativeID).then(data =>{
@@ -224,11 +225,19 @@ module.exports.createSession = function(req,res){
             res.cookie('data', RepresentativeModel, {maxAge: 60000});
             res.cookie('data2', data, {maxAge: 60000});
             res.cookie('data3', data2, {maxAge: 60000});
+            res.cookie('data4', TicketInfo,{maxAge: 60000});
             res.end('/payment');
         })
     });
 }
 
+module.exports.payment = function(req,res) {
+    var Representative = req.cookies.data;
+    var TicketInfo = req.cookies.data4;
+    console.log(Representative);
+    console.log(TicketInfo);
+    res.render('payment', {Representative : Representative, TicketInfo: TicketInfo});
+}
 function CreateListPassengerModel(ListPassenger, RepresentativeID){
     var ListPassengerModel = [];
     return new Promise(resolve => {

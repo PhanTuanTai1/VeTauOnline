@@ -4,6 +4,7 @@ var controller = require("./controller/indexController");
 var managerCtrler = require("./controller/managerController");
 var bodyParser = require("body-parser");
 var session = require('express-session');
+var cookieParser = require('cookie-parser')
 var port = process.env.PORT || 3000;
 var Cookies = require('cookies')
 var keys = ['keyboard cat']
@@ -20,6 +21,7 @@ app.use(urlencodedParser);
 app.use(jsonParser);
 app.set('view engine',"ejs");
 app.locals.moment = require('moment');
+app.use(cookieParser())
 app.set('trust proxy', 1)
 app.use(session({  
     secret: 'keyboard cat',
@@ -91,8 +93,7 @@ app.post("/createInfomation", function(req,res){
 })
 
 app.get('/payment', function(req,res){
-    console.log("req.headers.cookie: " + req.headers.cookie);
-    res.render('payment');
+    controller.payment(req,res);
 })
 //get List
 app.get("/getAllCus",function(req,res){

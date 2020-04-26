@@ -203,7 +203,8 @@ var vm = new Vue({
                 "Price" : this.result.ScheduleDetails[0].TableCosts[0].Cost,
                 "DepartureStationID" : this.result.ScheduleDetails[0].DepartureStationID,
                 "ArrivalStationID" : this.result.ScheduleDetails[0].ArrivalStationID,
-                "TrainName" : train[0].Name
+                "TrainName" : train[0].Name,
+                "SeatID" : ListSeat[0].ID
             }
             
             var data = {
