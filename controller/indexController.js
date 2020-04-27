@@ -9,7 +9,7 @@ var STATUS = {
     "PRINTED" : "2",
     "CANCEL" : "3"
 }
-
+var md5 = require('md5');
 module.exports.index = function(req,res) {
     db.Station.findAll({
         attributes:["ID","Name"]
@@ -185,8 +185,7 @@ module.exports.getAllTypeObject = function(req,res){
     })
 }
 
-module.exports.getListSeatSold = function(req,res){
-    
+module.exports.getListSeatSold = function(req,res){ 
     db.Ticket.findAll({
         attributes: ['SeatID'],
         where: {
@@ -222,22 +221,61 @@ module.exports.createSession = function(req,res){
 
     CreateListPassengerModel(ListPassenger, RepresentativeID).then(data =>{
         CreateTicket(data, TicketInfo, ListSeat).then(data2 => {
-            res.cookie('data', RepresentativeModel, {maxAge: 60000});
-            res.cookie('data2', data, {maxAge: 60000});
-            res.cookie('data3', data2, {maxAge: 60000});
-            res.cookie('data4', TicketInfo,{maxAge: 60000});
+            TicketInfo.PassengerQuantity = data.length;
+            TicketInfo.SeatID = data2[0].SeatID;
+            res.cookie('data', RepresentativeModel, {maxAge: 600000});
+            res.cookie('data2', data, {maxAge: 600000});
+            res.cookie('data3', data2, {maxAge: 600000});
+            res.cookie('data4', TicketInfo,{maxAge: 600000});
             res.end('/payment');
         })
     });
 }
 
 module.exports.payment = function(req,res) {
-    var Representative = req.cookies.data;
-    var TicketInfo = req.cookies.data4;
-    console.log(Representative);
-    console.log(TicketInfo);
-    res.render('payment', {Representative : Representative, TicketInfo: TicketInfo});
+    res.render('payment', {Representative : req.cookies.data, TicketInfo: req.cookies.data4, moment: moment});
 }
+
+module.exports.getSeatTypeBySeatID = function(req,res) {
+    db.Seat.findOne({
+        attributes: ['ID'],
+        where: {
+            ID : req.query.SeatID
+        },
+        include: {
+            model: db.SeatType,
+            attributes: ['ID','TypeName']
+        }
+    }).then(data => {
+        res.end(JSON.stringify(data));
+    })
+}
+
+module.exports.RedirectToNganLuong = function(req,res){
+    var url = 'https://sandbox.nganluong.vn:8088/nl35/checkout.php?';
+    url+= 'merchant_site_code=48847&';
+    url+= 'return_url=192.168.1.12:3000/paymentSuccess&';
+    url+= 'receiver=phantuantai1234@gmail.com&';
+    url+= 'transaction_info=thanhtoantienvetau&';
+    url+= 'order_code=' + req.cookies.data.ID + '&';
+    url+= 'price=' + req.cookies.data.TotalCost + '&';
+    url+= 'currency=vnd&';
+    url+= 'quantity=1&';
+    url+= 'tax=0&';
+    url+= 'discount=0&';
+    url+= 'fee_cal=0&';
+    url+= 'fee_shipping=0&';
+    url+= 'order_description=1&';
+    url+= 'buyer_info=1&';
+    url+= 'affiliate_code=1&';
+    var secure_code = md5(48847 + ' ' + '192.168.1.12:3000/paymentSuccess' + ' ' + 'phantuantai1234@gmail.com' + ' ' + 'thanhtoantienvetau' + ' ' 
+                                + req.cookies.data.ID + ' ' + req.cookies.data.TotalCost + ' ' + 'vnd' + ' ' + 1 + ' ' + 0 + ' ' + 0 + ' ' + 0 + ' ' 
+                                + 0 + ' ' + 1 + ' ' + 1 + ' ' + 1 + ' ' + '3fb19dfe9df59a63b23ca36069c3aea5')
+    url+= 'secure_code=' + secure_code;
+    console.log(url);
+    res.redirect(url);
+}
+
 function CreateListPassengerModel(ListPassenger, RepresentativeID){
     var ListPassengerModel = [];
     return new Promise(resolve => {

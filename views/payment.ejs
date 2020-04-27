@@ -36,8 +36,9 @@
 
 <body>
     <div id="errors" class="modal fade">
-        
-
+        <input hidden type="text" value="<%=TicketInfo.SeatID%>" id="SeatID">
+        <input hidden type="text" value="<%=TicketInfo.DepartureStationID%>" id="DepartureStationID">
+        <input hidden type="text" value="<%=TicketInfo.ArrivalStationID%>" id="ArrivalStationID">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                <div class="modal-header">
@@ -387,17 +388,6 @@
                     <div class="row">
                         <div class="col-xs-12">
     
-                            <script type="text/javascript">
-                                // Langage strings:
-                                lang_strings['sold_out'] = "Sold out";
-                                lang_strings['not_yet_open'] = "Not yet open";
-                                lang_strings['notice'] = "Notice";
-                                lang_strings['booking_price_total_charged_VND_disclaimer'] = "According to law, all payments and transactions in Vietnam territory must be made in Vietnamese dong (VND).";
-    
-                                // Init:
-                                inits.push('price_summary');
-                            </script>
-    
                             <div class="gap gap-section"></div>
                             <div class="gap gap-title">
                                 <h2>Price breakdown</h2>
@@ -413,7 +403,7 @@
                                         <div style="line-height: 40px" class="col-md-12 col-xs-12 view-total-price-items">
                                             <div class="col-xs-12 bold">
                                                 <div class="searchresult-itenerary bold uppercase">
-                                                    HANOI<i class="icon icon-train inline"></i>HO CHI MINH </div>
+                                                    <span id="DepartureID">HANOI</span> <i class="icon icon-train inline"></i><span id="ArrivalID">HO CHI MINH </span></div>
                                             </div>
                                         </div>
                                     </div>
@@ -422,14 +412,14 @@
                                     <div class="row">
                                         <div class="col-md-6 col-xs-12 view-total-price-items">
                                             <div class="col-md-6 col-xs-6">
-                                                <i class="fa fa-calendar-o"></i> Thursday, 30 April 2020 </div>
+                                                <i class="fa fa-calendar-o"></i> <%=moment(TicketInfo.DepartureDate).format('DD-MM-YYYY')%> </div>
                                             <div class="col-md-6 col-xs-6 mobile-text-right">
-                                                <i class="fa fa-clock-o"></i> <span class="blue-text bold">22:15</span>
+                                                <i class="fa fa-clock-o"></i> <span class="blue-text bold"><%=moment(TicketInfo.DepartureTime).format('LT')%></span>
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-xs-12 view-total-price-items border-bottom">
                                             <div class="col-md-12 col-xs-12">
-                                                <span class="bold">Vietnam Railways</span> SE1 </div>
+                                                <span class="bold">Vietnam Railways</span> <%=TicketInfo.TrainName%> </div>
                                         </div>
                                     </div>
                                 </div>
@@ -441,20 +431,20 @@
                                     <div class="row ">
                                         <div class="col-md-3 col-xs-12 view-total-price-items ">
                                             <div class="col-xs-12 super-bold">
-                                                1. Mr. Phan, Tai </div>
+                                                <%=Representative.Name%> </div>
                                         </div>
                                         <div class="col-md-3 col-xs-12 view-total-price-items no-padding-top-bottom  ">
                                             <div class="col-xs-12">
-                                                123456789 </div>
+                                                <%=Representative.Passport%> </div>
                                         </div>
     
                                         <div class="col-md-6 col-xs-12 view-total-price-items">
                                             <div class="col-xs-7">
-                                                <span class="bold">Soft seat</span>
+                                                <span class="bold" id="seatType">{{seatType.SeatType.SeatTypeName}}</span>
                                             </div>
     
                                             <div class="col-xs-5 text-right yellow-text">
-                                                <span class="money" data-amount="922000" data-currency="VND">922,000&nbsp;đ</span>
+                                                <span class="money" ><%=JSON.stringify(TicketInfo.Price).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%> &nbsp;VND</span>
                                             </div>
                                         </div>
                                     </div>
@@ -465,48 +455,22 @@
                                     <div class="row">
                                         <div class="col-md-offset-6 col-md-6 col-xs-12 view-total-price-items">
                                             <div class="col-xs-5 bold">
-                                                Service fee </div>
+                                                Passenger Quantity </div>
                                             <div class="col-xs-2 text-right">
-                                                1 x
+                                                
                                             </div>
                                             <div class="col-xs-5 text-right yellow-text">
-                                                <span class="service_fee_73992753 money" data-amount="50000" data-currency="VND">50,000&nbsp;đ</span>
+                                                <span class="service_fee_73992753 money"><%=TicketInfo.PassengerQuantity%></span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
     
                                 <!-- Change Fee  -->
-    
-                                <!-- Cancellation Fee  -->
-    
-                                <!-- Subtotal -->
-                                <div class="padded-panel panel-light medium-border-top subtotal_row">
-                                    <div class="row border-bottom">
-                                        <div class="col-md-offset-6 col-md-6 col-xs-12 view-total-price-items">
-                                            <div class="col-xs-5 bold">
-                                                Subtotal </div>
-                                            <div id="subtotal" class="col-xs-offset-2 col-xs-5 text-right yellow-text money" data-amount="972000" data-currency="VND">972,000&nbsp;đ</div>
-                                        </div>
-                                    </div>
-                                </div>
-    
+
                                 <div class="hidden-sm hidden-xs" style="border-bottom: 1px solid #f5f5f5"></div>
     
                                 <div class="hidden-sm hidden-xs" style="border-bottom: 1px solid #f5f5f5"></div>
-    
-                                <!-- Processing Fee -->
-                                <div class="padded-panel panel-light processing_fee_row medium-border-bottom">
-                                    <div class="row">
-                                        <div class="col-md-offset-6 col-md-6 col-xs-12 view-total-price-items">
-                                            <div class="col-xs-5 bold">
-                                                Processing fee </div>
-                                            <div class="col-xs-offset-2 col-xs-5 text-right yellow-text">
-                                                <span id="processing_fee" class="money" data-amount="34000" data-currency="VND">34,000&nbsp;đ</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
     
                                 <!-- Red Invoice Delivery Fee -->
     
@@ -517,40 +481,11 @@
                                             <div class="col-xs-5 uppercase super-bold">
                                                 Total </div>
                                             <div class="col-xs-offset-2 col-xs-5 text-right super-bold yellow-text">
-                                                <span id="total_booking" class="money" data-amount="1006000" data-currency="VND">1,006,000&nbsp;đ</span>
+                                                <span id="total_booking" class="money"><%=JSON.stringify(Representative.TotalCost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%>&nbsp;đ</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-    
-                                <!-- edit from here -->
-                                <div id="total_charged_row_sgd" class="padded-panel panel-light medium-border-top" style="display: none;">
-                                    <div class="row">
-                                        <div class="col-md-offset-6 col-md-6 col-xs-12 view-total-price-items">
-                                            <div class="col-xs-7">
-                                                TOTAL charged in SGD </div>
-                                            <div class="col-xs-5 text-right super-bold yellow-text">
-                                                <span id="total_charged_sgd" data-amount="972000" data-currency="SGD">S$&nbsp;60.96</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-    
-                                <div id="total_charged_row_vnd" class="padded-panel panel-light medium-border-top" style="display:none">
-                                    <div class="row">
-                                        <div class="col-md-offset-6 col-md-6 col-xs-12 view-total-price-items">
-                                            <div class="col-xs-7">
-                                                TOTAL charged in VND &nbsp;&nbsp;
-                                                <div id="charged_currency_info" class="fa fa-info-circle" style="cursor:pointer"></div>
-                                            </div>
-                                            <div class="col-xs-5 text-right super-bold yellow-text">
-                                                <span id="total_charged_vnd" data-amount="972000" data-currency="VND">1,006,000&nbsp;đ</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-    
-                                <!-- <div class="gap gap-small"></div> -->
                             </div>
                             <!-- End price_summary-->
                         </div>
@@ -960,7 +895,7 @@
     
                     <input type="hidden" name="submitting" value="submitting">
     
-                    <button id="submit_payment" type="submit" class="btn green full-width" disabled="disabled">Proceed to payment</button>
+                    <a id="submit_payment" class="btn green full-width" href="/RedirectToNganLuong">Proceed to payment</a>
     
                     <input type="hidden" name="stripeSource" value="">
     
@@ -1104,18 +1039,13 @@
     <script src="https://unpkg.com/vue-router@2.0.0/dist/vue-router.js"></script>
     <script src="../dist/axios.js"></script>
     <script src="../dist/vuejs-datepickker.js"></script>
-    <script src="../dist/myVue3.js"></script>	
+    <script src="../dist/myVue4.js"></script>	
     <script type="text/javascript" src="../dist/baolau.min6ffc.js"></script>
     <script type="text/javascript" src="../dist/myJS.js"></script>
     <!-- <script src="../dist/myVue2.js"></script> -->
     <!-- <script src="../dist/moment.js"></script>             -->
     <!-- Language dependant libraries -->
     <script type="text/javascript" src="../vendor/bootstrap-datepicker/locales/bootstrap-datepicker.en.min.js"></script>
-    <script>
-        var _freshenUrlAfter = ['googleAnalytics', 'pardot', 'hubspot'];
-       
-    </script>
-    
 </body>
 
 <!-- Mirrored from booking.baolau.com/en/ by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 24 Feb 2020 14:32:07 GMT -->

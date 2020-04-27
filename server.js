@@ -95,6 +95,19 @@ app.post("/createInfomation", function(req,res){
 app.get('/payment', function(req,res){
     controller.payment(req,res);
 })
+
+app.get('/getSeatTypeBySeatID', function(req,res){
+    controller.getSeatTypeBySeatID(req,res);
+})
+
+app.get('/paymentSuccess',function(req,res){
+    console.log(req);
+})
+
+app.get('/RedirectToNganLuong', function(req,res){
+    controller.RedirectToNganLuong(req,res);
+})
+
 //get List
 app.get("/getAllCus",function(req,res){
     managerCtrler.getAllCustomer(req,res);
