@@ -29,9 +29,8 @@ module.exports.train = function(req,res){
 }
 
 module.exports.search =  function(req,res){
-    console.log(req.query);
-    
-    if(typeof(req.query.ONE_WAY) != "undefined"){
+
+    if(typeof(req.query.ONE_WAY) != "undefined" && req.query.ONE_WAY == "true"){
         db.Schedule.findAll({
             attributes: ['ID','DateDeparture','TimeDeparture','TrainID'],
             where:{
@@ -70,7 +69,10 @@ module.exports.search =  function(req,res){
                 });                
             })          
         })      
-    }   
+    }
+    else if(typeof(req.query.TWO_WAY) != "undefined" && req.query.TWO_WAY == "true"){
+        
+    }
 }
 
 module.exports.scheduleDetail = function(req,res) {
@@ -254,7 +256,7 @@ module.exports.getSeatTypeBySeatID = function(req,res) {
 module.exports.RedirectToNganLuong = function(req,res){
     var url = 'https://sandbox.nganluong.vn:8088/nl35/checkout.php?';
     url+= 'merchant_site_code=48847&';
-    url+= 'return_url=192.168.1.12:3000/paymentSuccess&';
+    url+= 'return_url=https://trainticketonline.herokuapp.com/paymentSuccess&';
     url+= 'receiver=phantuantai1234@gmail.com&';
     url+= 'transaction_info=thanhtoantienvetau&';
     url+= 'order_code=' + req.cookies.data.ID + '&';
@@ -268,7 +270,7 @@ module.exports.RedirectToNganLuong = function(req,res){
     url+= 'order_description=1&';
     url+= 'buyer_info=1&';
     url+= 'affiliate_code=1&';
-    var secure_code = md5(48847 + ' ' + '192.168.1.12:3000/paymentSuccess' + ' ' + 'phantuantai1234@gmail.com' + ' ' + 'thanhtoantienvetau' + ' ' 
+    var secure_code = md5(48847 + ' ' + 'https://trainticketonline.herokuapp.com/paymentSuccess' + ' ' + 'phantuantai1234@gmail.com' + ' ' + 'thanhtoantienvetau' + ' ' 
                                 + req.cookies.data.ID + ' ' + req.cookies.data.TotalCost + ' ' + 'vnd' + ' ' + 1 + ' ' + 0 + ' ' + 0 + ' ' + 0 + ' ' 
                                 + 0 + ' ' + 1 + ' ' + 1 + ' ' + 1 + ' ' + '3fb19dfe9df59a63b23ca36069c3aea5')
     url+= 'secure_code=' + secure_code;
