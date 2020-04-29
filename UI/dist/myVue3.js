@@ -116,10 +116,13 @@ var vm = new Vue({
             document.getElementById(object2).value = id;
         },
         setCarriageDisplay : function(){
-            this.result = JSON.parse(document.getElementById('result').value);
+            alert(JSON.stringify(this.result))
+            alert(JSON.stringify(this.listCarriage))
+
             var result = this.listCarriage.filter(data => {
                 return data.TrainID == this.result.TrainID && data.Seats[0].SeatTypeID == this.result.ScheduleDetails[0].TableCosts[0].SeatTypeID
             })
+            
             this.carriageDisplay = result;
         },
 
