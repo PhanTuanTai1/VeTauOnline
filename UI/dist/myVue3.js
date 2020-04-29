@@ -118,11 +118,11 @@ var vm = new Vue({
         setCarriageDisplay : function(){
             alert(JSON.stringify(this.result))
             alert(JSON.stringify(this.listCarriage))
-
+            alert(JSON.stringify(this.listCarriage[0].Seats[0].SeatTypeID))
             var result = this.listCarriage.filter(data => {
                 return data.TrainID == this.result.TrainID && data.Seats[0].SeatTypeID == this.result.ScheduleDetails[0].TableCosts[0].SeatTypeID
             })
-            
+
             this.carriageDisplay = result;
         },
 
