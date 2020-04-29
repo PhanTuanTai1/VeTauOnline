@@ -24,12 +24,13 @@ var vm = new Vue({
     el: "#app",
     created: async function(){
        this.total = document.getElementById('number').value;
-       this.result = JSON.parse(document.getElementById('result').value);
-
+       this.result = await JSON.parse(document.getElementById('result').value);
+       if(typeof(document.getElementById('result2')) != "undefined" && document.getElementById('result2') != null)
+            this.result2 = JSON.parse(document.getElementById('result2').value);
        await axios.get('/getAllTrain').then(res => {
            this.train = res.data;
        })
-       this.setTrainName();
+       
        
        await axios.get('/getListCarriage').then(res =>{
            this.listCarriage = res.data;
@@ -40,7 +41,7 @@ var vm = new Vue({
        await axios.get('/getAllStation').then(res =>{
            this.station = res.data;
        })
-       this.setStationName();
+       
        axios.get('/getAllSeatType').then(res =>{
            this.seatType = res.data;
        })
@@ -57,6 +58,10 @@ var vm = new Vue({
        for(var i = 0; i < this.total;i++){
            this.numberPass.push({'index': i + 1});
        }
+       this.setTrainName(this.result, 1);
+       if(typeof(this.result2)  != "undefined" && this.result2 != null) this.setTrainName(this.result2, 2);
+       this.setStationName(this.result, 1);
+       if(typeof(this.result2)  != "undefined" && this.result2 != null) this.setStationName(this.result2, 2);
        this.loadSeat();
        this.listSelected = new Array();
     },
@@ -71,38 +76,40 @@ var vm = new Vue({
         numberPass: null,
         total: null,
         result: null,
+        result2: null,
         carriageDisplay: null,
         listSelected: null
     },
 
     methods:{
-        setTrainName:async function(){
+        setTrainName:async function(result, index){
             var train = this.train.filter(train => {
-                return train.ID == this.result.TrainID
+                return train.ID == result.TrainID
             })
-            document.getElementById('trainName').innerHTML = train[0].Name;
-            var object = document.getElementsByClassName('hiddenTrain');
+            document.getElementById('trainName'+ index).innerHTML = train[0].Name;
+
+            var object = document.getElementsByClassName('hiddenTrain' + index);
             for(var i = 0; i < object.length; i++){
                 object[i].innerHTML = train[0].Name;
             }
         },
 
-        setStationName: function(){
+        setStationName: function(result, index){
             var depart = this.station.filter(station => {
-                return station.ID == this.result.ScheduleDetails[0].DepartureStationID
+                return station.ID == result.ScheduleDetails[0].DepartureStationID
             })
             var arrival = this.station.filter(station => {
-                return station.ID == this.result.ScheduleDetails[0].ArrivalStationID
+                return station.ID == result.ScheduleDetails[0].ArrivalStationID
             })
+                document.getElementById('parentDepart' + index).innerHTML = depart[0].Name;
+                document.getElementById('subDepart' + index).innerHTML = depart[0].Name;
+                document.getElementById('hiddenDepart' + index).innerHTML = depart[0].Name;
+                document.getElementById('summaryDepart' + index).innerHTML = depart[0].Name;
+                document.getElementById('parentArrival' + index).innerHTML = arrival[0].Name;
+                document.getElementById('subArrival' + index).innerHTML = arrival[0].Name;
+                document.getElementById('hiddenArrival' + index).innerHTML = arrival[0].Name;
+                document.getElementById('summaryArrival' + index).innerHTML = arrival[0].Name;
             
-            document.getElementById('parentDepart').innerHTML = depart[0].Name;
-            document.getElementById('subDepart').innerHTML = depart[0].Name;
-            document.getElementById('hiddenDepart').innerHTML = depart[0].Name;
-            document.getElementById('summaryDepart').innerHTML = depart[0].Name;
-            document.getElementById('parentArrival').innerHTML = arrival[0].Name;
-            document.getElementById('subArrival').innerHTML = arrival[0].Name;
-            document.getElementById('hiddenArrival').innerHTML = arrival[0].Name;
-            document.getElementById('summaryArrival').innerHTML = arrival[0].Name;
         },
         selectedType: function(object, object2, id, typeName){
             document.getElementById(object).innerHTML = typeName;

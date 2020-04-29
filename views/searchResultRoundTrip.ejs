@@ -38,6 +38,10 @@
 <body>
     <input type="hidden" id="myData" value="<%=result%>"/>
     <input type="hidden" id="query" value="<%=query%>"/>
+    <input type="hidden" id="step_trip" value="<%=STEP%>"/>
+    <%if(typeof(DepartureQuery) != "undefined"){%>
+        <input type="hidden" id="DepartureQuery" value="<%=DepartureQuery%>"/>
+    <%}%> 
     <div id="errors" class="modal fade">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -190,10 +194,26 @@
         <div class="gap gap-super-small hidden-sm hidden-xs"></div>
         <div class="progress-bar-holder hidden-sm hidden-xs">
             <ul class="progressbar small-text bold">
-                <li class="current">
-                    <span>DEPARTURE</span>
-                    <em class="progress-bar-arrow "></em>
-                </li>
+                <%if(STEP == 1){%>
+                    <li class="current">
+                        <span>DEPARTURE</span>
+                        <em class="progress-bar-arrow "></em>
+                    </li>
+                    <li class="">
+                        <span>RETURN</span>
+                        <em class="progress-bar-arrow "></em>
+                    </li>
+                <%}%>
+                <%if(STEP ==2){%>
+                    <li class="active">
+                        <a href="https://booking.baolau.com/en/results?departure=&amp;return=&amp;sess_key=b9ea2d577e0c5e3ae3b7eab2e8e8b574">DEPARTURE</a>
+                        <em class="progress-bar-arrow "></em>
+                    </li>
+                    <li class="current">
+                        <span>RETURN</span>
+                        <em class="progress-bar-arrow "></em>
+                    </li>
+                <%}%>
                 <li class="">
                     <span>PASSENGERS</span>
                     <em class="progress-bar-arrow "></em>
@@ -218,11 +238,20 @@
             <div class="col-xs-2 col-sm-3 small-text">
                 &nbsp; </div>
 
-            <div class="col-xs-8 col-sm-6">
-                <div class="current bold">
-                    <span>Departure</span>
-                </div>
-            </div>
+                <%if(STEP == 1){%>
+                    <div class="col-xs-8 col-sm-6">
+                        <div class="current bold">
+                            <span>Departure</span>
+                        </div>
+                    </div>
+                <%}%>
+                <%if(STEP ==2){%>
+                    <li class="current bold">
+                        <span>Return</span>
+                        <em class="progress-bar-arrow "></em>
+                    </li>
+                <%}%>
+            
 
             <div style="opacity: .3" class="col-xs-2 col-sm-3 small-text">
                 <div class="progress-arrow-right pull-right small-text"></div>
@@ -621,8 +650,7 @@
                         data-price="922000" 
                         data-allow-price-zero="" 
                         data-step="Vietnam Railways" class="result clickable_tr train vr direct">
-                            <td style="text-align: center; width: 158px;">
-                                <img src="https://booking.baolau.com/images/logos/transports/logo-vr.png" class="searchresult-logo">
+                            <td style="text-align: center; width: 158px;"><img src="https://booking.baolau.com/images/logos/transports/logo-vr.png" class="searchresult-logo">
                                 <div style="font-size: 13px;" v-text="train.Name"></div>
                             </td>
                             <td class="text-right" style="width: 187px;">

@@ -6,7 +6,9 @@ new Vue({
         this.result = JSON.parse(document.getElementById("myData").value);
         document.getElementById("myData").replaceWith("");
         this.query = JSON.parse(document.getElementById("query").value);
-        
+
+        if(typeof(document.getElementById('step_trip')) != "undefined" && document.getElementById('step_trip') != null) 
+            this.step = document.getElementById('step_trip').value;
         await axios.get('/getAllTrain')
         .then(res => {                 
             this.train = res.data;
@@ -30,6 +32,7 @@ new Vue({
         listTrain: [],
         seatType: null,
         query: null,
+        step: null,
     },
 
     methods:{
@@ -60,14 +63,29 @@ new Vue({
             tr.setAttribute("class","result clickable_tr train vr clicked checking");
 
             var train = this.getScheduleDetailByTrainID(trainID);
+            var url;
 
-            var url = "/scheduleDetail?TRAINID=" 
+            if(typeof(this.query.ONE_WAY) != "undefined")
+            {
+                url = "/scheduleDetail?TRAINID=" 
                         + train[0].TrainID + "&SCHEDULEID=" + train[0].ID + "&DepartID=" 
                         + train[0].ScheduleDetails[0].DepartureStationID
                         + "&ArrivalID=" + train[0].ScheduleDetails[0].ArrivalStationID
                         + "&ONE_WAY=" + this.query.ONE_WAY
                         + "&PASSENGERS=" + this.query.PASSENGERS
-                        + "&Query=" + JSON.stringify(this.query); 
+                        + "&Query=" + JSON.stringify(this.query);     
+            }
+            else if(typeof(this.query.ROUND_TRIP) != "undefined"){
+                alert(this.step);
+                url = "/scheduleDetail?TRAINID=" 
+                        + train[0].TrainID + "&SCHEDULEID=" + train[0].ID + "&DepartID=" 
+                        + train[0].ScheduleDetails[0].DepartureStationID
+                        + "&ArrivalID=" + train[0].ScheduleDetails[0].ArrivalStationID
+                        + "&ROUND_TRIP=" + this.query.ROUND_TRIP
+                        + "&PASSENGERS=" + this.query.PASSENGERS
+                        + "&Query=" + JSON.stringify(this.query)
+                        + "&STEP=" + this.step;
+            }
 
             axios.get(url)
             .then( resp => {

@@ -38,7 +38,7 @@
             >
                 <td style="text-align: center">
                     <img class="searchresult-logo" src="https://booking.baolau.com/images/logos/transports/logo-vr-5-star.png">
-                    <div style="font-size: 13px" id="trainName"></div>
+                    <div style="font-size: 13px" id="trainName<%=index%>"></div>
                 </td>
 
                 <td class="text-right">
@@ -53,12 +53,12 @@
                     17h 10m </td>
                 <td class="searchresult-itenerary hidden-sm hidden-xs">
                     <span style="display:inline-block" >
-                        <span id="parentDepart"></span><br>
-                    <span style="font-size:13px" id="subDepart"></span></span> 
+                        <span id="parentDepart<%=index%>"></span><br>
+                    <span style="font-size:13px" id="subDepart<%=index%>"></span></span> 
                     <i class="icon have-node-code icon-train inline"></i> 
                     <span style="display:inline-block">
-                        <span id="parentArrival"></span><br>
-                    <span style="font-size:13px" id="subArrival"></span></span>
+                        <span id="parentArrival<%=index%>"></span><br>
+                    <span style="font-size:13px" id="subArrival<%=index%>"></span></span>
                 </td>
                 <td class="total_price yellow-text super-bold price-alignment">
                     <span class="money" data-amount="579000" data-currency="VND"><%=JSON.stringify(result.ScheduleDetails[0].TableCosts[0].Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%>&nbsp;VND</span> <i class="js-result_promo_tag fa fa-tag yellow-text" style="display:none"></i> </td>
@@ -99,7 +99,7 @@
 
                                         <td colspan="2" class="padded-left">
                                             <!-- style="border-right:1px solid #ddd;" -->
-                                            <h4 class="station-text bold" id="hiddenDepart">
+                                            <h4 class="station-text bold" id="hiddenDepart<%=index%>">
                     <!-- DA NANG                                                 - Da Nang Railway Station                                            </h4> -->
                                             <!-- <span> 202 Hải Phòng, Phường Tân Chính, Quận Thanh Khê, Đà Nẵng</span> -->
                                         </td>
@@ -111,7 +111,7 @@
                                                     <div class="relative fares-choose-items
                                         active                                                                                                                                                                                                        ">
                                                         <div class="fares-choose radio">
-                                                            <input id="fare_2f3307796b9aba433630ffeb5301ed8b_69951216_NML56" type="radio" name="fares_2f3307796b9aba433630ffeb5301ed8b_69951216" class="fare_radio" data-fare="NML56" data-price="579000" data-label="Soft seat Premium" data-has_promotion="0" data-basefare="579000" checked="">
+                                                            <input id="fare_2f3307796b9aba433630ffeb5301ed8b_69951216_NML56" type="radio" name="fares_2f3307796b9aba433630ffeb5301ed8b_69951216<%=index%>" class="fare_radio" data-fare="NML56" data-price="579000" data-label="Soft seat Premium" data-has_promotion="0" data-basefare="579000" checked="">
 
                                                             <label for="fare_2f3307796b9aba433630ffeb5301ed8b_69951216_NML56"></label>
                                                         </div>
@@ -135,7 +135,7 @@
                                     <tr style="border:none">
                                         <td style="text-align:center">
                                             <img class="searchresult-logo" src="https://booking.baolau.com/images/logos/transports/logo-vr-5-star.png">
-                                            <div style="font-size: 13px" class="hiddenTrain">SE3</div>
+                                            <div style="font-size: 13px" class="hiddenTrain<%=index%>">SE3</div>
                                         </td>
                                         <td class="text-right">
                                             <span>
@@ -150,7 +150,7 @@
                                             <!-- style="border-right:1px solid #ddd; overflow:hidden"-->
                                             <!--<div class="side_point">
                     <span class="side_line">-->
-                                            <div class="bold" >Vietnam Railways</span> <span class="hiddenTrain"></span>
+                                            <div class="bold" >Vietnam Railways</span> <span class="hiddenTrain<%=index%>"></span>
                                             <!--</span>
             </div>-->
                                         </td>
@@ -169,7 +169,7 @@
                                             </div>
                                         </td>
                                         <td colspan="2" class="padded-left">
-                                            <h4 class="station-text bold" id="hiddenArrival">
+                                            <h4 class="station-text bold" id="hiddenArrival<%=index%>">
                     HO CHI MINH                                                 - Saigon Railway Station                                            </h4>
                                             <!-- <span>01 Nguyễn Thông, Phường 9, Quận 3, Thành phố Hồ Chí Minh</span> -->
                                         </td>

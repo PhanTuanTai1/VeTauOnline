@@ -249,17 +249,40 @@
         <div class="clearfix"></div>
 
         <!-- <div class="gap gap-small hidden-sm hidden-xs"></div> -->
-        <div style="padding:0px 15px;" class="searchresult-button">
-            <a class="btn full-width btn-select green" 
-            href="/passenger?ONE_WAY=<%=ONE_WAY%>&PASSENGERS=<%=PASSENGERS%>&SCHEDULEID=<%=SCHEDULEID%>&TRAINID=<%=TrainID%>&SCHEDULEDETAILID=<%=SCHEDULEDETAILID%>&FROM=<%=FROM%>&TO=<%=TO%>&DEPART=<%=DEPART%>&costID=<%=result[0].ScheduleDetails[0].TableCosts[0].SeatTypeID%>"
-            target="_self" 
-            id="bookLink<%=SCHEDULEDETAILID%>"
-            data-href="/passenger?ONE_WAY=<%=ONE_WAY%>&PASSENGERS=<%=PASSENGERS%>&SCHEDULEID=<%=SCHEDULEID%>&TRAINID=<%=TrainID%>&SCHEDULEDETAILID=<%=SCHEDULEDETAILID%>&FROM=<%=FROM%>&TO=<%=TO%>&DEPART=<%=DEPART%>">
-                <span class="bold">ĐẶT VÉ TRỰC TUYẾN</span>
-            </a>
-            
-        </div>
-
+        <%if(typeof(STEP) == "undefined"){%>
+            <div style="padding:0px 15px;" class="searchresult-button">
+                <a class="btn full-width btn-select green" 
+                href="/passenger?ONE_WAY=<%=ONE_WAY%>&PASSENGERS=<%=PASSENGERS%>&SCHEDULEID=<%=SCHEDULEID%>&TRAINID=<%=TrainID%>&SCHEDULEDETAILID=<%=SCHEDULEDETAILID%>&FROM=<%=FROM%>&TO=<%=TO%>&DEPART=<%=DEPART%>&costID=<%=result[0].ScheduleDetails[0].TableCosts[0].SeatTypeID%>"
+                target="_self" 
+                id="bookLink<%=SCHEDULEDETAILID%>"
+                data-href="/passenger?ONE_WAY=<%=ONE_WAY%>&PASSENGERS=<%=PASSENGERS%>&SCHEDULEID=<%=SCHEDULEID%>&TRAINID=<%=TrainID%>&SCHEDULEDETAILID=<%=SCHEDULEDETAILID%>&FROM=<%=FROM%>&TO=<%=TO%>&DEPART=<%=DEPART%>">
+                    <span class="bold">ĐẶT VÉ TRỰC TUYẾN</span>
+                </a>
+                
+            </div>
+        <%}else if(STEP == 1){%>
+            <div style="padding:0px 15px;" class="searchresult-button">
+                <a class="btn full-width btn-select green" 
+                href="/searchSchedule?ROUND_TRIP=<%=ROUND_TRIP%>&DepartureQuery=<%=JSON.stringify(DepartureQuery)%>&STEP=<%=STEP%>&RETURN=<%=RETURN%>&PASSENGERS=<%=PASSENGERS%>&SCHEDULEID=<%=SCHEDULEID%>&TRAINID=<%=TrainID%>&SCHEDULEDETAILID=<%=SCHEDULEDETAILID%>&FROM=<%=FROM%>&TO=<%=TO%>&DEPART=<%=DEPART%>&costID=<%=result[0].ScheduleDetails[0].TableCosts[0].SeatTypeID%>"
+                target="_self" 
+                id="bookLink<%=SCHEDULEDETAILID%>"
+                data-href="/searchSchedule?ROUND_TRIP=<%=ROUND_TRIP%>&STEP=<%=STEP%>&RETURN=<%=RETURN%>&PASSENGERS=<%=PASSENGERS%>&SCHEDULEID=<%=SCHEDULEID%>&TRAINID=<%=TrainID%>&SCHEDULEDETAILID=<%=SCHEDULEDETAILID%>&FROM=<%=FROM%>&TO=<%=TO%>&DEPART=<%=DEPART%>">
+                    <span class="bold">ĐẶT VÉ TRỰC TUYẾN</span>
+                </a>
+                
+            </div>
+        <%}else{%>
+            <div style="padding:0px 15px;" class="searchresult-button">
+                <a class="btn full-width btn-select green" 
+                href="/passenger?ROUND_TRIP=<%=ROUND_TRIP%>&PASSENGERS=<%=PASSENGERS%>&SCHEDULEID=<%=SCHEDULEID%>&TRAINID=<%=TrainID%>&SCHEDULEDETAILID=<%=SCHEDULEDETAILID%>&FROM=<%=FROM%>&TO=<%=TO%>&DEPART=<%=DEPART%>&costID=<%=result[0].ScheduleDetails[0].TableCosts[0].SeatTypeID%>"
+                target="_self" 
+                id="bookLink<%=SCHEDULEDETAILID%>"
+                data-href="/passenger?ROUND_TRIP=<%=ROUND_TRIP%>&PASSENGERS=<%=PASSENGERS%>&SCHEDULEID=<%=SCHEDULEID%>&TRAINID=<%=TrainID%>&SCHEDULEDETAILID=<%=SCHEDULEDETAILID%>&FROM=<%=FROM%>&TO=<%=TO%>&DEPART=<%=DEPART%>">
+                    <span class="bold">ĐẶT VÉ TRỰC TUYẾN</span>
+                </a>
+                
+            </div>
+        <%}%>   
         <div class="gap gap-mini"></div>
 
     </td>

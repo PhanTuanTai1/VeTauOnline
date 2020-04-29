@@ -38,6 +38,9 @@
     <div id="errors" class="modal fade">
         <input type="hidden" value="<%=JSON.stringify(result.DateDeparture)%>" id="dateDepart">
         <input type="hidden" value="<%=JSON.stringify(result)%>" id="result">
+        <%if(typeof(result2) != "undefined"){%>
+            <input type="hidden" value="<%=JSON.stringify(result2)%>" id="result2">
+        <%}%>
         <input type="hidden" value="<%=passengers%>" id="number">
         <input type="hidden" value="<%=SeatTypeID%>" id="SeatTypeID">
         <input type="hidden" value="<%=FROM%>" id="FROM">
@@ -186,11 +189,19 @@
         <div class="row booking-progress uppercase">
             <div class="col-xs-2 col-sm-3 small-text">
                 &nbsp; </div>
-
+                <%if(typeof(result2)!="undefined"){%>
+                    <input hidden type="text" value="2" id="indexIti">
+                <%}%>
+                <input hidden type="text" value="1" id="indexIti">
             <div class="col-xs-8 col-sm-6">
                 <div class="current bold">
                     <span>Departure</span>
                 </div>
+                <%if(typeof(ROUND_TRIP) != "undefined"){%>
+                    <div class="current bold">
+                        <span>Departure</span>
+                    </div>
+                <%}%>
             </div>
 
             <div style="opacity: .3" class="col-xs-2 col-sm-3 small-text">
@@ -211,6 +222,12 @@
                             <a href="https://booking.baolau.com/en/results?departure=&amp;return=&amp;sess_key=b9ea2d577e0c5e3ae3b7eab2e8e8b574">DEPARTURE</a>
                             <em class="progress-bar-arrow "></em>
                         </li>
+                        <%if(typeof(ROUND_TRIP) != "undefined"){%>
+                            <li class="active">
+                                <a href="https://booking.baolau.com/en/results?departure=&amp;return=&amp;sess_key=b9ea2d577e0c5e3ae3b7eab2e8e8b574">RETURN</a>
+                                <em class="progress-bar-arrow "></em>
+                            </li>
+                        <%}%>
                         <li class="current">
                             <span>PASSENGERS</span>
                             <em class="progress-bar-arrow"></em>
@@ -251,7 +268,52 @@
             <!-- END MOBILE progress-bar-holder -->
     
             <form action="/payment" id="booking_form" data-passengers="1" method="post" accept-charset="utf-8">
-    
+                <%if(typeof(result2) != "undefined"){%>
+                    <div class="container">
+                        <div id="search_results_2" class="row">
+                            <div class="col-xs-12">
+                                <div class="gap gap-section"></div>
+                                <div class="gap gap-title">
+                                    <h2>Your itinerary</h2>
+                                    <div class="horizontal-devider hidden-sm hidden-xs"></div>
+                                </div>
+        
+                                <div class="js-selected_result">
+                                    <h1 class="booking-desp big-text">
+                    Summary of Departure from <span class="blue-text bold" id="summaryDepart2">Da Nang</span> to <span class="blue-text bold" id="summaryArrival2">Ho Chi Minh</span> on <span class="bold"><%=moment(result2.DateDeparture).format('DD-MM-YYYY')%></span>
+                </h1>
+                                    <div class="gap gap-mini"></div>
+        
+                                    <!-- table Result -->
+                                    <%- include('tableResult', {result: result2, index: 2})%>
+                                    
+                                    <!-- Disclaimer Ticket Collection -->
+                                </div>
+                                <!-- // js-selected_result -->
+        
+                            </div>
+                            <!-- End col-xs-12-->
+                        </div>
+                        <!-- End Search result-->
+        
+                        <!-- Modals -->
+                        <div id="map" class="modal fade">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div style="padding: 0px; margin-top: 0px" class="modal-body">
+                                        <button type="button" class="close" style="position: absolute; top:10px; right:15px; z-index: 1; color: #000; opacity: .8; font-size: 24px;" data-dismiss="modal" aria-label="Close">×</button>
+                                        <div id="map_canvas">
+                                            <div class="map"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+                        <!-- /.modal -->
+                    </div>
+                <%}%>
                 <div class="container">
                     <div id="search_results" class="row">
                         <div class="col-xs-12">
@@ -263,12 +325,13 @@
     
                             <div class="js-selected_result">
                                 <h1 class="booking-desp big-text">
-                Summary of Departure from <span class="blue-text bold" id="summaryDepart">Da Nang</span> to <span class="blue-text bold" id="summaryArrival">Ho Chi Minh</span> on <span class="bold"><%=moment(result.DateDeparture).format('DD-MM-YYYY')%></span>
+                Summary of Departure from <span class="blue-text bold" id="summaryDepart1">Da Nang</span> to <span class="blue-text bold" id="summaryArrival1">Ho Chi Minh</span> on <span class="bold"><%=moment(result.DateDeparture).format('DD-MM-YYYY')%></span>
             </h1>
                                 <div class="gap gap-mini"></div>
     
                                 <!-- table Result -->
-                                <%- include('tableResult', {result: result})%>
+                                <%- include('tableResult', {result: result, index: 1})%>
+                                
                                 <!-- Disclaimer Ticket Collection -->
                             </div>
                             <!-- // js-selected_result -->
@@ -295,7 +358,7 @@
                     </div>
                     <!-- /.modal -->
                 </div>
-    
+            
                 <div class="container">
                     <!-- Hidden fields -->
                     <input id="first_travel_date" type="hidden" name="first_travel_date" value="2020-04-16">

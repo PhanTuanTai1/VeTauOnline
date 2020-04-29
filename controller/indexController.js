@@ -4,12 +4,14 @@ var moment = require('moment');
 var bucketjs = require('../node_modules/buckets-js/dist/buckets');
 var formidable = require('formidable');
 var UUID = require('uuidjs');
+var md5 = require('md5');
+
 var STATUS = {
     "NOTPRINT" : "1",
     "PRINTED" : "2",
     "CANCEL" : "3"
 }
-var md5 = require('md5');
+
 module.exports.index = function(req,res) {
     db.Station.findAll({
         attributes:["ID","Name"]
@@ -70,8 +72,74 @@ module.exports.search =  function(req,res){
             })          
         })      
     }
-    else if(typeof(req.query.TWO_WAY) != "undefined" && req.query.TWO_WAY == "true"){
+    else if(typeof(req.query.ROUND_TRIP) != "undefined" && req.query.ROUND_TRIP == "true"){
+        var date = req.query.DEPART;
+        var from = req.query.FROM;
+        var to = req.query.TO;
         
+        if(typeof(req.query.STEP) != "undefined" && req.query.STEP == 1){
+            date = req.query.RETURN;
+            from = req.query.TO;
+            to = req.query.FROM;
+        }
+
+        db.Schedule.findAll({
+            attributes: ['ID','DateDeparture','TimeDeparture','TrainID'],
+            where:{
+                DateDeparture: date
+            },
+            include:[{
+                model: db.ScheduleDetail,
+                attributes: ['ID','ScheduleID','DepartureStationID', 'ArrivalStationID','Time'],
+                where:{
+                    DepartureStationID: parseInt(from),
+                    ArrivalStationID: parseInt(to)
+                }
+            }],
+        }).then(Schedule => {   
+            // console.log(JSON.stringify(Schedule));
+            if(Schedule.length === 0) {
+                if(typeof(req.query.STEP) == "undefined"){
+                    res.render('searchResultRoundTrip',{result : [], query: JSON.stringify(req.query),STEP: 1});
+                }
+                else {
+                    res.render('searchResultRoundTrip',{result : [], query: JSON.stringify(req.query),STEP: 2, DepartureQuery: req.query.DepartureQuery});
+                }
+                res.end();
+            }     
+            var result = [];
+            var count = 0;
+            Schedule.forEach((schedule, index, array ) => {     
+
+                checkSeat(schedule.TrainID,req.query.PASSENGERS, req.query.DEPART).then(check =>{
+                    if(check){
+                        result.push(schedule);                   
+                    }           
+                    if(index + 1 === array.length){
+                        if(result.length === 0) {
+                            if(typeof(req.query.STEP) == "undefined"){
+                                res.render('searchResultRoundTrip',{result : JSON.stringify(result), query: JSON.stringify(req.query),STEP: 1});
+                            }
+                            else {
+                                var data = {'SCHEDULEID': req.query.SCHEDULEID, 'SCHEDULEDETAILID': req.query.SCHEDULEDETAILID, 'costID': req.query.costID}
+                                res.cookie('step1', data)
+                                res.render('searchResultRoundTrip',{result : JSON.stringify(result), query: JSON.stringify(req.query),STEP: 2, DepartureQuery: req.query.DepartureQuery});
+                            }
+                        }
+                        else {
+                            if(typeof(req.query.STEP) == "undefined"){
+                                res.render('searchResultRoundTrip',{result : JSON.stringify(result), query: JSON.stringify(req.query),STEP: 1});
+                            }
+                            else {
+                                var data = {'SCHEDULEID': req.query.SCHEDULEID, 'SCHEDULEDETAILID': req.query.SCHEDULEDETAILID, 'costID': req.query.costID}
+                                res.cookie('step1', data)
+                                res.render('searchResultRoundTrip',{result : JSON.stringify(result), query: JSON.stringify(req.query),STEP: 2, DepartureQuery: req.query.DepartureQuery});
+                            }
+                        }
+                    }
+                });                
+            })          
+        })      
     }
 }
 
@@ -100,7 +168,9 @@ module.exports.scheduleDetail = function(req,res) {
         var Train = await getTrainByID(result[0].TrainID);
         var dic = await getAllSeatType();
         var data = JSON.parse(req.query.Query);
-        res.render('scheduleDetail', 
+
+        if(typeof(req.query.ONE_WAY) != "undefined"){
+            res.render('scheduleDetail', 
             {result: result, 
             departureStation: DepartureStation, 
             arrivalStation: ArrivalStation, 
@@ -115,7 +185,46 @@ module.exports.scheduleDetail = function(req,res) {
             SCHEDULEID: req.query.SCHEDULEID,
             TrainID:  req.query.TRAINID,
             SCHEDULEDETAILID: result[0].ScheduleDetails[0].ID});
-        
+        }
+        else if(typeof(req.query.ROUND_TRIP) != "undefined" && req.query.STEP == 2){
+            res.render('scheduleDetail', 
+            {result: result, 
+            departureStation: DepartureStation, 
+            arrivalStation: ArrivalStation, 
+            train: Train, 
+            moment: moment, 
+            dic: dic, 
+            ROUND_TRIP: req.query.ROUND_TRIP, 
+            PASSENGERS: req.query.PASSENGERS, 
+            DEPART: data.DEPART,
+            RETURN: data.RETURN,
+            FROM: data.FROM,
+            TO: data.TO,
+            SCHEDULEID: req.query.SCHEDULEID,
+            TrainID:  req.query.TRAINID,
+            SCHEDULEDETAILID: result[0].ScheduleDetails[0].ID,
+            STEP:2});
+        }
+        else {
+            res.render('scheduleDetail', 
+            {result: result, 
+            departureStation: DepartureStation, 
+            arrivalStation: ArrivalStation, 
+            train: Train, 
+            moment: moment, 
+            dic: dic, 
+            ROUND_TRIP: req.query.ROUND_TRIP, 
+            PASSENGERS: req.query.PASSENGERS, 
+            DEPART: data.DEPART,
+            RETURN: data.RETURN,
+            FROM: data.FROM,
+            TO: data.TO,
+            SCHEDULEID: req.query.SCHEDULEID,
+            TrainID:  req.query.TRAINID,
+            SCHEDULEDETAILID: result[0].ScheduleDetails[0].ID,
+            STEP:req.query.STEP,
+            DepartureQuery: data});
+        }
     })
 }
 
@@ -160,15 +269,51 @@ module.exports.passenger = function(req,res){
             }]
         }]
     }).then(result => {
-       
-        res.render('passengers', {result: result, 
+       if(typeof(req.cookies.step1) != "undefined"){
+        db.Schedule.findOne({
+            attributes: ['ID','TrainID','DateDeparture','TimeDeparture'],
+            where: {
+                ID: parseInt(req.cookies.step1.SCHEDULEID)
+            },
+            include:[{
+                model: db.ScheduleDetail,
+                attributes: ['ID', 'DepartureStationID', 'ArrivalStationID', 'Length', 'Time'],
+                where: {
+                    ID: parseInt(req.cookies.step1.SCHEDULEDETAILID)
+                },
+                include: [{
+                    model: db.TableCost,
+                    attributes: ['ScheduleID','SeatTypeID','Cost'],
+                    where: {
+                        SeatTypeID: parseInt(req.cookies.step1.costID)
+                    }
+                }]
+            }]
+        }).then(result2 => {
+            res.render('passengers', {result: result,result2 : result2, 
+                moment: moment, 
+                SeatTypeID: req.query.costID, 
+                passengers: req.query.PASSENGERS,
+                FROM: req.query.FROM, 
+                TO: req.query.TO, 
+                DEPART: req.query.DEPART,
+                ONE_WAY: req.query.ONE_WAY,
+                ROUND_TRIP: req.query.ROUND_TRIP,
+                query: req.query.Query})
+        })       
+       }
+       else {
+        res.render('passengers', {result: result,
             moment: moment, 
             SeatTypeID: req.query.costID, 
             passengers: req.query.PASSENGERS,
             FROM: req.query.FROM, 
             TO: req.query.TO, 
             DEPART: req.query.DEPART,
-            ONE_WAY: req.query.ONE_WAY})
+            ONE_WAY: req.query.ONE_WAY,
+            ROUND_TRIP: req.query.ROUND_TRIP,
+            query: req.query.Query})
+       }      
     })
 }
 
@@ -322,6 +467,7 @@ function CreateTicket(ListPassengerModel, TicketInfo, ListSeat){
         resolve(ListTicketInfo);
     })
 }
+
 function RandomRepresentativeID(){
     return '_' + Math.random().toString(36).substr(2, 9);
 }
@@ -465,4 +611,3 @@ function convertTypeObjectToDictionary(object){
         })
     })
 }
-
