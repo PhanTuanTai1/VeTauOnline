@@ -24,9 +24,10 @@ var vm = new Vue({
     el: "#app",
     created: async function(){
        this.total = document.getElementById('number').value;
-       this.result = await JSON.parse(document.getElementById('result').value);
+       this.result = JSON.parse(document.getElementById('result').value);
        if(typeof(document.getElementById('result2')) != "undefined" && document.getElementById('result2') != null)
             this.result2 = JSON.parse(document.getElementById('result2').value);
+            
        await axios.get('/getAllTrain').then(res => {
            this.train = res.data;
        })
@@ -116,10 +117,6 @@ var vm = new Vue({
             document.getElementById(object2).value = id;
         },
         setCarriageDisplay : function(){
-            alert(JSON.stringify(this.result))
-            alert(JSON.stringify(this.listCarriage))
-            alert(JSON.stringify(this.listCarriage[0].Seats[0].SeatTypeID))
-            alert(JSON.stringify(this.result.ScheduleDetails[0].TableCosts[0].SeatTypeID));
             var result = this.listCarriage.filter(data => {
                 return data.TrainID == this.result.TrainID && data.Seats[0].SeatTypeID == this.result.ScheduleDetails[0].TableCosts[0].SeatTypeID
             })
