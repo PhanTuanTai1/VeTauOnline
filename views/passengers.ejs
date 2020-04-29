@@ -268,7 +268,7 @@
             <!-- END MOBILE progress-bar-holder -->
     
             <form action="/payment" id="booking_form" data-passengers="1" method="post" accept-charset="utf-8">
-                <%if(typeof(result2) != "undefined"){%>
+                <%if(typeof(result2) != "undefined" && result2 != null){%>
                     <div class="container">
                         <div id="search_results_2" class="row">
                             <div class="col-xs-12">
@@ -715,7 +715,6 @@
 <!-- END WINDOW POPUP -->
 
     <script src="../dist/vue.js"></script>
-    <script src="https://unpkg.com/vue-router@2.0.0/dist/vue-router.js"></script>
     <script src="../dist/axios.js"></script>
     <script src="../dist/vuejs-datepickker.js"></script>
     <script src="../dist/myVue3.js"></script>	
@@ -725,10 +724,7 @@
     <!-- <script src="../dist/moment.js"></script>             -->
     <!-- Language dependant libraries -->
     <script type="text/javascript" src="../vendor/bootstrap-datepicker/locales/bootstrap-datepicker.en.min.js"></script>
-    <script>
-        var _freshenUrlAfter = ['googleAnalytics', 'pardot', 'hubspot'];
-       
-    </script>
+    
     
 </body>
 

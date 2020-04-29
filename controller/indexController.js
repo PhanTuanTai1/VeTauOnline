@@ -269,7 +269,7 @@ module.exports.passenger = function(req,res){
             }]
         }]
     }).then(result => {
-       if(typeof(req.cookies.step1) != "undefined"){
+       if(typeof(req.cookies.step1) != "undefined" && typeof(req.query.ONE_WAY) == "undefined"){
         db.Schedule.findOne({
             attributes: ['ID','TrainID','DateDeparture','TimeDeparture'],
             where: {
