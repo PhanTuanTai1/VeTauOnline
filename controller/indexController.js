@@ -353,34 +353,81 @@ module.exports.createSession = function(req,res){
     var Representative = req.body.data.Representative;
     var ListPassenger = req.body.data.ListPassenger;
     var ListSeat = req.body.data.ListSeat;
+    var ListSeat2;
     var TicketInfo = req.body.data.TicketInfo
+    var TicketInfo2;
     var RepresentativeID = RandomRepresentativeID();
     console.log('TicketInfo: ' + JSON.stringify(TicketInfo));
+    console.log('TicketInfo2 : ' + JSON.stringify(req.body.data));
+    var total = TicketInfo.Price * ListPassenger.length;
+     
+    if(typeof(req.body.data.TicketInfo2) != "undefined"){
+        TicketInfo2 = req.body.data.TicketInfo2;
+        total += TicketInfo2.Price * ListPassenger.length
+        ListSeat2 = req.body.data.ListSeat2;
 
-    var RepresentativeModel = db.Representative.build({
-        'Name' : Representative.FullName,
-        'Passport' : Representative.Passport,
-        'Email' : Representative.Email,
-        'Phone' : Representative.Phone,
-        'ID' : RepresentativeID,
-        'TotalCost' : TicketInfo.Price * ListPassenger.length
-    })
-
-    CreateListPassengerModel(ListPassenger, RepresentativeID).then(data =>{
-        CreateTicket(data, TicketInfo, ListSeat).then(data2 => {
-            TicketInfo.PassengerQuantity = data.length;
-            TicketInfo.SeatID = data2[0].SeatID;
-            res.cookie('data', RepresentativeModel, {maxAge: 600000});
-            res.cookie('data2', data, {maxAge: 600000});
-            res.cookie('data3', data2, {maxAge: 600000});
-            res.cookie('data4', TicketInfo,{maxAge: 600000});
-            res.end('/payment');
+        var RepresentativeModel = db.Representative.build({
+            'Name' : Representative.FullName,
+            'Passport' : Representative.Passport,
+            'Email' : Representative.Email,
+            'Phone' : Representative.Phone,
+            'ID' : RepresentativeID,
+            'TotalCost' : total
         })
-    });
+
+        CreateListPassengerModel(ListPassenger, RepresentativeID).then(data =>{
+            CreateTicket(data, TicketInfo, ListSeat).then(data2 => {
+                TicketInfo.PassengerQuantity = data.length;
+                TicketInfo.SeatID = data2[0].SeatID;
+                res.cookie('data', RepresentativeModel, {maxAge: 600000});
+                res.cookie('data2', data, {maxAge: 600000});
+                res.cookie('data3', data2, {maxAge: 600000});
+                res.cookie('data4', TicketInfo,{maxAge: 600000});
+                CreateTicket(data, TicketInfo2, ListSeat2).then(data3 => {
+                    TicketInfo2.PassengerQuantity = data.length;
+                    TicketInfo2.SeatID = data3[0].SeatID;
+                    res.cookie('data5', data3, {maxAge: 600000});
+                    res.cookie('data6', TicketInfo2,{maxAge: 600000});
+                    res.end('/payment');
+                })
+            })
+        });
+    }
+    else {
+        var RepresentativeModel = db.Representative.build({
+            'Name' : Representative.FullName,
+            'Passport' : Representative.Passport,
+            'Email' : Representative.Email,
+            'Phone' : Representative.Phone,
+            'ID' : RepresentativeID,
+            'TotalCost' : total
+        })
+    
+        CreateListPassengerModel(ListPassenger, RepresentativeID).then(data =>{
+            CreateTicket(data, TicketInfo, ListSeat).then(data2 => {
+                TicketInfo.PassengerQuantity = data.length;
+                TicketInfo.SeatID = data2[0].SeatID;
+                res.cookie('data', RepresentativeModel, {maxAge: 600000});
+                res.cookie('data2', data, {maxAge: 600000});
+                res.cookie('data3', data2, {maxAge: 600000});
+                res.cookie('data4', TicketInfo,{maxAge: 600000});
+                res.end('/payment');
+            })
+        });
+    }
+
+    
 }
 
 module.exports.payment = function(req,res) {
-    res.render('payment', {Representative : req.cookies.data, TicketInfo: req.cookies.data4, moment: moment});
+    if(typeof(req.cookies.data6) != "undefined"){
+        console.log(req.cookies.data6);
+        res.render('payment', {Representative : req.cookies.data, TicketInfo: req.cookies.data4,TicketInfo2: req.cookies.data6, moment: moment});
+    }
+    else {
+        res.render('payment', {Representative : req.cookies.data, TicketInfo: req.cookies.data4, moment: moment});
+    }
+    
 }
 
 module.exports.getSeatTypeBySeatID = function(req,res) {

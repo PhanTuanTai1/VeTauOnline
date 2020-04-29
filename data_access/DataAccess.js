@@ -1,14 +1,12 @@
 var { Sequelize, Model, DataTypes } = require('sequelize');
 var moment = require('moment');
+
 Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
     date = this._applyTimezone(date, options);
-  
-    // Z here means current timezone, _not_ UTC
-    // return date.format('YYYY-MM-DD HH:mm:ss.SSS Z');
     return moment(date).format('YYYY-MM-DD');
-  };
+};
 
-  // database cloud sql.freeasphost.net
+// database cloud sql.freeasphost.net
 // var sequelize = new Sequelize('tuantai1234_trainticketdatabase', 'tuantai1234', '79495291', {
 //     dialect: 'mssql',
 //     host: 'sql.freeasphost.net',
@@ -17,20 +15,20 @@ Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
 // })
 
 // database local
-var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '123456', {
-    dialect: 'mssql',
-    host: 'localhost',
-    //port: '1433',
-    port: '57031'
-})
+// var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '123456', {
+//     dialect: 'mssql',
+//     host: 'localhost',
+//     //port: '1433',
+//     port: '57031'
+// })
 
 //  database cloud sql5059.site4now.net
-// var sequelize = new Sequelize('DB_A5DDEE_trainticket', 'DB_A5DDEE_trainticket_admin', '79495291Z*z', {
-//     dialect: 'mssql',
-//     host: 'sql5059.site4now.net',
-//     //port: '1433',
-//     //port: '57031'
-// })
+var sequelize = new Sequelize('DB_A5DDEE_trainticket', 'DB_A5DDEE_trainticket_admin', '79495291Z*z', {
+    dialect: 'mssql',
+    host: 'sql5059.site4now.net',
+    //port: '1433',
+    //port: '57031'
+})
 
 //1 Train Entity
 class Train extends Model{}

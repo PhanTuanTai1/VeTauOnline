@@ -39,6 +39,11 @@
         <input hidden type="text" value="<%=TicketInfo.SeatID%>" id="SeatID">
         <input hidden type="text" value="<%=TicketInfo.DepartureStationID%>" id="DepartureStationID">
         <input hidden type="text" value="<%=TicketInfo.ArrivalStationID%>" id="ArrivalStationID">
+        <%if(typeof(TicketInfo2) != "undefined" && TicketInfo2 != null){%>
+            <input hidden type="text" value="<%=TicketInfo2.SeatID%>" id="SeatID2">
+            <input hidden type="text" value="<%=TicketInfo2.DepartureStationID%>" id="DepartureStationID2">
+            <input hidden type="text" value="<%=TicketInfo2.ArrivalStationID%>" id="ArrivalStationID2">
+        <%}%>
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                <div class="modal-header">
@@ -397,7 +402,75 @@
                             <!-- price_summary-->
     
                             <div id="price_summary" data-passengers="1">
-    
+                                <%if(typeof(TicketInfo2) != "undefined" && TicketInfo2 != null){%>
+                                    <div class="padded-panel panel-light medium-border-top">
+                                        <div class="row">
+                                            <div style="line-height: 40px" class="col-md-12 col-xs-12 view-total-price-items">
+                                                <div class="col-xs-12 bold">
+                                                    <div class="searchresult-itenerary bold uppercase">
+                                                        <span id="DepartureID2">HANOI</span> <i class="icon icon-train inline"></i><span id="ArrivalID2">HO CHI MINH </span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="padded-panel panel-light border-top">
+                                        <div class="row">
+                                            <div class="col-md-6 col-xs-12 view-total-price-items">
+                                                <div class="col-md-6 col-xs-6">
+                                                    <i class="fa fa-calendar-o"></i> <%=moment(TicketInfo2.DepartureDate).format('DD-MM-YYYY')%> </div>
+                                                <div class="col-md-6 col-xs-6 mobile-text-right">
+                                                    <i class="fa fa-clock-o"></i> <span class="blue-text bold"><%=moment(TicketInfo2.DepartureTime).format('LT')%></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-xs-12 view-total-price-items border-bottom">
+                                                <div class="col-md-12 col-xs-12">
+                                                    <span class="bold">Vietnam Railways</span> <%=TicketInfo2.TrainName%> </div>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                    <div class="hidden-sm hidden-xs" style="border-bottom: 1px solid #f5f5f5"></div>
+        
+                                    <!-- Fares and passengers breakdown -->
+                                    <div class="padded-panel panel-light passenger_row" data-target="departure-0-0">
+                                        <div class="row ">
+                                            <div class="col-md-3 col-xs-12 view-total-price-items ">
+                                                <div class="col-xs-12 super-bold">
+                                                    <%=Representative.Name%> </div>
+                                            </div>
+                                            <div class="col-md-3 col-xs-12 view-total-price-items no-padding-top-bottom  ">
+                                                <div class="col-xs-12">
+                                                    <%=Representative.Passport%> </div>
+                                            </div>
+        
+                                            <div class="col-md-6 col-xs-12 view-total-price-items">
+                                                <div class="col-xs-7">
+                                                    <span class="bold" id="seatType2"></span>
+                                                </div>
+        
+                                                <div class="col-xs-5 text-right yellow-text">
+                                                    <span class="money" ><%=JSON.stringify(TicketInfo2.Price).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%> &nbsp;VND</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                    <!-- Service Fee -->
+                                    <div class="padded-panel panel-light medium-border-bottom service_fee_row service_fee_row_73992753">
+                                        <div class="row">
+                                            <div class="col-md-offset-6 col-md-6 col-xs-12 view-total-price-items">
+                                                <div class="col-xs-5 bold">
+                                                    Passenger Quantity </div>
+                                                <div class="col-xs-2 text-right">
+                                                    
+                                                </div>
+                                                <div class="col-xs-5 text-right yellow-text">
+                                                    <span class="service_fee_73992753 money"><%=TicketInfo2.PassengerQuantity%></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <%}%>
                                 <div class="padded-panel panel-light medium-border-top">
                                     <div class="row">
                                         <div style="line-height: 40px" class="col-md-12 col-xs-12 view-total-price-items">
@@ -440,7 +513,7 @@
     
                                         <div class="col-md-6 col-xs-12 view-total-price-items">
                                             <div class="col-xs-7">
-                                                <span class="bold" id="seatType">{{seatType.SeatType.SeatTypeName}}</span>
+                                                <span class="bold" id="seatType"></span>
                                             </div>
     
                                             <div class="col-xs-5 text-right yellow-text">
@@ -465,7 +538,8 @@
                                         </div>
                                     </div>
                                 </div>
-    
+                                
+                              
                                 <!-- Change Fee  -->
 
                                 <div class="hidden-sm hidden-xs" style="border-bottom: 1px solid #f5f5f5"></div>

@@ -424,85 +424,170 @@
                     </div>
     
                     <input type="hidden" name="seats_69951216" id="seats_69951216" value="">
-    
-                    <p class="big-text seat-gap">
-                        Please select your preferred seats for the itinerary from <span class="blue-text super-bold">Da Nang</span> to <span class="blue-text super-bold">Ho Chi Minh</span> on <span class="bold">Thursday, 16 April 2020</span>.
-                    </p>
-                    <div class="gap gap-mini"></div>
-                    <div class="panel-light">
-                        <div class="special padded-heading text-center">
-    
-                            <div class="carriage_titles">
-                                <div class="text-center item">
-                                    <p class="big-text bold" style="text-transform: capitalize">
-                                        Soft seat </p>
-                                </div>
-                            </div>
-                            <div class="gap gap-small hidden-sm hidden-xs"></div>
-    
-                            <!-- <div style="opacity: .8; margin-top: 15px" class="horizontal-devider"></div> -->
-    
-                            <div class="row">
-                                <div style="margin-top: 15px; margin-bottom: 30px;" class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12 col-xs-offset-0">
-                                    <div class="legend">
-                                        <div class="col-md-3 col-sm-3 col-xs-6">
-                                            <span> <i style="font-size: 40px;" class="icon-soft-seat-bottom"></i> <br> Available                        </span>
-                                        </div>
-                                        <div class="col-md-3 col-sm-3 col-xs-6">
-                                            <span style="color: #ffbb00;"> <i style="font-size: 40px;" class="icon-soft-seat-people-bottom"></i> <br> Selected                        </span>
-                                        </div>
-                                        <div class="seat_legend col-md-3 col-sm-3 col-xs-6">
-                                            <span style="color: #d54844;"> <i style="font-size: 40px;" class="icon-soft-seat-people-bottom"></i> <br> Sold out                        </span>
-                                        </div>
-                                        <div class="seat_legend col-md-3 col-sm-3 col-xs-6">
-                                            <span style="color: #666b71;"> <i style="font-size: 40px; opacity: .3" class="icon-soft-seat-reserve-bottom"></i> <br> Reserved                        </span>
-                                        </div>
-                                    </div>
-                                    <!-- End legend-->
-                                </div>
-                            </div>
-    
-                            <div class="horizontal-devider"></div>
+                    <%if(typeof(result2) != "undefined" && result2 != null){%>
+                        <div>
+                            <p class="big-text seat-gap">
+                                Please select your preferred seats for the itinerary from <span class="blue-text super-bold">Da Nang</span> to <span class="blue-text super-bold">Ho Chi Minh</span> on <span class="bold">Thursday, 16 April 2020</span>.
+                            </p>
                             <div class="gap gap-mini"></div>
-                            <div class="row hidden-sm hidden-xs">
-                                <div class="col-md-12">
-                                    <div class="diagram-train">
-                                        <div class="mobile-scroll">
-                                            <div class="diagram_cell train-block etc"> 
-                                                <div class="diagram-number">...</div>
+                            <div class="panel-light">
+                                <div class="special padded-heading text-center">
+            
+                                    <div class="carriage_titles">
+                                        <div class="text-center item">
+                                            <p class="big-text bold" style="text-transform: capitalize">
+                                                Soft seat </p>
+                                        </div>
+                                    </div>
+                                    <div class="gap gap-small hidden-sm hidden-xs"></div>
+            
+                                    <!-- <div style="opacity: .8; margin-top: 15px" class="horizontal-devider"></div> -->
+            
+                                    <div class="row">
+                                        <div style="margin-top: 15px; margin-bottom: 30px;" class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12 col-xs-offset-0">
+                                            <div class="legend">
+                                                <div class="col-md-3 col-sm-3 col-xs-6">
+                                                    <span> <i style="font-size: 40px;" class="icon-soft-seat-bottom"></i> <br> Available                        </span>
+                                                </div>
+                                                <div class="col-md-3 col-sm-3 col-xs-6">
+                                                    <span style="color: #ffbb00;"> <i style="font-size: 40px;" class="icon-soft-seat-people-bottom"></i> <br> Selected                        </span>
+                                                </div>
+                                                <div class="seat_legend col-md-3 col-sm-3 col-xs-6">
+                                                    <span style="color: #d54844;"> <i style="font-size: 40px;" class="icon-soft-seat-people-bottom"></i> <br> Sold out                        </span>
+                                                </div>
+                                                <div class="seat_legend col-md-3 col-sm-3 col-xs-6">
+                                                    <span style="color: #666b71;"> <i style="font-size: 40px; opacity: .3" class="icon-soft-seat-reserve-bottom"></i> <br> Reserved                        </span>
+                                                </div>
                                             </div>
-                                           <span v-if="carriageDisplay" v-for="(carriage, index) in carriageDisplay">
-                                            <div style="cursor: pointer;" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this)" v-bind:id="carriageDisplay[carriageDisplay.length - (index + 1)].ID" name="carriageSelected" class="diagram_cell train-block selectable selected" v-if="carriageDisplay.length - (index + 1) == 0">
-                                                <div class="diagram-number" >{{carriageDisplay.length - index}}</div>
+                                            <!-- End legend-->
+                                        </div>
+                                    </div>
+            
+                                    <div class="horizontal-devider"></div>
+                                    <div class="gap gap-mini"></div>
+                                    <div class="row hidden-sm hidden-xs">
+                                        <div class="col-md-12">
+                                            <div class="diagram-train">
+                                                <div class="mobile-scroll">
+                                                    <div class="diagram_cell train-block etc"> 
+                                                        <div class="diagram-number">...</div>
+                                                    </div>
+                                                   <span v-if="carriageDisplay2" v-for="(carriage, index) in carriageDisplay2">
+                                                    <div style="cursor: pointer;" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 2)" v-bind:id="carriageDisplay2[carriageDisplay2.length - (index + 1)].ID" name="carriageSelected2" class="diagram_cell train-block selectable selected" v-if="carriageDisplay2.length - (index + 1) == 0">
+                                                        <div class="diagram-number" >{{carriageDisplay2.length - index}}</div>
+                                                    </div>
+                                                    <div style="cursor: pointer;" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 2)" class="diagram_cell train-block available" v-bind:id="carriageDisplay2[carriageDisplay2.length - (index + 1)].ID" v-else>
+                                                        <div class="diagram-number" >{{carriageDisplay2.length - index}}</div>
+                                                    </div>
+                                                    <!-- <div style="cursor: pointer;" class="diagram_cell train-block selectable selected">
+                                                        <div class="diagram-number" data-carriage-id="5179">2</div>
+                                                    </div>
+                                                    <div style="cursor: pointer;" class="diagram_cell train-block selectable available">
+                                                        <div class="diagram-number" data-carriage-id="5176">1</div>
+                                                    </div> -->
+                                                   </span>
+                                                    <div class="diagram_cell train-block etc">
+                                                        <div class="diagram-number">...</div>
+                                                    </div>
+                                                    <div class="diagram_cell train-block last">
+                                                        <div class="diagram-number" name="hiddenTrain2">SE3</div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div style="cursor: pointer;" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this)" class="diagram_cell train-block available" v-bind:id="carriageDisplay[carriageDisplay.length - (index + 1)].ID" v-else>
-                                                <div class="diagram-number" >{{carriageDisplay.length - index}}</div>
+                                        </div>
+                                    </div>
+            
+                                    <div class="gap gap-medium hidden-sm hidden-xs"></div>
+                                    <div style="position: relative; height: 300px;">
+                                        <%- include('chooseSeat2') %>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                           
+                        </div>
+                    <%}%>
+                    <div>
+                        <p class="big-text seat-gap">
+                            Please select your preferred seats for the itinerary from <span class="blue-text super-bold">Da Nang</span> to <span class="blue-text super-bold">Ho Chi Minh</span> on <span class="bold">Thursday, 16 April 2020</span>.
+                        </p>
+                        <div class="gap gap-mini"></div>
+                        <div class="panel-light">
+                            <div class="special padded-heading text-center">
+        
+                                <div class="carriage_titles">
+                                    <div class="text-center item">
+                                        <p class="big-text bold" style="text-transform: capitalize">
+                                            Soft seat </p>
+                                    </div>
+                                </div>
+                                <div class="gap gap-small hidden-sm hidden-xs"></div>
+        
+                                <!-- <div style="opacity: .8; margin-top: 15px" class="horizontal-devider"></div> -->
+        
+                                <div class="row">
+                                    <div style="margin-top: 15px; margin-bottom: 30px;" class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12 col-xs-offset-0">
+                                        <div class="legend">
+                                            <div class="col-md-3 col-sm-3 col-xs-6">
+                                                <span> <i style="font-size: 40px;" class="icon-soft-seat-bottom"></i> <br> Available                        </span>
                                             </div>
-                                            <!-- <div style="cursor: pointer;" class="diagram_cell train-block selectable selected">
-                                                <div class="diagram-number" data-carriage-id="5179">2</div>
+                                            <div class="col-md-3 col-sm-3 col-xs-6">
+                                                <span style="color: #ffbb00;"> <i style="font-size: 40px;" class="icon-soft-seat-people-bottom"></i> <br> Selected                        </span>
                                             </div>
-                                            <div style="cursor: pointer;" class="diagram_cell train-block selectable available">
-                                                <div class="diagram-number" data-carriage-id="5176">1</div>
-                                            </div> -->
-                                           </span>
-                                            <div class="diagram_cell train-block etc">
-                                                <div class="diagram-number">...</div>
+                                            <div class="seat_legend col-md-3 col-sm-3 col-xs-6">
+                                                <span style="color: #d54844;"> <i style="font-size: 40px;" class="icon-soft-seat-people-bottom"></i> <br> Sold out                        </span>
                                             </div>
-                                            <div class="diagram_cell train-block last">
-                                                <div class="diagram-number" name="hiddenTrain">SE3</div>
+                                            <div class="seat_legend col-md-3 col-sm-3 col-xs-6">
+                                                <span style="color: #666b71;"> <i style="font-size: 40px; opacity: .3" class="icon-soft-seat-reserve-bottom"></i> <br> Reserved                        </span>
+                                            </div>
+                                        </div>
+                                        <!-- End legend-->
+                                    </div>
+                                </div>
+        
+                                <div class="horizontal-devider"></div>
+                                <div class="gap gap-mini"></div>
+                                <div class="row hidden-sm hidden-xs">
+                                    <div class="col-md-12">
+                                        <div class="diagram-train">
+                                            <div class="mobile-scroll">
+                                                <div class="diagram_cell train-block etc"> 
+                                                    <div class="diagram-number">...</div>
+                                                </div>
+                                               <span v-if="carriageDisplay" v-for="(carriage, index) in carriageDisplay">
+                                                <div style="cursor: pointer;" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 1)" v-bind:id="carriageDisplay[carriageDisplay.length - (index + 1)].ID" name="carriageSelected1" class="diagram_cell train-block selectable selected" v-if="carriageDisplay.length - (index + 1) == 0">
+                                                    <div class="diagram-number" >{{carriageDisplay.length - index}}</div>
+                                                </div>
+                                                <div style="cursor: pointer;" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 1)" class="diagram_cell train-block available" v-bind:id="carriageDisplay[carriageDisplay.length - (index + 1)].ID" v-else>
+                                                    <div class="diagram-number" >{{carriageDisplay.length - index}}</div>
+                                                </div>
+                                                <!-- <div style="cursor: pointer;" class="diagram_cell train-block selectable selected">
+                                                    <div class="diagram-number" data-carriage-id="5179">2</div>
+                                                </div>
+                                                <div style="cursor: pointer;" class="diagram_cell train-block selectable available">
+                                                    <div class="diagram-number" data-carriage-id="5176">1</div>
+                                                </div> -->
+                                               </span>
+                                                <div class="diagram_cell train-block etc">
+                                                    <div class="diagram-number">...</div>
+                                                </div>
+                                                <div class="diagram_cell train-block last">
+                                                    <div class="diagram-number" name="hiddenTrain">SE3</div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-    
-                            <div class="gap gap-medium hidden-sm hidden-xs"></div>
-                            <div style="position: relative; height: 300px;">
-                                <%- include('chooseSeat') %>
+        
+                                <div class="gap gap-medium hidden-sm hidden-xs"></div>
+                                <div style="position: relative; height: 300px;">
+                                    <%- include('chooseSeat') %>
+                                </div>
                             </div>
                         </div>
+                        <br>
                     </div>
-                    <br>
+                    
                     <div class="bs-callout bs-callout-info">
                         <div class="padded-heading">
                             <div class="bold">
@@ -510,7 +595,6 @@
                             <div class="italic" style="padding-top: 10px;">Please note that the position of the seats is just for reference. The railway operator may change the orientation of the carriage at the departure station anytime at their convenience. We hope you understand that this situation escapes our control and we cannot guarantee that the position of your seat will be the same as you select here.</div>
                         </div>
                     </div>
-    
                     <!-- END Seat selection -->
     
                     <!-- Seat preference -->
