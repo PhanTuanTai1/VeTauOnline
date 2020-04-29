@@ -8,21 +8,29 @@ Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
     return moment(date).format('YYYY-MM-DD');
   };
 
-  // database cloud
-var sequelize = new Sequelize('tuantai1234_trainticketdatabase', 'tuantai1234', '79495291', {
-    dialect: 'mssql',
-    host: 'sql.freeasphost.net',
-    //port: '1433',
-    //port: '57031'
-})
+  // database cloud sql.freeasphost.net
+// var sequelize = new Sequelize('tuantai1234_trainticketdatabase', 'tuantai1234', '79495291', {
+//     dialect: 'mssql',
+//     host: 'sql.freeasphost.net',
+//     //port: '1433',
+//     //port: '57031'
+// })
 
-//  database local
+// database local
 // var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '123456', {
 //     dialect: 'mssql',
 //     host: 'localhost',
 //     //port: '1433',
 //     port: '57031'
 // })
+
+//  database cloud sql5059.site4now.net
+var sequelize = new Sequelize('DB_A5DDEE_trainticket', 'DB_A5DDEE_trainticket_admin', '79495291Z*z', {
+    dialect: 'mssql',
+    host: 'sql5059.site4now.net',
+    //port: '1433',
+    //port: '57031'
+})
 
 //1 Train Entity
 class Train extends Model{}
