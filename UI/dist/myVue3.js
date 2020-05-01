@@ -89,6 +89,7 @@ var vm = new Vue({
        
        this.listSelected = new Array();
        this.listSelected2 = new Array();
+       localStorage.setItem('passenger', location.href)
     },
     data:{
         train: [],
@@ -106,7 +107,9 @@ var vm = new Vue({
         carriageDisplay: null,
         carriageDisplay2: null,
         listSelected: null,
-        listSelected2: null
+        listSelected2: null,
+        hrefDeparture: localStorage.getItem('departure'),
+        hrefReturn: localStorage.getItem('return')
     },
 
     methods:{
@@ -273,7 +276,6 @@ var vm = new Vue({
             var train = this.train.filter(train => {
                 return train.ID == this.result.TrainID
             })
-            
             var TicketInfo = {
                 "DepartureDate" : this.result.DateDeparture,
                 "DepartureTime" : this.result.TimeDeparture,
@@ -287,6 +289,7 @@ var vm = new Vue({
                 var train2 = this.train.filter(train => {
                     return train.ID == this.result2.TrainID
                 })
+                
                 TicketInfo2 = {
                     "DepartureDate" : this.result2.DateDeparture,
                     "DepartureTime" : this.result2.TimeDeparture,

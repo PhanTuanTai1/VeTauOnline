@@ -247,7 +247,7 @@
                                                         <label>DEPARTURE</label>
                                                         <input v-model="FROM" @input="searchFromStation" id="Depart"
                                                             name="origin" value="" class="typeahead form-control"
-                                                            tabindex="1" placeholder="city, airport or station"
+                                                            tabindex="1" placeholder="station"
                                                             type="text" autocomplete="off" />
                                                         <input type="hidden" id="origin_id" name="origin_id" value=""
                                                             v-model="departureStationID">
@@ -283,7 +283,7 @@
                                                         <input v-model="TO" @input="searchToStation" id="Arrival"
                                                             name="destination" value="" tabindex="2"
                                                             class="typeahead form-control"
-                                                            placeholder="city, airport or station" type="text"
+                                                            placeholder="station" type="text"
                                                             autocomplete="off" />
                                                         <input type="hidden" id="destination_id" name="destination_id"
                                                             value="" v-model="arrivalStationID">

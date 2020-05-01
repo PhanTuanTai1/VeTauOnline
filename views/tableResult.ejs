@@ -42,7 +42,7 @@
                 </td>
 
                 <td class="text-right">
-                    <div class="super-bold"><%=moment(result.TimeDeparture).format('LT')%></div>
+                    <div class="super-bold"><%=moment(result.TimeDeparture).subtract('hour', 7).format('LT')%></div>
                     <div><%=moment(result.DateDeparture).format('DD-MM-YYYY')%></div>
                 </td>
                 <td class="text-right">

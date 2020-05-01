@@ -3,7 +3,7 @@
 new Vue({
     el: "#app",
     created: async function(){
-
+      alert(JSON.parse(document.getElementById("myData").value));
         this.result = JSON.parse(document.getElementById("myData").value);
         document.getElementById("myData").replaceWith("");
         this.query = JSON.parse(document.getElementById("query").value);
@@ -26,9 +26,17 @@ new Vue({
             this.Stations = res.data;
         }) 
 
-        this.departure = this.getStationName(this.result[0].ScheduleDetails[0].DepartureStationID);
-        this.arrival = this.getStationName(this.result[0].ScheduleDetails[0].ArrivalStationID);
-        this.listTrain = this.loadListTrain();       
+        this.departure = this.getStationName(document.getElementById('departureID').value);
+        this.arrival = this.getStationName(document.getElementById('arrival').value);
+        this.listTrain = this.loadListTrain();
+        // hrefDeparture 
+        if(this.step == 1){
+            localStorage.setItem('departure', location.href);
+        }
+        else if(this.step == 2){
+            localStorage.setItem('return', location.href);
+            this.hrefDeparture = localStorage.getItem('departure');
+        }
     },
     data:{
         result: null,
@@ -54,6 +62,7 @@ new Vue({
         one_way: false,   
         passengers: 1,
         errors: null,
+        hrefDeparture: null
     },
 
     methods:{
@@ -97,7 +106,6 @@ new Vue({
                         + "&Query=" + JSON.stringify(this.query);     
             }
             else if(typeof(this.query.ROUND_TRIP) != "undefined"){
-                alert(this.step);
                 url = "/scheduleDetail?TRAINID=" 
                         + train[0].TrainID + "&SCHEDULEID=" + train[0].ID + "&DepartID=" 
                         + train[0].ScheduleDetails[0].DepartureStationID
@@ -155,7 +163,7 @@ new Vue({
         },
 
         formatTime: function(dateTime){
-            return moment(dateTime).format("LT");
+            return moment(dateTime.split('Z')[0]).format("LT");
         },
 
         getFirstCost: function(scheduleDetailID){
@@ -165,142 +173,8 @@ new Vue({
                 //alert(JSON.stringify(res.data.Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " VND");
                 document.getElementById('cost' + scheduleDetailID).innerHTML = JSON.stringify(res.data.Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " VND";
             })
-        },
-        setDataDepart: function(){
-            var data = this.getStationID(document.getElementById('Depart').value);
-            if(typeof(data[0]) != "undefined"){
-                this.departureStationID = data[0].ID
-                return true;
-            }
-            return false;
-          },
-          setDataArrive: function(){
-            var data = this.getStationID(document.getElementById('Arrival').value);
-            if(typeof(data[0]) != "undefined"){
-              this.arrivalStationID = data[0].ID;
-              return true;
-            }
-            return false;
-          },
-          searchFromStation(){
-            if(this.FROM.trim() == "") {
-              this.SearchFrom = [];
-              return;
-            }    
-            var result = this.Stations.filter(station => {
-              return station.Name.toLowerCase().startsWith(this.FROM.toLowerCase().trim());
-            });
-            this.SearchFrom = result;
-          },
-      
-          searchToStation(){
-            if(this.TO.trim() == "") {
-              this.SearchTo = [];
-              return;
-            }
-            var result = this.Stations.filter(station => {
-              return station.Name.toLowerCase().startsWith(this.TO.toLowerCase().trim());
-            });
-            this.SearchTo = result;
-          },
-      
-          selectStationFrom: function(station){
-            this.FROM = station;
-            this.SearchFrom = [];
-            this.departureStationID = this.getStationID(station)[0].ID;
-            //alert(this.departureStationID);
-          },
+        }
           
-          getStationID(stationName){
-            return this.Stations.filter(station => {
-              return tvkd.c(station.Name) == tvkd.c(stationName);
-            });
-          },
-      
-          selectStationTo: function(station){
-            this.TO = station;
-            this.SearchTo = [];
-            this.arrivalStationID = this.getStationID(station)[0].ID;
-          },
-      
-          disabledReturnDay: function(){
-            this.round_trip = false;
-            this.one_way = true;
-            document.getElementById("dateTimePicker_2").setAttribute("disabled","");
-          },
-      
-          enabledReturnDay: function(){
-            this.round_trip = true;
-            this.one_way = false;
-            document.getElementById("dateTimePicker_2").removeAttribute("disabled");
-          },
-      
-          increasePassager: function(){
-            if(this.passengers < 6) this.passengers += 1;
-          },
-      
-          validateData: function(){
-            if(document.getElementById('Depart').value == "" ){
-              this.errors = "Please enter departure station";
-              return false;
-            }
-            if(this.departureStationID == null) {
-              if(!this.setDataDepart()){
-                this.errors = "Departure station invalid";
-                return false;
-              }       
-            }
-            if(document.getElementById('Arrival').value == "" ){
-              this.errors = "Please enter arrival station";
-              return false;
-            } 
-            if(this.arrivalStationID == null) {
-              if(!this.setDataArrive()){
-                this.errors = "Arrival station invalid";
-                return false;
-              }
-            }
-            if(this.departureStationID == this.arrivalStationID) {
-              this.errors = "Departure and destination station aren't the same";
-              return false;
-            }
-            return true;
-          },
-      
-          Search: function(){    
-            if(this.validateData())
-            {
-              location.href = this.setParamQuery();  
-            }
-            else {
-              $("#errors").modal({
-                fadeDuration: 100
-              });
-            }
-          },
-          
-          setParamQuery: function(){
-            var url = '/searchSchedule?';
-            url += "FROM=" + this.departureStationID + "&";
-            url += "TO=" + this.arrivalStationID + "&";
-            
-            if(this.round_trip == true){     
-              url += "DEPART=" + this.depart_date + "&";      
-              url += "RETURN=" + this.return_date + "&"; 
-              url += "ROUND_TRIP=" + this.round_trip + "&"; 
-            }
-            
-            if(this.one_way == true) {
-              url += "DEPART=" + this.depart_date + "&";     
-              url += "ONE_WAY=" + this.one_way + "&"; 
-            }
-            
-            if(this.passengers >= 6) this.passengers = 5;
-      
-            url += "PASSENGERS=" + this.passengers; 
-      
-            return url;
-          }
     },
     components: {
         vuejsDatepicker,

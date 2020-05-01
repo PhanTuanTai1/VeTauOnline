@@ -83,7 +83,7 @@
         </div>
     </div>
 
-    <div id="waiting_overlay" style="display:none">
+    <div id="waiting_overlay" style="display:block">
         <div class="container">
             <h2 style="color: #fff; text-transform: uppercase;" id="waiting_text1" class="refrigerator"></h2>
             <span id="waiting_text2" class="big-big-text"></span>
@@ -207,11 +207,11 @@
                 <div class="progress-bar-holder hidden-sm hidden-xs">
                     <ul class="progressbar small-text bold">
                         <li class="active">
-                            <a href="https://booking.baolau.com/en/results?departure=&amp;return=&amp;sess_key=0161c993bc7824020ae72718937f2210">DEPARTURE</a>
+                            <a v-bind:href="hrefDeparture">DEPARTURE</a>
                             <em class="progress-bar-arrow "></em>
                         </li>
                         <li class="active">
-                            <a href="https://booking.baolau.com/en/passengers?sess_key=0161c993bc7824020ae72718937f2210">PASSENGERS</a>
+                            <a v-bind:href="hrefPassengers">PASSENGERS</a>
                             <em class="progress-bar-arrow "></em>
                         </li>
                         <li class="current">
@@ -419,7 +419,8 @@
                                                 <div class="col-md-6 col-xs-6">
                                                     <i class="fa fa-calendar-o"></i> <%=moment(TicketInfo2.DepartureDate).format('DD-MM-YYYY')%> </div>
                                                 <div class="col-md-6 col-xs-6 mobile-text-right">
-                                                    <i class="fa fa-clock-o"></i> <span class="blue-text bold"><%=moment(TicketInfo2.DepartureTime).format('LT')%></span>
+                                                    
+                                                    <i class="fa fa-clock-o"></i> <span class="blue-text bold"><%=moment(TicketInfo2.DepartureTime).subtract('hour', 7).format('LT')%></span>
                                                 </div>
                                             </div>
                                             <div class="col-md-6 col-xs-12 view-total-price-items border-bottom">
@@ -487,7 +488,7 @@
                                             <div class="col-md-6 col-xs-6">
                                                 <i class="fa fa-calendar-o"></i> <%=moment(TicketInfo.DepartureDate).format('DD-MM-YYYY')%> </div>
                                             <div class="col-md-6 col-xs-6 mobile-text-right">
-                                                <i class="fa fa-clock-o"></i> <span class="blue-text bold"><%=moment(TicketInfo.DepartureTime).format('LT')%></span>
+                                                <i class="fa fa-clock-o"></i> <span class="blue-text bold"><%=moment(TicketInfo.DepartureTime).subtract('hour', 7).format('LT')%></span>
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-xs-12 view-total-price-items border-bottom">

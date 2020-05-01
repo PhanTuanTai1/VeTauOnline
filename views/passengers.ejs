@@ -47,7 +47,7 @@
         <input type="hidden" value="<%=TO%>" id="TO">
         <input type="hidden" value="<%=DEPART%>" id="DEPART">
         <input type="hidden" value="<%=ONE_WAY%>" id="ONE_WAY">
-
+        <input type="hidden" value="<%=query%>" id="query">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                <div class="modal-header">
@@ -219,12 +219,12 @@
                 <div class="progress-bar-holder hidden-sm hidden-xs">
                     <ul class="progressbar small-text bold">
                         <li class="active">
-                            <a href="https://booking.baolau.com/en/results?departure=&amp;return=&amp;sess_key=b9ea2d577e0c5e3ae3b7eab2e8e8b574">DEPARTURE</a>
+                            <a v-bind:href="hrefDeparture">DEPARTURE</a>
                             <em class="progress-bar-arrow "></em>
                         </li>
                         <%if(typeof(ROUND_TRIP) != "undefined"){%>
                             <li class="active">
-                                <a href="https://booking.baolau.com/en/results?departure=&amp;return=&amp;sess_key=b9ea2d577e0c5e3ae3b7eab2e8e8b574">RETURN</a>
+                                <a v-bind:href="hrefReturn">RETURN</a>
                                 <em class="progress-bar-arrow "></em>
                             </li>
                         <%}%>

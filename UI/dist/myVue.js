@@ -26,7 +26,7 @@ new Vue({
 
   methods: {
     setDataDepart: function(){
-      var data = this.getStationID(document.getElementById('Depart').value);
+      var data = this.getStationID(this.FROM);
       if(typeof(data[0]) != "undefined"){
           this.departureStationID = data[0].ID
           return true;
@@ -34,7 +34,7 @@ new Vue({
       return false;
     },
     setDataArrive: function(){
-      var data = this.getStationID(document.getElementById('Arrival').value);
+      var data = this.getStationID(this.TO);
       if(typeof(data[0]) != "undefined"){
         this.arrivalStationID = data[0].ID;
         return true;
@@ -72,7 +72,7 @@ new Vue({
     
     getStationID(stationName){
       return this.Stations.filter(station => {
-        return tvkd.c(station.Name) == tvkd.c(stationName);
+        return tvkd.c(station.Name.toLowerCase()).replace(/\s/g, '') == tvkd.c(stationName.toLowerCase()).replace(/\s/g, '');
       });
     },
 

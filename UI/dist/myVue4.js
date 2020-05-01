@@ -1,7 +1,7 @@
 new Vue({
     el: '#app',
     created: async function(){
-        if(typeof(document.getElementById('SeatID2')) != "undefined"){
+        if(document.getElementById('SeatID2') != null){
             await axios.get('/getSeatTypeBySeatID?SeatID=' + document.getElementById('SeatID2').value).then(res => {
                 this.seatType2 = res.data;              
             })
@@ -20,15 +20,19 @@ new Vue({
         this.displayArrivalStation();
         this.displayDepartureStation();
     },
+    mounted: function(){
+        document.getElementById('waiting_overlay').style['display'] = 'none';
+    },
     data: {
         station: null,
         seatType: null,
-        seatType2: null
+        seatType2: null,
+        hrefDeparture: localStorage.getItem('departure'),
+        hrefPassengers: localStorage.getItem('passenger')
     },
     methods: {
         displaySeatTypeName: function(){
             document.getElementById('seatType').innerHTML = this.seatType.SeatType.TypeName;
-            alert(JSON.stringify(this.seatType2))
             if(this.seatType2 != null){
                 document.getElementById('seatType2').innerHTML = this.seatType2.SeatType.TypeName;
             }
@@ -38,7 +42,7 @@ new Vue({
                 return data.ID == document.getElementById('ArrivalStationID').value;
             })
             var data2;
-            if(typeof(document.getElementById('ArrivalStationID2')) != "undefined"){
+            if(document.getElementById('ArrivalStationID2') != null){
                 data2 = this.station.filter(data => {
                     return data.ID == document.getElementById('ArrivalStationID2').value;
                 })
@@ -51,7 +55,7 @@ new Vue({
                 return data.ID == document.getElementById('DepartureStationID').value;
             })
             var data2;
-            if(typeof(document.getElementById('DepartureStationID2')) != "undefined"){
+            if(document.getElementById('DepartureStationID2') != null){
                 data2 = this.station.filter(data => {
                     return data.ID == document.getElementById('DepartureStationID2').value;
                 })
