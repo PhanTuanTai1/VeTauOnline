@@ -33,10 +33,11 @@ new Vue({
           'Created!',
           'New train can be on duty.',
           'success',
-
-        ).then(function () {
-          location.reload();
-        });
+        )
+        this.Trains.push({
+              "ID" : train[0],
+              "Name" : train[1]
+        })
       }
     },
     async updateTrain(IDinput) {
@@ -119,5 +120,9 @@ new Vue({
       })
     },
   },
-
+  computed: {
+    listTrain() {
+      return this.Trains;
+    }
+  }
 })

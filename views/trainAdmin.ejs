@@ -42,13 +42,13 @@
                             </div>
                         </div>
 
-                        <table v-if="Trains" class="table">
+                        <table v-if="listTrain" class="table">
                             <thead class="font-weight-bold table-info">
                                 <td>#</td>
                                 <td>Name</td>
                                 <td class="text-right">....</td>
                             </thead>
-                            <tr v-for="item in Trains">
+                            <tr v-for="item in listTrain">
                                 <td>{{item.ID}}</td>
                                 <td>{{item.Name}}</td>
                                 <td class="text-right"><button type="button" class="btn btn-warning"  @click="updateTrain(item.ID)"><i

@@ -186,7 +186,7 @@
                             </div><!-- sidebar-menu -->
             </div><!-- END sub-header -->
 </header>
-
+<%if(typeof(error) == "undefined"){%>
 <div class="subpage panel-dark search_result_page" id="app">
 
     <!-- PC progress-bar-holder -->
@@ -740,7 +740,9 @@
     <input type="hidden" id="check_availability_carriers" name="check_availability_carriers" value="">
     <input type="hidden" id="complete_result" name="complete_result" value="0">
 </div>
-
+<%}else{%>
+    <%- include('notfound')%>
+<%}%>
 <!-- FOOTER -->
 <footer class="main-footer">
     

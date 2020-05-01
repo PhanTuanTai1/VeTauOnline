@@ -3,7 +3,7 @@
 new Vue({
     el: "#app",
     created: async function(){
-      alert(JSON.parse(document.getElementById("myData").value));
+
         this.result = JSON.parse(document.getElementById("myData").value);
         document.getElementById("myData").replaceWith("");
         this.query = JSON.parse(document.getElementById("query").value);
@@ -26,17 +26,9 @@ new Vue({
             this.Stations = res.data;
         }) 
 
-        this.departure = this.getStationName(document.getElementById('departureID').value);
-        this.arrival = this.getStationName(document.getElementById('arrival').value);
-        this.listTrain = this.loadListTrain();
-        // hrefDeparture 
-        if(this.step == 1){
-            localStorage.setItem('departure', location.href);
-        }
-        else if(this.step == 2){
-            localStorage.setItem('return', location.href);
-            this.hrefDeparture = localStorage.getItem('departure');
-        }
+        this.departure = this.getStationName(this.result[0].ScheduleDetails[0].DepartureStationID);
+        this.arrival = this.getStationName(this.result[0].ScheduleDetails[0].ArrivalStationID);
+        this.listTrain = this.loadListTrain();       
     },
     data:{
         result: null,
@@ -62,7 +54,6 @@ new Vue({
         one_way: false,   
         passengers: 1,
         errors: null,
-        hrefDeparture: null
     },
 
     methods:{
@@ -106,6 +97,7 @@ new Vue({
                         + "&Query=" + JSON.stringify(this.query);     
             }
             else if(typeof(this.query.ROUND_TRIP) != "undefined"){
+                alert(this.step);
                 url = "/scheduleDetail?TRAINID=" 
                         + train[0].TrainID + "&SCHEDULEID=" + train[0].ID + "&DepartID=" 
                         + train[0].ScheduleDetails[0].DepartureStationID
@@ -163,7 +155,7 @@ new Vue({
         },
 
         formatTime: function(dateTime){
-            return moment(dateTime.split('Z')[0]).format("LT");
+            return moment(dateTime).subtract('hour', 7).format("LT");
         },
 
         getFirstCost: function(scheduleDetailID){
@@ -173,8 +165,7 @@ new Vue({
                 //alert(JSON.stringify(res.data.Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " VND");
                 document.getElementById('cost' + scheduleDetailID).innerHTML = JSON.stringify(res.data.Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " VND";
             })
-        }
-          
+        },
     },
     components: {
         vuejsDatepicker,

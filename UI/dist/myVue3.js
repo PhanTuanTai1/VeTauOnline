@@ -109,7 +109,8 @@ var vm = new Vue({
         listSelected: null,
         listSelected2: null,
         hrefDeparture: localStorage.getItem('departure'),
-        hrefReturn: localStorage.getItem('return')
+        hrefReturn: localStorage.getItem('return'),
+        error: null
     },
 
     methods:{
@@ -225,7 +226,27 @@ var vm = new Vue({
                 }
             }
         },
+        validatePassenger: function(firstName, lastName, passport,typeobject, index){
+            if(firstName.trim() == "") {
+                this.error = "Please enter first name for passenger " + index;
+                return false;
+            }
+            if(lastName.trim() == "") {
+                this.error = "Please enter last name for passenger " + index;
+                return false;
+            }
 
+            if(!(/^\d{9,11}$/).test(passport)) {
+                this.error = "Please enter passport for passenger " + index + " (9 to 11 number character)" ;
+                return false;
+            }
+
+            if(typeobject == "") {
+                this.error = "Please choose type object for passenger " + index;
+                return false;
+            }
+            return true;
+        },
         submitForm: function(){
             var formData = new FormData();
             var data;
@@ -235,13 +256,26 @@ var vm = new Vue({
                 var fullName = document.getElementById('passenger_' + (i + 1) + '_first_name').value + " "
                                 + document.getElementById('passenger_' + (i + 1) + '_last_name').value
 
-                var Passenger = {
-                    "Name" : fullName,
-                    "Passport" : document.getElementById('passenger_' + (i + 1) + '_passport').value,
-                    "TypeObject" : document.getElementById('TypeObjectID' + (i + 1)).value
+                var check = this.validatePassenger(document.getElementById('passenger_' + (i + 1) + '_first_name').value, 
+                            document.getElementById('passenger_' + (i + 1) + '_last_name').value,
+                            document.getElementById('passenger_' + (i + 1) + '_passport').value,
+                            document.getElementById('TypeObjectID' + (i + 1)).value,
+                            i + 1);
+                            
+                if(check){
+                    var Passenger = {
+                        "Name" : fullName,
+                        "Passport" : document.getElementById('passenger_' + (i + 1) + '_passport').value,
+                        "TypeObject" : document.getElementById('TypeObjectID' + (i + 1)).value
+                    }
+                    ListPassenger.push(Passenger);
                 }
-
-                ListPassenger.push(Passenger);
+                else {
+                    $("#errors").modal({
+                        fadeDuration: 100
+                    });
+                    return;
+                }
             }
             
             var Representative = {
@@ -276,6 +310,7 @@ var vm = new Vue({
             var train = this.train.filter(train => {
                 return train.ID == this.result.TrainID
             })
+
             var TicketInfo = {
                 "DepartureDate" : this.result.DateDeparture,
                 "DepartureTime" : this.result.TimeDeparture,
@@ -324,6 +359,7 @@ var vm = new Vue({
             }).then(res => {
                 location.href  = res.data;
             })
+
         }
     }
 })
