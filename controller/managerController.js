@@ -1,25 +1,18 @@
 var { Sequelize, Model, DataTypes } = require('sequelize');
 var db = require("../data_access/DataAccess");
 var moment = require('moment');
+var uuid = require('uuidjs');
 //#region Customer
 module.exports.getAllCustomer = function (req, res) {
     db.Customer.findAll({
     }).then(cus => {
-        res.end(JSON.stringify(cus));
+        res.end(JSON.stringify(cus)); 
     })
 }
 module.exports.createCustomer = (req, res) => {
-    // Validate request
-    if (!req.query.Name) {
-      res.status(400).send({
-        message: "Content can not be empty!"
-      });
-      return;
-    }
-   
     //Create a customer
     const cus = {
-      ID:req.query.ID,
+      ID:uuid.genV4().intFields.timeLow,
       Name:req.query.Name,
       Passport:req.query.Passport,
       RepresentativeID: req.query.RepresentativeID,
@@ -91,17 +84,10 @@ module.exports.getTrainByID = function(req,res){
   })
 }
 module.exports.createTrain = (req, res) => {
-  // Validate request
-  if (!req.query.Name) {
-    res.status(400).send({
-      message: "Content can not be empty!"
-    });
-    return;
-  }
  
   //Create a customer
   const train = {
-    ID:req.query.ID,
+    ID:uuid.genV4().bitFields.clockSeqLow,
     Name:req.query.Name
   };
   // Save customer in the database
@@ -109,11 +95,15 @@ module.exports.createTrain = (req, res) => {
     .then(data => {
       res.send(data);
     })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the customer."
-      });
-    });
+   
 };
+//#endregion
+
+//#region Ticket
+module.exports.printTicketByRepresentativeId = (req,res) => {
+  db.Ticket.findAll().then(ticket=>{
+    res.end(JSON.stringify(ticket))
+  })
+}
+
 //#endregion

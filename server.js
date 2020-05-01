@@ -85,21 +85,21 @@ app.get("/getAllTrain",function(req,res){
 app.get("/admin",function(req,res){
     res.render('admin');
 })
-app.get("/CustomerManager",function(req,res){
+app.get("/admin/customer",function(req,res){
     res.render('customerAdmin');
 })
-app.get("/StationManager",function(req,res){
+app.get("/admin/station",function(req,res){
     res.render('stationAdmin')
 })
-app.get("/TrainManager",function(req,res){
+app.get("/admin/train",function(req,res){
     res.render('trainAdmin')
 })
 
 //action customer
-app.delete("/CustomerManager", function(req,res){
+app.delete("/admin/customer", function(req,res){
     managerCtrler.delCustomerByID(req,res)
 });
-app.post("/CustomerManager",function(req,res){
+app.post("/admin/customer",function(req,res){
     managerCtrler.createCustomer(req,res);
 })
 
@@ -107,16 +107,25 @@ app.post("/CustomerManager",function(req,res){
 app.get("/getTrain",function(req,res){
     managerCtrler.getTrainByID(req,res);
 })
-app.post("/TrainManager",function(req,res){
+app.post("/admin/train",function(req,res){
     managerCtrler.createTrain(req,res);
 })
-app.delete("/TrainManager", function(req,res){
+app.delete("/admin/train", function(req,res){
     managerCtrler.delTrain(req,res)
 });
-app.put("/TrainManager",function(req,res){
+app.put("/admin/train",function(req,res){
     managerCtrler.updateTrain(req,res);
 })
 
+//action
+
+//test print
+app.get("/testprint",function(req,res){
+    res.render('test');
+})
+app.get("/test",function(req,res){
+    managerCtrler.printTicketByRepresentativeId(req,res);
+})
 
 var server = app.listen(port,function(){
     console.log("Run on port " + port);

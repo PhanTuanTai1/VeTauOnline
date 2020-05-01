@@ -54,7 +54,7 @@ new Vue({
       })
 
       if (cus) {
-        axios.post('http://localhost:3000/CustomerManager?ID=' + cus[0]+'&Name='+cus[1]+'&Passport='+cus[2]+'&RepresentativeID='+cus[3]);
+        axios.post('http://localhost:3000/admin/customer?ID=' + cus[0]+'&Name='+cus[1]+'&Passport='+cus[2]+'&RepresentativeID='+cus[3]);
         swal.fire(
           'Created!',
           'New customer arrived.',
@@ -84,7 +84,7 @@ new Vue({
         reverseButtons: true
       }).then((result) => {
         if (result.value) {
-          axios.delete('http://localhost:3000/CustomerManager?ID=' + IDinput);
+          axios.delete('http://localhost:3000/admin/customer?ID=' + IDinput);
 
           swalWithBootstrapButtons.fire(
             'Deleted!',
