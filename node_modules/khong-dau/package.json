@@ -1,0 +1,61 @@
+{
+  "_from": "khong-dau",
+  "_id": "khong-dau@2.0.0",
+  "_inBundle": false,
+  "_integrity": "sha1-C8pB5tB2v0yY3t2cxGQtGBZGUhs=",
+  "_location": "/khong-dau",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "khong-dau",
+    "name": "khong-dau",
+    "escapedName": "khong-dau",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/khong-dau/-/khong-dau-2.0.0.tgz",
+  "_shasum": "0bca41e6d076bf4c98dedd9cc4642d181646521b",
+  "_spec": "khong-dau",
+  "_where": "C:\\Users\\tn\\Desktop\\VeTauOnline",
+  "author": {
+    "name": "Vu Anh Hao",
+    "email": "vuanhhaogk@gmail.com",
+    "url": "http://xn--vanhhoblog-l4a35n.vn"
+  },
+  "bugs": {
+    "url": "https://github.com/vuanhhaogk/khong-dau/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "sanitize-filename": "^1.6.1"
+  },
+  "deprecated": false,
+  "description": "Convert Vietnamese characters to Latin characters",
+  "homepage": "https://github.com/vuanhhaogk/khong-dau#readme",
+  "keywords": [
+    "Vietnamese",
+    "Language",
+    "NodeJS",
+    "Javascript",
+    "Server",
+    "Client",
+    "Converter"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "khong-dau",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vuanhhaogk/khong-dau.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "2.0.0"
+}

@@ -15,20 +15,20 @@ Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
 // })
 
 // database local
-// var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '123456', {
-//     dialect: 'mssql',
-//     host: 'localhost',
-//     //port: '1433',
-//     port: '57031'
-// })
+var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '123456', {
+    dialect: 'mssql',
+    host: 'localhost',
+    //port: '1433',
+    port: '57031'
+})
 
 //  database cloud sql5059.site4now.net
-var sequelize = new Sequelize('DB_A5DDEE_trainticket', 'DB_A5DDEE_trainticket_admin', '79495291Z*z', {
-    dialect: 'mssql',
-    host: 'sql5059.site4now.net',
-    //port: '1433',
-    //port: '57031'
-})
+// var sequelize = new Sequelize('DB_A5DDEE_trainticket', 'DB_A5DDEE_trainticket_admin', '79495291Z*z', {
+//     dialect: 'mssql',
+//     host: 'sql5059.site4now.net',
+//     //port: '1433',
+//     //port: '57031'
+// })
 
 //1 Train Entity
 class Train extends Model{}

@@ -1,4 +1,5 @@
 
+
 new Vue({
     el: "#app",
     created: async function(){
@@ -9,6 +10,12 @@ new Vue({
 
         if(typeof(document.getElementById('step_trip')) != "undefined" && document.getElementById('step_trip') != null) 
             this.step = document.getElementById('step_trip').value;
+        axios.get('/getAllStation')
+        .then(res => {
+          this.Stations = res.data;
+          this.round_trip = true;
+        })
+
         await axios.get('/getAllTrain')
         .then(res => {                 
             this.train = res.data;
@@ -33,6 +40,20 @@ new Vue({
         seatType: null,
         query: null,
         step: null,
+        FROM: '',
+        TO: '',
+        Stations: null,
+        Trains: null,
+        SearchFrom: null,
+        SearchTo: null,
+        depart_date: new Date(),
+        return_date: new Date(),
+        departureStationID: null,
+        arrivalStationID: null,
+        round_trip: true,
+        one_way: false,   
+        passengers: 1,
+        errors: null,
     },
 
     methods:{
@@ -144,10 +165,149 @@ new Vue({
                 //alert(JSON.stringify(res.data.Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " VND");
                 document.getElementById('cost' + scheduleDetailID).innerHTML = JSON.stringify(res.data.Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " VND";
             })
-        }
+        },
+        setDataDepart: function(){
+            var data = this.getStationID(document.getElementById('Depart').value);
+            if(typeof(data[0]) != "undefined"){
+                this.departureStationID = data[0].ID
+                return true;
+            }
+            return false;
+          },
+          setDataArrive: function(){
+            var data = this.getStationID(document.getElementById('Arrival').value);
+            if(typeof(data[0]) != "undefined"){
+              this.arrivalStationID = data[0].ID;
+              return true;
+            }
+            return false;
+          },
+          searchFromStation(){
+            if(this.FROM.trim() == "") {
+              this.SearchFrom = [];
+              return;
+            }    
+            var result = this.Stations.filter(station => {
+              return station.Name.toLowerCase().startsWith(this.FROM.toLowerCase().trim());
+            });
+            this.SearchFrom = result;
+          },
+      
+          searchToStation(){
+            if(this.TO.trim() == "") {
+              this.SearchTo = [];
+              return;
+            }
+            var result = this.Stations.filter(station => {
+              return station.Name.toLowerCase().startsWith(this.TO.toLowerCase().trim());
+            });
+            this.SearchTo = result;
+          },
+      
+          selectStationFrom: function(station){
+            this.FROM = station;
+            this.SearchFrom = [];
+            this.departureStationID = this.getStationID(station)[0].ID;
+            //alert(this.departureStationID);
+          },
+          
+          getStationID(stationName){
+            return this.Stations.filter(station => {
+              return tvkd.c(station.Name) == tvkd.c(stationName);
+            });
+          },
+      
+          selectStationTo: function(station){
+            this.TO = station;
+            this.SearchTo = [];
+            this.arrivalStationID = this.getStationID(station)[0].ID;
+          },
+      
+          disabledReturnDay: function(){
+            this.round_trip = false;
+            this.one_way = true;
+            document.getElementById("dateTimePicker_2").setAttribute("disabled","");
+          },
+      
+          enabledReturnDay: function(){
+            this.round_trip = true;
+            this.one_way = false;
+            document.getElementById("dateTimePicker_2").removeAttribute("disabled");
+          },
+      
+          increasePassager: function(){
+            if(this.passengers < 6) this.passengers += 1;
+          },
+      
+          validateData: function(){
+            if(document.getElementById('Depart').value == "" ){
+              this.errors = "Please enter departure station";
+              return false;
+            }
+            if(this.departureStationID == null) {
+              if(!this.setDataDepart()){
+                this.errors = "Departure station invalid";
+                return false;
+              }       
+            }
+            if(document.getElementById('Arrival').value == "" ){
+              this.errors = "Please enter arrival station";
+              return false;
+            } 
+            if(this.arrivalStationID == null) {
+              if(!this.setDataArrive()){
+                this.errors = "Arrival station invalid";
+                return false;
+              }
+            }
+            if(this.departureStationID == this.arrivalStationID) {
+              this.errors = "Departure and destination station aren't the same";
+              return false;
+            }
+            return true;
+          },
+      
+          Search: function(){    
+            if(this.validateData())
+            {
+              location.href = this.setParamQuery();  
+            }
+            else {
+              $("#errors").modal({
+                fadeDuration: 100
+              });
+            }
+          },
+          
+          setParamQuery: function(){
+            var url = '/searchSchedule?';
+            url += "FROM=" + this.departureStationID + "&";
+            url += "TO=" + this.arrivalStationID + "&";
+            
+            if(this.round_trip == true){     
+              url += "DEPART=" + this.depart_date + "&";      
+              url += "RETURN=" + this.return_date + "&"; 
+              url += "ROUND_TRIP=" + this.round_trip + "&"; 
+            }
+            
+            if(this.one_way == true) {
+              url += "DEPART=" + this.depart_date + "&";     
+              url += "ONE_WAY=" + this.one_way + "&"; 
+            }
+            
+            if(this.passengers >= 6) this.passengers = 5;
+      
+            url += "PASSENGERS=" + this.passengers; 
+      
+            return url;
+          }
     },
     components: {
         vuejsDatepicker,
       }
 })
+
+
+  
+  
 

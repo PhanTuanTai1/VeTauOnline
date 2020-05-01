@@ -14,9 +14,9 @@ var jsonParser = bodyParser.json();
 // create application/x-www-form-urlencoded parser
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var app = express();
-
+app.use(express.static('./node_modules'));
 app.use(express.static('UI'));
-app.use(express.static('node_modules'));
+
 app.use(urlencodedParser);
 app.use(jsonParser);
 app.set('view engine',"ejs");
