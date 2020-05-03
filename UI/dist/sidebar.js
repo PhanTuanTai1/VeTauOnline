@@ -20,7 +20,7 @@ Vue.component('my-sidebar', {
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 <a href="#" class="dropdown-item">
                     <div class="media">
-                        <img src="dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+                        <img src="../dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
                         <div class="media-body">
                             <h3 class="dropdown-item-title">
                                 Brad Diesel
@@ -34,7 +34,7 @@ Vue.component('my-sidebar', {
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item">
                     <div class="media">
-                        <img src="dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                        <img src="../dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
                         <div class="media-body">
                             <h3 class="dropdown-item-title">
                                 John Pierce
@@ -48,7 +48,7 @@ Vue.component('my-sidebar', {
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item">
                     <div class="media">
-                        <img src="dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                        <img src="../dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
                         <div class="media-body">
                             <h3 class="dropdown-item-title">
                                 Nora Silvester
@@ -97,14 +97,14 @@ Vue.component('my-sidebar', {
   </nav>
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <a href="index3.html" class="brand-link">
-        <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+        <img src="../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
             style="opacity: .8">
         <span class="brand-text font-weight-light">AdminLTE 3</span>
     </a>
     <div class="sidebar">
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                <img src="../dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
                 <a href="#" class="d-block">Alexander Pierce</a>
@@ -114,7 +114,7 @@ Vue.component('my-sidebar', {
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
                 <li class="nav-item has-treeview menu-open">
-                    <a href="./admin" class="nav-link active">
+                    <a href="/admin" class="nav-link active">
                         <i class="nav-icon fa fa-dashboard"></i>
                         <p>
                             Dashboard
@@ -123,29 +123,67 @@ Vue.component('my-sidebar', {
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="./CustomerManager" class="nav-link active">
+                            <a href="./customer" class="nav-link active">
                                 <i class="fa fa-male nav-icon"></i>
                                 <p>Customer</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                        <a href="./StationManager" class="nav-link">
+                        <a href="./station" class="nav-link">
                             <i class="fa fa-map nav-icon"></i>
                             <p>Station</p>
                         </a>
                         </li>
                         <li class="nav-item">
-                        <a href="./TrainManager" class="nav-link">
+                        <a href="./train" class="nav-link">
                             <i class="fa fa-train nav-icon"></i>
                             <p>Train</p>
                         </a>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="/Ticket" class="nav-link">
+                            <i class="nav-icon fa fa-chart-pie"></i>
+                            <p>
+                                Ticket
+                                <i class="right fa fa-angle-left"></i>
+                            </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="pages/charts/chartjs.html" class="nav-link">
+                                <i class="fa fa-circle nav-icon"></i>
+                                <p>ChartJS</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="pages/charts/flot.html" class="nav-link">
+                                <i class="fa fa-circle nav-icon"></i>
+                                <p>Flot</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="pages/charts/inline.html" class="nav-link">
+                                <i class="fa fa-circle nav-icon"></i>
+                                <p>Inline</p>
+                                </a>
+                            </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
             </ul>
         </nav>
     </div>
-  </aside></div>`
+  </aside></div>`,
+    computed() {
+        const hasTree = $('.has-treeview');
+
+        $.each(hasTree, function () {
+            $(this).click(function () {
+                $(this).children('.nav-treeview').slideToggle();
+            });
+        });
+    }
 })
 new Vue({
     el: "#sidebar",

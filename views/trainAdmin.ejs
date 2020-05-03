@@ -9,7 +9,7 @@
     <title>AdminLTE 3 | Dashboard 2</title>
 
 
-    <link rel="stylesheet" href="dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="../dist/css/adminlte.min.css">
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -42,22 +42,32 @@
                             </div>
                         </div>
 
+<<<<<<< HEAD
                         <table v-if="listTrain" class="table">
+=======
+                        <table class="table">
+>>>>>>> b529c9e711cd6f4283459fb93c3465da85878988
                             <thead class="font-weight-bold table-info">
                                 <td>#</td>
                                 <td>Name</td>
                                 <td class="text-right">....</td>
                             </thead>
+<<<<<<< HEAD
                             <tr v-for="(item,index) in listTrain">
+=======
+                            <tr v-for="(item,index) in Trains" :key="index">
+>>>>>>> b529c9e711cd6f4283459fb93c3465da85878988
                                 <td>{{item.ID}}</td>
                                 <td>{{item.Name}}</td>
-                                <td class="text-right"><button type="button" class="btn btn-warning"  @click="updateTrain(item.ID)"><i
+                                <td class="text-right"><button type="button" class="btn btn-warning"  @click="updateTrain(item.ID,index)"><i
                                             class="fa fa-edit"></i> Edit</button> <button type="button"
-                                        class="btn btn-info" @click="delTrain(item.ID)"><i class="fa fa-trash"></i>
+                                        class="btn btn-info" @click="delTrain(item.ID,index)"><i class="fa fa-trash"></i>
                                         Delete</button></td>
                             </tr>
                         </table>
+                        
                     </div>
+                    <button type="button" @click="update" class="btn btn-success">ok</button>
 
                 </div>
             </div>
@@ -80,10 +90,10 @@
 
     <!-- ./wrapper -->
     <!-- AdminLTE App -->
-    <script src="dist/js/adminlte.js"></script>
+    <script src="../dist/js/adminlte.js"></script>
 
     <!-- PAGE SCRIPTS -->
-    <script src="dist/js/pages/dashboard2.js"></script>
+    <script src="../dist/js/pages/dashboard2.js"></script>
 
     <script src="../dist/vue.js"></script>
     <script src="../dist/vue-router.js"></script>
@@ -92,6 +102,7 @@
     <script src="../dist/sidebar.js"></script>
     <script src="../dist/footer.js"></script>
     <script src="../dist/sweetalert2.all.min.js"></script>
+    <script src="../dist/uuid.js"></script>
     <!-- Language dependant libraries -->
 </body>
 

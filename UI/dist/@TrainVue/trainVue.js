@@ -8,39 +8,72 @@ new Vue({
   },
   data: {
     Trains: null,
-    TrainByID: null
+    TrainByID: null,
+  },
+  computed: {
+    listTrain() {
+      return this.Trains;
+    }
   },
   methods: {
+    update() {
+      this.$forceUpdate()
+    },
     async createTrain() {
+      const Toast = await Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        onOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer)
+          toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+      })
       const { value: train } = await Swal.fire({
         title: 'Create train',
         html:
-          '<label for="fname">ID:</label><br>' +
-          '<input type="text" id="ID""><br>' +
-          '<label for="fname">Name:</label><br>' +
-          '<input type="text" id="Name""><br>',
+          `<form>
+            <div class="form-group">
+              <label for="fname">Name:</label><br>
+              <input type="text" id="Name"" required><br>
+            </div>
+          </form>`,
         focusConfirm: false,
         preConfirm: () => {
           return [
-            document.getElementById('ID').value,
             document.getElementById('Name').value,
           ]
         }
       })
+
       if (train) {
-        axios.post(window.origin + '/TrainManager?ID=' + train[0] + '&Name=' + train[1]);
-        swal.fire(
-          'Created!',
-          'New train can be on duty.',
-          'success',
-        )
-        this.Trains.push({
-              "ID" : train[0],
-              "Name" : train[1]
+        axios.post(window.origin + '/admin/train?Name=' + train[0]).then(res => {
+          this.Trains.push({
+            "ID": res.data.ID,
+            "Name": res.data.Name
+          });
+          Toast.fire({
+            icon: 'success',
+            title: 'New train comes'
+          })
+
         })
       }
     },
-    async updateTrain(IDinput) {
+    async updateTrain(IDinput, index) {
+      const Toast = await Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        onOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer)
+          toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+      })
       axios.get(window.origin + '/getTrain?ID=' + IDinput)
         .then(async res => {
           var trainId = res.data.ID;
@@ -60,25 +93,21 @@ new Vue({
               ]
             }
           })
-          console.log(temp);
           if (temp) {
-            axios.put(window.origin + '/TrainManager?ID=' + trainId + '&Name=' + temp[1]).then(
-              function () {
-                swal.fire(
-                  'Updated!',
-                  `Your train is updated.`,
-                  'success',
-
-                ).then(function () {
-                  location.reload();
-                });
+            axios.put(window.origin + '/admin/train?ID=' + temp[0] + '&Name=' + temp[1]).then(
+              res => {
+                this.$set(this.Trains,index,{"ID":temp[0],"Name":temp[1]})
               }
-            )
+            ).then(
+              Toast.fire({
+              icon: 'success',
+              title: `Train #${temp[0]} updated`
+            }))             ;
 
           }
         })
     },
-    delTrain(IDinput) {
+    delTrain(IDinput, index) {
       const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
           confirmButton: 'btn btn-success',
@@ -97,16 +126,9 @@ new Vue({
         reverseButtons: true
       }).then((result) => {
         if (result.value) {
-          axios.delete(window.origin + '/TrainManager?ID=' + IDinput);
-
-          swalWithBootstrapButtons.fire(
-            'Deleted!',
-            'Your train has been deleted.',
-            'success',
-
-          ).then(function () {
-            location.reload();
-          });
+          axios.delete(window.origin + '/admin/train?ID=' + IDinput).then(function () {
+            this.Trains.splice(index,1);
+           });
         } else if (
           /* Read more about handling dismissals below */
           result.dismiss === Swal.DismissReason.cancel
