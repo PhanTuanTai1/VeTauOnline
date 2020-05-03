@@ -227,24 +227,71 @@ var vm = new Vue({
             }
         },
         validatePassenger: function(firstName, lastName, passport,typeobject, index){
-            if(firstName.trim() == "") {
-                this.error = "Please enter first name for passenger " + index;
+            if(typeobject == "") {
+                this.error = "Please choose type object for passenger " + index;
                 return false;
             }
+
             if(lastName.trim() == "") {
                 this.error = "Please enter last name for passenger " + index;
                 return false;
             }
 
-            if(!(/^\d{9,11}$/).test(passport)) {
-                this.error = "Please enter passport for passenger " + index + " (9 to 11 number character)" ;
+            if(firstName.trim() == "") {
+                this.error = "Please enter first & middle name for passenger " + index;
+                return false;
+            }
+            
+            var regex = /^\d{9,11}$/;
+
+            if(!regex.test(passport)) {
+                this.error = "Please enter passport for passenger " + index + " (9 to 11 number character)"
                 return false;
             }
 
-            if(typeobject == "") {
-                this.error = "Please choose type object for passenger " + index;
+            return true;
+        },
+        validateRepresentative: function(Representative){
+            var regex = /^\d{9,11}$/;
+            var regex2 = /^\d{10,11}$/;
+            if(Representative.FullName.trim() == "" ){
+                this.error = "Please enter name for representative";
                 return false;
             }
+            if(!regex.test(Representative.Passport)){
+                this.error = "Please enter passport for representative (9 to 11 number character)";
+                return false;
+            }
+            if(Representative.Email.trim() == ""){
+                this.error = "Please enter email for representative";
+                return false;
+            }
+            var verify_email = document.getElementById('verify_email').value;
+            if(Representative.Email != verify_email) {
+                this.error = "Email and verify email not correct";
+                return false;
+            }
+            if(!regex2.test(Representative.Phone)){
+                this.error = "Please enter phone number for representative";
+                return false;
+            }
+            
+            return true;
+        },
+        checkSeat: function(){
+            
+            if(this.listSelected.length < this.numberPass.length) {
+                this.error = "Please choose seat for passenger";
+                return false;
+            }
+
+            if(typeof(this.result2)  != "undefined" && this.result2 != null){
+                if(this.listSelected2.length < this.numberPass.length) {
+                    this.error = "Please choose seat for passenger";
+                    return false;
+                }
+           }
+            
             return true;
         },
         submitForm: function(){
@@ -284,7 +331,18 @@ var vm = new Vue({
                 "Email" : document.getElementById('book_email').value,
                 "Phone": document.getElementById('book_phone').value
             }    
-
+            if(!this.validateRepresentative(Representative)) {
+                $("#errors").modal({
+                    fadeDuration: 100
+                });
+                return;
+            }
+            if(!this.checkSeat()){
+                $("#errors").modal({
+                    fadeDuration: 100
+                });
+                return;
+            }
             var ListSeat = new Array();
             for(var i = 0; i < this.listSelected.length; i++){
                 var object = this.listSelected[i].split("_");
