@@ -48,7 +48,7 @@
                                 <td>Name</td>
                                 <td class="text-right">....</td>
                             </thead>
-                            <tr v-for="item in listTrain">
+                            <tr v-for="(item,index) in listTrain">
                                 <td>{{item.ID}}</td>
                                 <td>{{item.Name}}</td>
                                 <td class="text-right"><button type="button" class="btn btn-warning"  @click="updateTrain(item.ID)"><i
