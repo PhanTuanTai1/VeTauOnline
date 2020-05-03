@@ -2,6 +2,7 @@ var express = require("express");
 var config = require("./config/connectionString");
 var controller = require("./controller/indexController");
 var managerCtrler = require("./controller/managerController");
+var loginController = require("./controller/loginController");
 var bodyParser = require("body-parser");
 var session = require('express-session');
 var cookieParser = require('cookie-parser')
@@ -10,13 +11,12 @@ var Cookies = require('cookies')
 var keys = ['keyboard cat']
 // create application/json parser
 var jsonParser = bodyParser.json();
- 
+
 // create application/x-www-form-urlencoded parser
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var app = express();
 app.use(express.static('./node_modules'));
 app.use(express.static('UI'));
-
 app.use(urlencodedParser);
 app.use(jsonParser);
 app.set('view engine',"ejs");
@@ -29,7 +29,7 @@ app.use(session({
     saveUninitialized: true,
     cookie: { secure: true ,
         maxAge: 600000}
-  }))
+}))
 
 app.get("/",function(req,res){
    res.render('index2');
@@ -92,6 +92,12 @@ app.post("/createInfomation", function(req,res){
     controller.createSession(req,res);
 })
 
+app.get('/CheckLogin' , function(req,res){
+    loginController.CheckLogin(req,res);
+})
+app.get('/login', function(req,res){
+    loginController.Login(req,res);
+})
 app.get('/payment', function(req,res){
     controller.payment(req,res);
 })
