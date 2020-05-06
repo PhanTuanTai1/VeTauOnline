@@ -10,9 +10,12 @@ new Vue({
     Trains: null,
     TrainByID: null,
   },
-  computed: {
-    listTrain() {
-      return this.Trains;
+  watch: {
+    Trains: {
+      handler(newData) {
+        console.log(`Trains length is ${this.Trains.length}`);
+      },
+      deep: true,
     }
   },
   methods: {
@@ -96,26 +99,36 @@ new Vue({
           if (temp) {
             axios.put(window.origin + '/admin/train?ID=' + temp[0] + '&Name=' + temp[1]).then(
               res => {
-                this.$set(this.Trains,index,{"ID":temp[0],"Name":temp[1]})
+                this.$set(this.Trains, index, { "ID": temp[0], "Name": temp[1] })
               }
             ).then(
               Toast.fire({
-              icon: 'success',
-              title: `Train #${temp[0]} updated`
-            }))             ;
+                icon: 'success',
+                title: `Train #${temp[0]} updated`
+              }));
 
           }
         })
     },
-    delTrain(IDinput, index) {
-      const swalWithBootstrapButtons = Swal.mixin({
+    async delTrain(IDinput, index) {
+      const swalWithBootstrapButtons = await Swal.mixin({
         customClass: {
           confirmButton: 'btn btn-success',
           cancelButton: 'btn btn-danger'
         },
         buttonsStyling: false
       })
-
+      const Toast = await Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        onOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer)
+          toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+      })
       swalWithBootstrapButtons.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
@@ -126,13 +139,16 @@ new Vue({
         reverseButtons: true
       }).then((result) => {
         if (result.value) {
-          axios.delete(window.origin + '/admin/train?ID=' + IDinput).then(function () {
-            this.Trains.splice(index,1);
-           });
-        } else if (
-          /* Read more about handling dismissals below */
-          result.dismiss === Swal.DismissReason.cancel
-        ) {
+          axios.delete(window.origin + '/admin/train?ID=' + IDinput);
+          this.Trains.splice(index, 1)
+
+          Toast.fire({
+            icon: 'success',
+            title: `Train #${IDinput} deleted`
+          });
+
+
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
           swalWithBootstrapButtons.fire(
             'Cancelled',
             'Your imaginary file is safe :)',
