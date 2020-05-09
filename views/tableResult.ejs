@@ -30,253 +30,502 @@
             </tr>
         </thead>
         <tbody>
-
-            <tr id="Schedule<%=result.ID%>" 
-            class="result clickable_tr train vr direct" 
-            data-toggle="collapse"
-            data-target="#collapse-<%=result.ID%>"
-            >
-                <td style="text-align: center">
-                    <img class="searchresult-logo" src="https://booking.baolau.com/images/logos/transports/logo-vr-5-star.png">
-                    <div style="font-size: 13px" id="trainName<%=index%>"></div>
-                </td>
-
-                <td class="text-right">
-                    <div class="super-bold"><%=moment(result.TimeDeparture).subtract('hour', 7).format('LT')%></div>
-                    <div><%=moment(result.DateDeparture).format('DD-MM-YYYY')%></div>
-                </td>
-                <td class="text-right">
-                    <div class="super-bold">04:38</div>
-                    <div>Fr, 17/04</div>
-                </td>
-                <td class="text-center">
-                    17h 10m </td>
-                <td class="searchresult-itenerary hidden-sm hidden-xs">
-                    <span style="display:inline-block" >
-                        <span id="parentDepart<%=index%>"></span><br>
-                    <span style="font-size:13px" id="subDepart<%=index%>"></span></span> 
-                    <i class="icon have-node-code icon-train inline"></i> 
-                    <span style="display:inline-block">
-                        <span id="parentArrival<%=index%>"></span><br>
-                    <span style="font-size:13px" id="subArrival<%=index%>"></span></span>
-                </td>
-                <td class="total_price yellow-text super-bold price-alignment">
-                    <span class="money" data-amount="579000" data-currency="VND"><%=JSON.stringify(result.ScheduleDetails[0].TableCosts[0].Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%>&nbsp;VND</span> <i class="js-result_promo_tag fa fa-tag yellow-text" style="display:none"></i> </td>
-                <td class="text-right button-alignment">
-                    <i class="fa button-direct hidden-xs hidden-sm"></i>
-
-                    <div class="spinner">
-                        <img src="https://booking.baolau.com/images/genaral/spinner-2.gif" style="width:27px">
-                    </div>
-
-                    <input type="hidden" name="price_breakdown" class="price_breakdown" value="eyI2OTk1MTIxNiI6eyJ0eXBlIjoidHJhaW4iLCJwcmljZSI6IjU3OTAwMCIsImZhcmUiOiJOTUw1NiJ9fQ==">
-
-                    <input type="hidden" name="coordinates" class="coordinates" value="W1siMTYuMDcxODUyIiwiMTA4LjIwODQ4MiIsIkRBIE5BTkciLCJ0cmFpbiJdLFsiMTAuNzgyMzUyIiwiMTA2LjY3Nzg3OSIsIkhPIENISSBNSU5IIiwidHJhaW4iXV0=">
-                </td>
-            </tr>
-
-            <tr id="collapse-<%=result.ID%>" data-id="2f3307796b9aba433630ffeb5301ed8b" class="result-collapse collapse" >
-                <td colspan="7" style="padding-top:0; padding-bottom:0">
-                    <div class="route_details" >
-                        <!-- Details Desktop -->
-                        <div style="color: #7a8085;" class="hidden-sm hidden-xs">
-                            <table style="width:100%; padding:0;">
-                                <!-- Origin -->
-                                <tbody>
-                                    <tr style="border:none">
-                                        <td>&nbsp;</td>
-
-                                        <td class="text-right">
-                                            <span class="blue-text super-bold"><%=moment(result.TimeDeparture).format('LT')%></span>
-                                            <p><%=moment(result.DateDeparture).format('DD-MM-YYYY')%></p>
-                                        </td>
-
-                                        <td class="relative text-center">
-                                            <div class="searchresult-timeline">
-                                                <i class="icon-line-point inline line-bottom"></i>
-                                            </div>
-                                        </td>
-
-                                        <td colspan="2" class="padded-left">
-                                            <!-- style="border-right:1px solid #ddd;" -->
-                                            <h4 class="station-text bold" id="hiddenDepart<%=index%>">
-                    <!-- DA NANG                                                 - Da Nang Railway Station                                            </h4> -->
-                                            <!-- <span> 202 Hải Phòng, Phường Tân Chính, Quận Thanh Khê, Đà Nẵng</span> -->
-                                        </td>
-
-                                        <!-- Fares -->
-                                        <td colspan="2" rowspan="3" style="padding:20px">
-                                            <div class="fares" data-route="69951216">
-                                                <div class="desktop-fares">
-                                                    <div class="relative fares-choose-items
-                                        active                                                                                                                                                                                                        ">
-                                                        <div class="fares-choose radio">
-                                                            <input id="fare_2f3307796b9aba433630ffeb5301ed8b_69951216_NML56" type="radio" name="fares_2f3307796b9aba433630ffeb5301ed8b_69951216<%=index%>" class="fare_radio" data-fare="NML56" data-price="579000" data-label="Soft seat Premium" data-has_promotion="0" data-basefare="579000" checked="">
-
-                                                            <label for="fare_2f3307796b9aba433630ffeb5301ed8b_69951216_NML56"></label>
-                                                        </div>
-                                                        <label class="fares-description">
-                                                            <p id="typeSeat"></p>
-                                                            <span class="yellow-text js-fare_price money" data-currency="VND"><%=JSON.stringify(result.ScheduleDetails[0].TableCosts[0].Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%>&nbsp;VND</span>
-                                                            <div class="fare-info-button" data-origin_country_code="VN" data-destination_country_code="VN" data-transport="vr" data-alert="eyJvcmlnaW5faWQiOiIyNjQiLCJkZXN0aW5hdGlvbl9pZCI6IjMyNCIsInRyYXZlbF9kYXRlIjoiMjAyMC0wNC0xNiIsInRyYW5zcG9ydF9jb2RlIjoidnIiLCJ2ZXNzZWwiOiJTRTMifQ==" data-fare="NML56" data-status="1" data-overwrites="eyJzZWF0X3NlbGVjdGlvbiI6ImZhcmVfcnVsZV9vcHRpb25fcGVybWl0dGVkIn0=" data-container="body" data-placement="auto" data-trigger="hover" data-template="<span class='farerule popover-style'><span> <i style ='font-size:20px' class='fa-info-circle'></i></span><span class='farerule-content popover-content small-text'></span></span>" data-html="true" data-content="">
-                                                                <div><i style="font-size: 20px" class="fa-info-circle" aria-hidden="true"></i></div>
-                                                                <div>Fare rules</div>
+            <%if(index == 1){%>
+                <tr id="Schedule<%=result.ID%>" 
+                    class="result clickable_tr train vr direct" 
+                    data-toggle="collapse"
+                    data-target="#collapse-<%=result.ID%>"
+                    >
+                        <td style="text-align: center">
+                            <img class="searchresult-logo" src="https://booking.baolau.com/images/logos/transports/logo-vr-5-star.png">
+                            <div style="font-size: 13px" id="trainName<%=index%>">{{Train1}}</div>
+                        </td>
+        
+                        <td class="text-right">
+                            <div class="super-bold"><%=moment(result.TimeDeparture).subtract('hour', 7).format('LT')%></div>
+                            <div><%=moment(result.DateDeparture).format('DD-MM-YYYY')%></div>
+                        </td>
+                        <td class="text-right">
+                            <div class="super-bold">04:38</div>
+                            <div>Fr, 17/04</div>
+                        </td>
+                        <td class="text-center">
+                            17h 10m </td>
+                        <td class="searchresult-itenerary hidden-sm hidden-xs">
+                            <span style="display:inline-block" >
+                                <span >{{Depart1}}</span><br>
+                            <span style="font-size:13px" >{{Depart1}}</span></span> 
+                            <i class="icon have-node-code icon-train inline"></i> 
+                            <span style="display:inline-block">
+                                <span >{{Arrival1}}</span><br>
+                            <span style="font-size:13px" >{{Arrival1}}</span></span>
+                        </td>
+                        <td class="total_price yellow-text super-bold price-alignment">
+                            <span class="money" data-amount="579000" data-currency="VND"><%=JSON.stringify(result.ScheduleDetails[0].TableCosts[0].Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%>&nbsp;VND</span> <i class="js-result_promo_tag fa fa-tag yellow-text" style="display:none"></i> </td>
+                        <td class="text-right button-alignment">
+                            <i class="fa button-direct hidden-xs hidden-sm"></i>
+        
+                            <div class="spinner">
+                                <img src="https://booking.baolau.com/images/genaral/spinner-2.gif" style="width:27px">
+                            </div>
+        
+                            <input type="hidden" name="price_breakdown" class="price_breakdown" value="eyI2OTk1MTIxNiI6eyJ0eXBlIjoidHJhaW4iLCJwcmljZSI6IjU3OTAwMCIsImZhcmUiOiJOTUw1NiJ9fQ==">
+        
+                            <input type="hidden" name="coordinates" class="coordinates" value="W1siMTYuMDcxODUyIiwiMTA4LjIwODQ4MiIsIkRBIE5BTkciLCJ0cmFpbiJdLFsiMTAuNzgyMzUyIiwiMTA2LjY3Nzg3OSIsIkhPIENISSBNSU5IIiwidHJhaW4iXV0=">
+                        </td>
+                    </tr>
+        
+                    <tr id="collapse-<%=result.ID%>" data-id="2f3307796b9aba433630ffeb5301ed8b" class="result-collapse collapse" >
+                        <td colspan="7" style="padding-top:0; padding-bottom:0">
+                            <div class="route_details" >
+                                <!-- Details Desktop -->
+                                <div style="color: #7a8085;" class="hidden-sm hidden-xs">
+                                    <table style="width:100%; padding:0;">
+                                        <!-- Origin -->
+                                        <tbody>
+                                            <tr style="border:none">
+                                                <td>&nbsp;</td>
+        
+                                                <td class="text-right">
+                                                    <span class="blue-text super-bold"><%=moment(result.TimeDeparture).subtract('hour', 7).format('LT')%></span>
+                                                    <p><%=moment(result.DateDeparture).format('DD-MM-YYYY')%></p>
+                                                </td>
+        
+                                                <td class="relative text-center">
+                                                    <div class="searchresult-timeline">
+                                                        <i class="icon-line-point inline line-bottom"></i>
+                                                    </div>
+                                                </td>
+        
+                                                <td colspan="2" class="padded-left">
+                                                    <!-- style="border-right:1px solid #ddd;" -->
+                                                    <h4 class="station-text bold">{{Depart1}}</h4>
+                            <!-- DA NANG                                                 - Da Nang Railway Station                                            </h4> -->
+                                                    <!-- <span> 202 Hải Phòng, Phường Tân Chính, Quận Thanh Khê, Đà Nẵng</span> -->
+                                                </td>
+        
+                                                <!-- Fares -->
+                                                <td colspan="2" rowspan="3" style="padding:20px">
+                                                    <div class="fares" data-route="69951216">
+                                                        <div class="desktop-fares">
+                                                            <div class="relative fares-choose-items
+                                                active                                                                                                                                                                                                        ">
+                                                                <div class="fares-choose radio">
+                                                                    <input id="fare_2f3307796b9aba433630ffeb5301ed8b_69951216_NML56" type="radio" name="fares_2f3307796b9aba433630ffeb5301ed8b_69951216<%=index%>" class="fare_radio" data-fare="NML56" data-price="579000" data-label="Soft seat Premium" data-has_promotion="0" data-basefare="579000" checked="">
+        
+                                                                    <label for="fare_2f3307796b9aba433630ffeb5301ed8b_69951216_NML56"></label>
+                                                                </div>
+                                                                <label class="fares-description">
+                                                                    <p id="typeSeat"></p>
+                                                                    <span class="yellow-text js-fare_price money" data-currency="VND"><%=JSON.stringify(result.ScheduleDetails[0].TableCosts[0].Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%>&nbsp;VND</span>
+                                                                    <div class="fare-info-button" data-origin_country_code="VN" data-destination_country_code="VN" data-transport="vr" data-alert="eyJvcmlnaW5faWQiOiIyNjQiLCJkZXN0aW5hdGlvbl9pZCI6IjMyNCIsInRyYXZlbF9kYXRlIjoiMjAyMC0wNC0xNiIsInRyYW5zcG9ydF9jb2RlIjoidnIiLCJ2ZXNzZWwiOiJTRTMifQ==" data-fare="NML56" data-status="1" data-overwrites="eyJzZWF0X3NlbGVjdGlvbiI6ImZhcmVfcnVsZV9vcHRpb25fcGVybWl0dGVkIn0=" data-container="body" data-placement="auto" data-trigger="hover" data-template="<span class='farerule popover-style'><span> <i style ='font-size:20px' class='fa-info-circle'></i></span><span class='farerule-content popover-content small-text'></span></span>" data-html="true" data-content="">
+                                                                        <div><i style="font-size: 20px" class="fa-info-circle" aria-hidden="true"></i></div>
+                                                                        <div>Fare rules</div>
+                                                                    </div>
+                                                                </label>
+        
                                                             </div>
-                                                        </label>
-
+                                                        </div>
+        
                                                     </div>
-                                                </div>
-
-                                            </div>
-                                        </td>
-                                    </tr>
-
-                                    <!-- Vessel -->
-                                    <tr style="border:none">
-                                        <td style="text-align:center">
-                                            <img class="searchresult-logo" src="https://booking.baolau.com/images/logos/transports/logo-vr-5-star.png">
-                                            <div style="font-size: 13px" class="hiddenTrain<%=index%>">SE3</div>
-                                        </td>
-                                        <td class="text-right">
-                                            <span>
-                    <span class="bold">17h 10m</span>
-                                            </span>
-                                        </td>
-                                        <td class="text-center">
-                                            <div class="searchresult-timeline">
-                                                <i class="icon-train inline"></i> </div>
-                                        </td>
-                                        <td colspan="2" class="padded-left">
-                                            <!-- style="border-right:1px solid #ddd; overflow:hidden"-->
-                                            <!--<div class="side_point">
-                    <span class="side_line">-->
-                                            <div class="bold" >Vietnam Railways</span> <span class="hiddenTrain<%=index%>"></span>
-                                            <!--</span>
-            </div>-->
-                                        </td>
-                                    </tr>
-
-                                    <!--  Destination -->
-                                    <tr style="border:none">
-                                        <td></td>
-                                        <td class="text-right">
-                                            <span class="blue-text super-bold">04:38</span>
-                                            <p>Fr, 17/04</p>
-                                        </td>
-                                        <td class="relative text-center">
-                                            <div class="searchresult-timeline">
-                                                <i class="icon-line-point inline line-top"></i>
-                                            </div>
-                                        </td>
-                                        <td colspan="2" class="padded-left">
-                                            <h4 class="station-text bold" id="hiddenArrival<%=index%>">
-                    HO CHI MINH                                                 - Saigon Railway Station                                            </h4>
-                                            <!-- <span>01 Nguyễn Thông, Phường 9, Quận 3, Thành phố Hồ Chí Minh</span> -->
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <!-- end Details -->
-                        </div>
-                        <!-- End Desktop details -->
-
-                        <!-- Mobile details -->
-                        <div class="mobile-result-content visible-xs visible-sm">
-                            <div>
-                                <!-- Origin -->
-                                <div class="col-xs-4">
-                                    <h4 class="station-text bold">DA NANG</h4>
-
-                                    <span class="popover-address origin-address" data-container="body" data-placement="auto" data-trigger="click focus" data-content=" 202 Hải Phòng, Phường Tân Chính, Quận Thanh Khê, Đà Nẵng" style="text-decoration: underline" data-original-title="" title="">
-                        Da Nang Railway Station                                                </span>
-                                </div>
-
-                                <div class="col-xs-4 text-center">
-                                    <img class="searchresult-logo" src="https://booking.baolau.com/images/logos/transports/logo-vr-5-star.png">
-                                    <div style="font-size: 13px">SE3</div>
-                                </div>
-
-                                <div class="col-xs-4 text-right">
-                                    <h4 class="station-text bold">HO CHI MINH</h4>
-
-                                    <span class="popover-address destination-address" data-container="body" data-placement="auto" data-trigger="click focus" data-content="01 Nguyễn Thông, Phường 9, Quận 3, Thành phố Hồ Chí Minh" style="text-decoration: underline" data-original-title="" title="">
-                        Saigon Railway Station                                                </span>
-                                </div>
-
-                                <div class="clearfix"></div>
-                            </div>
-
-                            <div class=" searchresult-timeline">
-                                <div class="col-xs-4 relative">
-                                    <i class="icon-line-point inline line-right"></i>
-                                </div>
-                                <div class="col-xs-4 text-center">
-                                    <i class="icon-train inline"></i> </div>
-                                <div class="col-xs-4 text-right relative">
-                                    <i class="icon-line-point inline line-left"></i>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-
-                            <div>
-                                <div class="col-xs-4">
-                                    <span class="blue-text big-text bold">11:28</span>
-                                    <p>Th, 16/04</p>
-                                </div>
-
-                                <div style="margin-top: 10px" class="col-xs-4 text-center">
-                                    <span class="small-text">17h 10m</span>
-                                </div>
-
-                                <div class="col-xs-4 text-right">
-                                    <span class="blue-text big-text bold">04:38</span>
-                                    <p>Fr, 17/04</p>
-                                </div>
-
-                                <div class="clearfix"></div>
-                            </div>
-
-                            <!-- Mobile Fares -->
-                            <div class="col-xs-12 gap-small">
-                                <section class="scrolling-section">
-                                    <div class="fare-content horizontal-items" style="width:170px">
-                                        <div class="fares fare-type-items" data-route="69951216">
-                                            <label class="mobile-fare" for="mobile_fare_2f3307796b9aba433630ffeb5301ed8b_69951216_NML56">
-                                                <div class="fare-type-title">
-                                                    <span>Soft seat Premium</span>
-                                                </div>
-                                                <div class="mobile-fare-choose relative ">
-                                                    <div class="radio">
-                                                        <input id="mobile_fare_2f3307796b9aba433630ffeb5301ed8b_69951216_NML56" type="radio" name="mobile_fares_2f3307796b9aba433630ffeb5301ed8b_69951216" class="fare_radio" data-fare="NML56" data-price="579000" data-label="Soft seat Premium" data-has_promotion="0" data-basefare="579000" checked="">
-
-                                                        <label for="mobile_fare_2f3307796b9aba433630ffeb5301ed8b_69951216_NML56"></label>
+                                                </td>
+                                            </tr>
+        
+                                            <!-- Vessel -->
+                                            <tr style="border:none">
+                                                <td style="text-align:center">
+                                                    <img class="searchresult-logo" src="https://booking.baolau.com/images/logos/transports/logo-vr-5-star.png">
+                                                    <div style="font-size: 13px" >{{Train1}}</div>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span>
+                            <span class="bold">17h 10m</span>
+                                                    </span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="searchresult-timeline">
+                                                        <i class="icon-train inline"></i> </div>
+                                                </td>
+                                                <td colspan="2" class="padded-left">
+                                                    <!-- style="border-right:1px solid #ddd; overflow:hidden"-->
+                                                    <!--<div class="side_point">
+                            <span class="side_line">-->
+                                                    <div class="bold" >Vietnam Railways</span> <span>{{Train1}}</span>
+                                                    <!--</span>
+                    </div>-->
+                                                </td>
+                                            </tr>
+        
+                                            <!--  Destination -->
+                                            <tr style="border:none">
+                                                <td></td>
+                                                <td class="text-right">
+                                                    <span class="blue-text super-bold">04:38</span>
+                                                    <p>Fr, 17/04</p>
+                                                </td>
+                                                <td class="relative text-center">
+                                                    <div class="searchresult-timeline">
+                                                        <i class="icon-line-point inline line-top"></i>
                                                     </div>
-                                                    <div style="padding-bottom: 20px;">
-                                                        <span class="yellow-text js-fare_price bold money" data-amount="579000" data-currency="VND">579,000&nbsp;đ</span>
-                                                    </div>
-                                                    <div style="padding-bottom: 10px; text-decoration: underline;" class="fare-info-button blue-text" data-origin_country_code="VN" data-destination_country_code="VN" data-transport="vr" data-alert="eyJvcmlnaW5faWQiOiIyNjQiLCJkZXN0aW5hdGlvbl9pZCI6IjMyNCIsInRyYXZlbF9kYXRlIjoiMjAyMC0wNC0xNiIsInRyYW5zcG9ydF9jb2RlIjoidnIiLCJ2ZXNzZWwiOiJTRTMifQ==" data-fare="NML56" data-status="1"><i style="margin-right: 8px" class="fa-info-circle" aria-hidden="true"></i>Fare rules</div>
-                                                </div>
-                                            </label>
+                                                </td>
+                                                <td colspan="2" class="padded-left">
+                                                    <h4 class="station-text bold" >{{Arrival1}}</h4>
+                            
+                                                    <!-- <span>01 Nguyễn Thông, Phường 9, Quận 3, Thành phố Hồ Chí Minh</span> -->
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <!-- end Details -->
+                                </div>
+                                <!-- End Desktop details -->
+        
+                                <!-- Mobile details -->
+                                <div class="mobile-result-content visible-xs visible-sm">
+                                    <div>
+                                        <!-- Origin -->
+                                        <div class="col-xs-4">
+                                            <h4 class="station-text bold">DA NANG</h4>
+        
+                                            <span class="popover-address origin-address" data-container="body" data-placement="auto" data-trigger="click focus" data-content=" 202 Hải Phòng, Phường Tân Chính, Quận Thanh Khê, Đà Nẵng" style="text-decoration: underline" data-original-title="" title="">
+                                Da Nang Railway Station                                                </span>
                                         </div>
+        
+                                        <div class="col-xs-4 text-center">
+                                            <img class="searchresult-logo" src="https://booking.baolau.com/images/logos/transports/logo-vr-5-star.png">
+                                            <div style="font-size: 13px">{{Train1}}</div>
+                                        </div>
+        
+                                        <div class="col-xs-4 text-right">
+                                            <h4 class="station-text bold">HO CHI MINH</h4>
+        
+                                            <span class="popover-address destination-address" data-container="body" data-placement="auto" data-trigger="click focus" data-content="01 Nguyễn Thông, Phường 9, Quận 3, Thành phố Hồ Chí Minh" style="text-decoration: underline" data-original-title="" title="">
+                                Saigon Railway Station                                                </span>
+                                        </div>
+        
+                                        <div class="clearfix"></div>
                                     </div>
-                                </section>
+        
+                                    <div class=" searchresult-timeline">
+                                        <div class="col-xs-4 relative">
+                                            <i class="icon-line-point inline line-right"></i>
+                                        </div>
+                                        <div class="col-xs-4 text-center">
+                                            <i class="icon-train inline"></i> </div>
+                                        <div class="col-xs-4 text-right relative">
+                                            <i class="icon-line-point inline line-left"></i>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+        
+                                    <div>
+                                        <div class="col-xs-4">
+                                            <span class="blue-text big-text bold">11:28</span>
+                                            <p>Th, 16/04</p>
+                                        </div>
+        
+                                        <div style="margin-top: 10px" class="col-xs-4 text-center">
+                                            <span class="small-text">17h 10m</span>
+                                        </div>
+        
+                                        <div class="col-xs-4 text-right">
+                                            <span class="blue-text big-text bold">04:38</span>
+                                            <p>Fr, 17/04</p>
+                                        </div>
+        
+                                        <div class="clearfix"></div>
+                                    </div>
+        
+                                    <!-- Mobile Fares -->
+                                    <div class="col-xs-12 gap-small">
+                                        <section class="scrolling-section">
+                                            <div class="fare-content horizontal-items" style="width:170px">
+                                                <div class="fares fare-type-items" data-route="69951216">
+                                                    <label class="mobile-fare" for="mobile_fare_2f3307796b9aba433630ffeb5301ed8b_69951216_NML56">
+                                                        <div class="fare-type-title">
+                                                            <span>Soft seat Premium</span>
+                                                        </div>
+                                                        <div class="mobile-fare-choose relative ">
+                                                            <div class="radio">
+                                                                <input id="mobile_fare_2f3307796b9aba433630ffeb5301ed8b_69951216_NML56" type="radio" name="mobile_fares_2f3307796b9aba433630ffeb5301ed8b_69951216" class="fare_radio" data-fare="NML56" data-price="579000" data-label="Soft seat Premium" data-has_promotion="0" data-basefare="579000" checked="">
+        
+                                                                <label for="mobile_fare_2f3307796b9aba433630ffeb5301ed8b_69951216_NML56"></label>
+                                                            </div>
+                                                            <div style="padding-bottom: 20px;">
+                                                                <span class="yellow-text js-fare_price bold money" data-amount="579000" data-currency="VND">579,000&nbsp;đ</span>
+                                                            </div>
+                                                            <div style="padding-bottom: 10px; text-decoration: underline;" class="fare-info-button blue-text" data-origin_country_code="VN" data-destination_country_code="VN" data-transport="vr" data-alert="eyJvcmlnaW5faWQiOiIyNjQiLCJkZXN0aW5hdGlvbl9pZCI6IjMyNCIsInRyYXZlbF9kYXRlIjoiMjAyMC0wNC0xNiIsInRyYW5zcG9ydF9jb2RlIjoidnIiLCJ2ZXNzZWwiOiJTRTMifQ==" data-fare="NML56" data-status="1"><i style="margin-right: 8px" class="fa-info-circle" aria-hidden="true"></i>Fare rules</div>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </div>
+                                    <!-- end mobile fares -->
+                                </div>
+                                <!-- END mobile-result-content-->
+        
                             </div>
-                            <!-- end mobile fares -->
-                        </div>
-                        <!-- END mobile-result-content-->
-
-                    </div>
-                    <!-- route_details-->
-
-                    <div class="clearfix"></div>
-
-                    <div class="gap gap-mini"></div>
-
-                </td>
-            </tr>
-            <tr id="gap-2f3307796b9aba433630ffeb5301ed8b" class="result-gap" style="display:none">
-                <td colspan="7"></td>
-            </tr>
+                            <!-- route_details-->
+        
+                            <div class="clearfix"></div>
+        
+                            <div class="gap gap-mini"></div>
+        
+                        </td>
+                    </tr>
+                    <tr id="gap-2f3307796b9aba433630ffeb5301ed8b" class="result-gap" style="display:none">
+                        <td colspan="7"></td>
+                    </tr>
+            <%}else{%>
+                <tr id="Schedule<%=result.ID%>" 
+                    class="result clickable_tr train vr direct" 
+                    data-toggle="collapse"
+                    data-target="#collapse-<%=result.ID%>"
+                    >
+                        <td style="text-align: center">
+                            <img class="searchresult-logo" src="https://booking.baolau.com/images/logos/transports/logo-vr-5-star.png">
+                            <div style="font-size: 13px" id="trainName<%=index%>">{{Train2}}</div>
+                        </td>
+        
+                        <td class="text-right">
+                            <div class="super-bold"><%=moment(result.TimeDeparture).subtract('hour', 7).format('LT')%></div>
+                            <div><%=moment(result.DateDeparture).format('DD-MM-YYYY')%></div>
+                        </td>
+                        <td class="text-right">
+                            <div class="super-bold">04:38</div>
+                            <div>Fr, 17/04</div>
+                        </td>
+                        <td class="text-center">
+                            17h 10m </td>
+                        <td class="searchresult-itenerary hidden-sm hidden-xs">
+                            <span style="display:inline-block" >
+                                <span >{{Depart2}}</span><br>
+                            <span style="font-size:13px" >{{Depart2}}</span></span> 
+                            <i class="icon have-node-code icon-train inline"></i> 
+                            <span style="display:inline-block">
+                                <span >{{Arrival2}}</span><br>
+                            <span style="font-size:13px" >{{Arrival2}}</span></span>
+                        </td>
+                        <td class="total_price yellow-text super-bold price-alignment">
+                            <span class="money" data-amount="579000" data-currency="VND"><%=JSON.stringify(result.ScheduleDetails[0].TableCosts[0].Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%>&nbsp;VND</span> <i class="js-result_promo_tag fa fa-tag yellow-text" style="display:none"></i> </td>
+                        <td class="text-right button-alignment">
+                            <i class="fa button-direct hidden-xs hidden-sm"></i>
+        
+                            <div class="spinner">
+                                <img src="https://booking.baolau.com/images/genaral/spinner-2.gif" style="width:27px">
+                            </div>
+        
+                            <input type="hidden" name="price_breakdown" class="price_breakdown" value="eyI2OTk1MTIxNiI6eyJ0eXBlIjoidHJhaW4iLCJwcmljZSI6IjU3OTAwMCIsImZhcmUiOiJOTUw1NiJ9fQ==">
+        
+                            <input type="hidden" name="coordinates" class="coordinates" value="W1siMTYuMDcxODUyIiwiMTA4LjIwODQ4MiIsIkRBIE5BTkciLCJ0cmFpbiJdLFsiMTAuNzgyMzUyIiwiMTA2LjY3Nzg3OSIsIkhPIENISSBNSU5IIiwidHJhaW4iXV0=">
+                        </td>
+                    </tr>
+        
+                    <tr id="collapse-<%=result.ID%>" data-id="2f3307796b9aba433630ffeb5301ed8b" class="result-collapse collapse" >
+                        <td colspan="7" style="padding-top:0; padding-bottom:0">
+                            <div class="route_details" >
+                                <!-- Details Desktop -->
+                                <div style="color: #7a8085;" class="hidden-sm hidden-xs">
+                                    <table style="width:100%; padding:0;">
+                                        <!-- Origin -->
+                                        <tbody>
+                                            <tr style="border:none">
+                                                <td>&nbsp;</td>
+        
+                                                <td class="text-right">
+                                                    <span class="blue-text super-bold"><%=moment(result.TimeDeparture).subtract('hour', 7).format('LT')%></span>
+                                                    <p><%=moment(result.DateDeparture).format('DD-MM-YYYY')%></p>
+                                                </td>
+        
+                                                <td class="relative text-center">
+                                                    <div class="searchresult-timeline">
+                                                        <i class="icon-line-point inline line-bottom"></i>
+                                                    </div>
+                                                </td>
+        
+                                                <td colspan="2" class="padded-left">
+                                                    <!-- style="border-right:1px solid #ddd;" -->
+                                                    <h4 class="station-text bold">{{Depart2}}</h4>
+                            <!-- DA NANG                                                 - Da Nang Railway Station                                            </h4> -->
+                                                    <!-- <span> 202 Hải Phòng, Phường Tân Chính, Quận Thanh Khê, Đà Nẵng</span> -->
+                                                </td>
+        
+                                                <!-- Fares -->
+                                                <td colspan="2" rowspan="3" style="padding:20px">
+                                                    <div class="fares" data-route="69951216">
+                                                        <div class="desktop-fares">
+                                                            <div class="relative fares-choose-items
+                                                active                                                                                                                                                                                                        ">
+                                                                <div class="fares-choose radio">
+                                                                    <input id="fare_2f3307796b9aba433630ffeb5301ed8b_69951216_NML56" type="radio" name="fares_2f3307796b9aba433630ffeb5301ed8b_69951216<%=index%>" class="fare_radio" data-fare="NML56" data-price="579000" data-label="Soft seat Premium" data-has_promotion="0" data-basefare="579000" checked="">
+        
+                                                                    <label for="fare_2f3307796b9aba433630ffeb5301ed8b_69951216_NML56"></label>
+                                                                </div>
+                                                                <label class="fares-description">
+                                                                    <p id="typeSeat"></p>
+                                                                    <span class="yellow-text js-fare_price money" data-currency="VND"><%=JSON.stringify(result.ScheduleDetails[0].TableCosts[0].Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%>&nbsp;VND</span>
+                                                                    <div class="fare-info-button" data-origin_country_code="VN" data-destination_country_code="VN" data-transport="vr" data-alert="eyJvcmlnaW5faWQiOiIyNjQiLCJkZXN0aW5hdGlvbl9pZCI6IjMyNCIsInRyYXZlbF9kYXRlIjoiMjAyMC0wNC0xNiIsInRyYW5zcG9ydF9jb2RlIjoidnIiLCJ2ZXNzZWwiOiJTRTMifQ==" data-fare="NML56" data-status="1" data-overwrites="eyJzZWF0X3NlbGVjdGlvbiI6ImZhcmVfcnVsZV9vcHRpb25fcGVybWl0dGVkIn0=" data-container="body" data-placement="auto" data-trigger="hover" data-template="<span class='farerule popover-style'><span> <i style ='font-size:20px' class='fa-info-circle'></i></span><span class='farerule-content popover-content small-text'></span></span>" data-html="true" data-content="">
+                                                                        <div><i style="font-size: 20px" class="fa-info-circle" aria-hidden="true"></i></div>
+                                                                        <div>Fare rules</div>
+                                                                    </div>
+                                                                </label>
+        
+                                                            </div>
+                                                        </div>
+        
+                                                    </div>
+                                                </td>
+                                            </tr>
+        
+                                            <!-- Vessel -->
+                                            <tr style="border:none">
+                                                <td style="text-align:center">
+                                                    <img class="searchresult-logo" src="https://booking.baolau.com/images/logos/transports/logo-vr-5-star.png">
+                                                    <div style="font-size: 13px" >{{Train2}}</div>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span>
+                            <span class="bold">17h 10m</span>
+                                                    </span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="searchresult-timeline">
+                                                        <i class="icon-train inline"></i> </div>
+                                                </td>
+                                                <td colspan="2" class="padded-left">
+                                                    <!-- style="border-right:1px solid #ddd; overflow:hidden"-->
+                                                    <!--<div class="side_point">
+                            <span class="side_line">-->
+                                                    <div class="bold" >Vietnam Railways</span> <span>{{Train2}}</span>
+                                                    <!--</span>
+                    </div>-->
+                                                </td>
+                                            </tr>
+        
+                                            <!--  Destination -->
+                                            <tr style="border:none">
+                                                <td></td>
+                                                <td class="text-right">
+                                                    <span class="blue-text super-bold">04:38</span>
+                                                    <p>Fr, 17/04</p>
+                                                </td>
+                                                <td class="relative text-center">
+                                                    <div class="searchresult-timeline">
+                                                        <i class="icon-line-point inline line-top"></i>
+                                                    </div>
+                                                </td>
+                                                <td colspan="2" class="padded-left">
+                                                    <h4 class="station-text bold" >{{Arrival2}}</h4>
+                            
+                                                    <!-- <span>01 Nguyễn Thông, Phường 9, Quận 3, Thành phố Hồ Chí Minh</span> -->
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <!-- end Details -->
+                                </div>
+                                <!-- End Desktop details -->
+        
+                                <!-- Mobile details -->
+                                <div class="mobile-result-content visible-xs visible-sm">
+                                    <div>
+                                        <!-- Origin -->
+                                        <div class="col-xs-4">
+                                            <h4 class="station-text bold">DA NANG</h4>
+        
+                                            <span class="popover-address origin-address" data-container="body" data-placement="auto" data-trigger="click focus" data-content=" 202 Hải Phòng, Phường Tân Chính, Quận Thanh Khê, Đà Nẵng" style="text-decoration: underline" data-original-title="" title="">
+                                Da Nang Railway Station                                                </span>
+                                        </div>
+        
+                                        <div class="col-xs-4 text-center">
+                                            <img class="searchresult-logo" src="https://booking.baolau.com/images/logos/transports/logo-vr-5-star.png">
+                                            <div style="font-size: 13px">{{Train2}}</div>
+                                        </div>
+        
+                                        <div class="col-xs-4 text-right">
+                                            <h4 class="station-text bold">HO CHI MINH</h4>
+        
+                                            <span class="popover-address destination-address" data-container="body" data-placement="auto" data-trigger="click focus" data-content="01 Nguyễn Thông, Phường 9, Quận 3, Thành phố Hồ Chí Minh" style="text-decoration: underline" data-original-title="" title="">
+                                Saigon Railway Station                                                </span>
+                                        </div>
+        
+                                        <div class="clearfix"></div>
+                                    </div>
+        
+                                    <div class=" searchresult-timeline">
+                                        <div class="col-xs-4 relative">
+                                            <i class="icon-line-point inline line-right"></i>
+                                        </div>
+                                        <div class="col-xs-4 text-center">
+                                            <i class="icon-train inline"></i> </div>
+                                        <div class="col-xs-4 text-right relative">
+                                            <i class="icon-line-point inline line-left"></i>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+        
+                                    <div>
+                                        <div class="col-xs-4">
+                                            <span class="blue-text big-text bold">11:28</span>
+                                            <p>Th, 16/04</p>
+                                        </div>
+        
+                                        <div style="margin-top: 10px" class="col-xs-4 text-center">
+                                            <span class="small-text">17h 10m</span>
+                                        </div>
+        
+                                        <div class="col-xs-4 text-right">
+                                            <span class="blue-text big-text bold">04:38</span>
+                                            <p>Fr, 17/04</p>
+                                        </div>
+        
+                                        <div class="clearfix"></div>
+                                    </div>
+        
+                                    <!-- Mobile Fares -->
+                                    <div class="col-xs-12 gap-small">
+                                        <section class="scrolling-section">
+                                            <div class="fare-content horizontal-items" style="width:170px">
+                                                <div class="fares fare-type-items" data-route="69951216">
+                                                    <label class="mobile-fare" for="mobile_fare_2f3307796b9aba433630ffeb5301ed8b_69951216_NML56">
+                                                        <div class="fare-type-title">
+                                                            <span>Soft seat Premium</span>
+                                                        </div>
+                                                        <div class="mobile-fare-choose relative ">
+                                                            <div class="radio">
+                                                                <input id="mobile_fare_2f3307796b9aba433630ffeb5301ed8b_69951216_NML56" type="radio" name="mobile_fares_2f3307796b9aba433630ffeb5301ed8b_69951216" class="fare_radio" data-fare="NML56" data-price="579000" data-label="Soft seat Premium" data-has_promotion="0" data-basefare="579000" checked="">
+        
+                                                                <label for="mobile_fare_2f3307796b9aba433630ffeb5301ed8b_69951216_NML56"></label>
+                                                            </div>
+                                                            <div style="padding-bottom: 20px;">
+                                                                <span class="yellow-text js-fare_price bold money" data-amount="579000" data-currency="VND">579,000&nbsp;đ</span>
+                                                            </div>
+                                                            <div style="padding-bottom: 10px; text-decoration: underline;" class="fare-info-button blue-text" data-origin_country_code="VN" data-destination_country_code="VN" data-transport="vr" data-alert="eyJvcmlnaW5faWQiOiIyNjQiLCJkZXN0aW5hdGlvbl9pZCI6IjMyNCIsInRyYXZlbF9kYXRlIjoiMjAyMC0wNC0xNiIsInRyYW5zcG9ydF9jb2RlIjoidnIiLCJ2ZXNzZWwiOiJTRTMifQ==" data-fare="NML56" data-status="1"><i style="margin-right: 8px" class="fa-info-circle" aria-hidden="true"></i>Fare rules</div>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </div>
+                                    <!-- end mobile fares -->
+                                </div>
+                                <!-- END mobile-result-content-->
+        
+                            </div>
+                            <!-- route_details-->
+        
+                            <div class="clearfix"></div>
+        
+                            <div class="gap gap-mini"></div>
+        
+                        </td>
+                    </tr>
+                    <tr id="gap-2f3307796b9aba433630ffeb5301ed8b" class="result-gap" style="display:none">
+                        <td colspan="7"></td>
+                    </tr>
+            <%}%>
+           
         </tbody>
     </table>
 </div>

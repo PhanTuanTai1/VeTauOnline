@@ -29,6 +29,11 @@ new Vue({
         this.departure = this.getStationName(this.result[0].ScheduleDetails[0].DepartureStationID);
         this.arrival = this.getStationName(this.result[0].ScheduleDetails[0].ArrivalStationID);
         this.listTrain = this.loadListTrain();       
+        localStorage.setItem('departure', location.href);
+    },
+    updated: function(){
+        document.body.style['overflow'] = "scroll";
+        document.getElementById('waiting_overlay').style['display'] = "none";
     },
     data:{
         result: null,

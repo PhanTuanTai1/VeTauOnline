@@ -30,7 +30,6 @@ var vm = new Vue({
             this.result2 = JSON.parse(document.getElementById('result2').value);
        }
             
-            
        await axios.get('/getAllTrain').then(res => {
            this.train = res.data;
        })
@@ -48,6 +47,7 @@ var vm = new Vue({
        
        axios.get('/getAllSeatType').then(res =>{
            this.seatType = res.data;
+           this.setSeatTypeDisplay();
        })
        axios.get('/getAllTypeObject').then(res =>{
            this.typeObject = res.data;
@@ -65,31 +65,41 @@ var vm = new Vue({
 
        await this.setCarriageDisplay();
        if(typeof(this.result2)  != "undefined" && this.result2 != null) await this.setCarriageDisplay2();
+
        this.numberPass = new Array();
        
        for(var i = 0; i < this.total;i++){
            this.numberPass.push({'index': i + 1});
        }
-       this.setTrainName(this.result, 1);
-       if(typeof(this.result2)  != "undefined" && this.result2 != null){
-            this.setTrainName(this.result2, 2);
-       }
-
-       this.setStationName(this.result, 1);
-
-       if(typeof(this.result2)  != "undefined" && this.result2 != null){
-            this.setStationName(this.result2, 2);
-       }
-
-       this.loadSeat(this.carriageDisplay, this.seatSold);
       
-       if(typeof(this.result2) != "undefined" && this.result2 != null) {
-        this.loadSeat(this.carriageDisplay2, this.seatSold2);
-       }
+       localStorage.setItem('passenger', location.href);
        
-       this.listSelected = new Array();
-       this.listSelected2 = new Array();
-       localStorage.setItem('passenger', location.href)
+    },
+    beforeUpdate: function(){
+        this.setTrainName(this.result, 1);
+        if(typeof(this.result2)  != "undefined" && this.result2 != null){
+             this.setTrainName(this.result2, 2);
+        }
+ 
+        this.setStationName(this.result, 1);
+ 
+        if(typeof(this.result2)  != "undefined" && this.result2 != null){
+             this.setStationName(this.result2, 2);
+        }
+        
+        this.listSelected = new Array();
+        this.listSelected2 = new Array();
+    },
+    updated: function(){
+        this.loadSeat(this.carriageDisplay, this.seatSold);
+       
+        if(typeof(this.result2) != "undefined" && this.result2 != null) {
+         this.loadSeat(this.carriageDisplay2, this.seatSold2);
+        }
+        document.body.style['overflow'] = "scroll";
+        document.getElementById('waiting_overlay').style['display'] = "none";
+        this.hrefDeparture = localStorage.getItem('departure');
+        this.hrefReturn = localStorage.getItem('return');
     },
     data:{
         train: [],
@@ -108,21 +118,29 @@ var vm = new Vue({
         carriageDisplay2: null,
         listSelected: null,
         listSelected2: null,
-        hrefDeparture: localStorage.getItem('departure'),
-        hrefReturn: localStorage.getItem('return'),
-        error: null
+        hrefDeparture: null,
+        hrefReturn: null,
+        error: null,
+        seatTypeDisplay: null,
+        seatTypeDisplay1: null,
+        DepartName1: null,
+        ArrivalName1: null,
+        TrainName1: null,
+        DepartName2: null,
+        ArrivalName2: null,
+        TrainName2: null,
     },
 
     methods:{
-        setTrainName:async function(result, index){
+        setTrainName: function(result, index){
             var train = this.train.filter(train => {
                 return train.ID == result.TrainID
             })
-            document.getElementById('trainName'+ index).innerHTML = train[0].Name;
-
-            var object = document.getElementsByClassName('hiddenTrain' + index);
-            for(var i = 0; i < object.length; i++){
-                object[i].innerHTML = train[0].Name;
+            if(index == 1) {
+                this.TrainName1 = train[0].Name;
+            }
+            else if(index == 2) {
+                this.TrainName2 = train[0].Name;
             }
         },
 
@@ -133,15 +151,14 @@ var vm = new Vue({
             var arrival = this.station.filter(station => {
                 return station.ID == result.ScheduleDetails[0].ArrivalStationID
             })
-                document.getElementById('parentDepart' + index).innerHTML = depart[0].Name;
-                document.getElementById('subDepart' + index).innerHTML = depart[0].Name;
-                document.getElementById('hiddenDepart' + index).innerHTML = depart[0].Name;
-                document.getElementById('summaryDepart' + index).innerHTML = depart[0].Name;
-                document.getElementById('parentArrival' + index).innerHTML = arrival[0].Name;
-                document.getElementById('subArrival' + index).innerHTML = arrival[0].Name;
-                document.getElementById('hiddenArrival' + index).innerHTML = arrival[0].Name;
-                document.getElementById('summaryArrival' + index).innerHTML = arrival[0].Name;
-            
+            if(index == 1) {
+                this.DepartName1 = depart[0].Name;
+                this.ArrivalName1 = arrival[0].Name;
+            }
+            else if(index == 2) {
+                this.DepartName2 = depart[0].Name;
+                this.ArrivalName2 = arrival[0].Name;
+            }             
         },
         selectedType: function(object, object2, id, typeName){
             document.getElementById(object).innerHTML = typeName;
@@ -164,6 +181,7 @@ var vm = new Vue({
         },
 
         loadSeat: function(listCarriage, seatSold){
+
             listCarriage.forEach(element => {
                 var object = document.getElementsByName('carriage_' + element.ID);
 
@@ -171,13 +189,27 @@ var vm = new Vue({
                     var seat =  this.listSeat.filter(seat => {
                         return seat.SeatNumber == object[i].firstChild.innerHTML && seat.CarriageID == element.ID;
                     })
+                   
                     var result = seatSold.filter(data => {
                         return data.SeatID == seat[0].ID;
                     })
 
                     if(result.length > 0){
-                        object[i].setAttribute('class','train_cell seat can_block soft_seat_right sold_out');
-                        object[i].setAttribute('style','pointer-events: none;');
+                        if(this.seatTypeDisplay[0].ID == 1 || this.seatTypeDisplay[0].ID == 6){
+                            
+                            if(object[i].getAttribute('class').search("soft_bed_left") != -1){
+                                object[i].setAttribute('class','train_bed_cell bed can_block soft_bed_left sold_out');
+                                object[i].setAttribute('style','pointer-events: none;');
+                            }
+                            else if(object[i].getAttribute('class').search("soft_bed_right") != -1) {
+                                object[i].setAttribute('class','train_bed_cell bed can_block soft_bed_right sold_out');
+                                object[i].setAttribute('style','pointer-events: none;');
+                            }
+                        }
+                        else {
+                            object[i].setAttribute('class','train_cell seat can_block soft_seat_right sold_out');
+                            object[i].setAttribute('style','pointer-events: none;');
+                        }
                     }
                     object[i].setAttribute('id' , seat[0].ID);
                 }
@@ -190,39 +222,100 @@ var vm = new Vue({
         },
 
         selectSeat: function(element, number){
-            if($(element).attr('class') == 'train_cell seat can_block soft_seat_right sold_out') return;
+            if(this.seatTypeDisplay[0].ID == 1 || this.seatTypeDisplay[0].ID == 6) {
+                if($(element).attr('class') == 'train_bed_cell bed can_block hard_bed_left sold_out') return;
 
-            if($(element).attr('class') == "train_cell seat can_block soft_seat_right available")
-            {
-                if(number == 1 && this.numberPass.length > this.listSelected.length){
-                    $(element).attr('class','train_cell seat can_block soft_seat_right selected');
-
-                    this.listSelected.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
-                }
-                else if(number == 2 && this.numberPass.length > this.listSelected2.length){
-                    $(element).attr('class','train_cell seat can_block soft_seat_right selected');
-
-                    this.listSelected2.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
-                }
-                else 
+                if($(element).attr('class').search("available") != -1)
                 {
-                    alert("Vượt quá số lượng");
+                    if(number == 1 && this.numberPass.length > this.listSelected.length){
+                        if($(element).attr('class').search("soft_bed_left") != -1){
+                            $(element).attr('class','train_bed_cell bed can_block soft_bed_left selected');
+                        }
+                        else if($(element).attr('class').search("soft_bed_right") != -1) {
+                            $(element).attr('class','train_bed_cell bed can_block soft_bed_right selected');
+                        }
+                        
+                        this.listSelected.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                    }
+                    else if(number == 2 && this.numberPass.length > this.listSelected2.length){
+                        if($(element).attr('class').search("soft_bed_left") != -1){
+                            $(element).attr('class','train_bed_cell bed can_block soft_bed_left selected');
+                        }
+                        else if($(element).attr('class').search("soft_bed_right") != -1) {
+                            $(element).attr('class','train_bed_cell bed can_block soft_bed_right selected');
+                        }
+
+                        this.listSelected2.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                    }
+                    else 
+                    {
+                        alert("Vượt quá số lượng");
+                    }
+                }
+                else {
+                    if(number == 1) {
+                        if($(element).attr('class').search("soft_bed_left") != -1){
+                            $(element).attr('class','train_bed_cell bed can_block soft_bed_left available');
+                        }
+                        else if($(element).attr('class').search("soft_bed_right ") != -1){
+                            $(element).attr('class','train_bed_cell bed can_block soft_bed_right available');
+                        }
+
+                        //$(element).attr('class','train_cell seat can_block soft_seat_right available');
+                    var filteredItems  = this.listSelected.filter(data => {
+                        return data != ($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                    })
+                    this.listSelected = filteredItems;
+                    }
+                    else if(number == 2){
+                        if($(element).attr('class').search("soft_bed_left") != -1){
+                            $(element).attr('class','train_bed_cell bed can_block soft_bed_left selected');
+                        }
+                        else if($(element).attr('class').search("soft_bed_right") != -1) {
+                            $(element).attr('class','train_bed_cell bed can_block soft_bed_right selected');
+                        }
+                        var filteredItems  = this.listSelected2.filter(data => {
+                            return data != ($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                        })
+                        this.listSelected2 = filteredItems;
+                    }
                 }
             }
             else {
-                if(number == 1) {
-                    $(element).attr('class','train_cell seat can_block soft_seat_right available');
-                var filteredItems  = this.listSelected.filter(data => {
-                    return data != ($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
-                })
-                this.listSelected = filteredItems;
+                if($(element).attr('class') == 'train_cell seat can_block soft_seat_right sold_out') return;
+
+                if($(element).attr('class') == "train_cell seat can_block soft_seat_right available")
+                {
+                    if(number == 1 && this.numberPass.length > this.listSelected.length){
+                        $(element).attr('class','train_cell seat can_block soft_seat_right selected');
+
+                        this.listSelected.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                    }
+                    else if(number == 2 && this.numberPass.length > this.listSelected2.length){
+                        $(element).attr('class','train_cell seat can_block soft_seat_right selected');
+
+                        this.listSelected2.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                    }
+                    else 
+                    {
+                        alert("Vượt quá số lượng");
+                    }
                 }
-                else if(number == 2){
-                    $(element).attr('class','train_cell seat can_block soft_seat_right available');
-                    var filteredItems  = this.listSelected2.filter(data => {
+                else {
+                    if(number == 1) {
+                        $(element).attr('class','train_cell seat can_block soft_seat_right available');
+                    var filteredItems  = this.listSelected.filter(data => {
                         return data != ($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
                     })
-                    this.listSelected2 = filteredItems;
+                    this.listSelected = filteredItems;
+                    }
+                    else if(number == 2){
+                        $(element).attr('class','train_cell seat can_block soft_seat_right available');
+                        var filteredItems  = this.listSelected2.filter(data => {
+                            return data != ($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                        })
+                        this.listSelected2 = filteredItems;
+                    }
                 }
             }
         },
@@ -418,6 +511,55 @@ var vm = new Vue({
                 location.href  = res.data;
             })
 
-        }
+        },
+        
+        setSeatTypeDisplay: function(){
+            var result = this.seatType.filter(data => {
+                return data.ID == this.result.ScheduleDetails[0].TableCosts[0].SeatTypeID;
+            })
+
+            this.seatTypeDisplay = result;
+
+            if(typeof(this.result2) != "undefined" && this.result2 != null) {
+                var result2 = this.seatType.filter(data => {
+                    return data.ID == this.result2.ScheduleDetails[0].TableCosts[0].SeatTypeID;
+                })
+    
+                this.seatTypeDisplay1 = result2;
+           }
+        },
+        
+    },
+    computed:{
+        SeatTypeName() {
+            return typeof(this.seatTypeDisplay[0]) != "undefined" ?  this.seatTypeDisplay[0].TypeName : "undefined";
+        },
+        SeatTypeID(){
+            return typeof(this.seatTypeDisplay[0]) != "undefined" ? this.seatTypeDisplay[0].ID : "undefined";
+        },
+        SeatTypeName1() {
+            return typeof(this.seatTypeDisplay1[0]) != "undefined" ?  this.seatTypeDisplay1[0].TypeName : "undefined";
+        },
+        SeatTypeID1(){
+            return typeof(this.seatTypeDisplay1[0]) != "undefined" ? this.seatTypeDisplay1[0].ID : "undefined";
+        },
+        Depart1() {
+            return this.DepartName1;
+        },
+        Arrival1() {
+            return this.ArrivalName1;
+        },
+        Train1() {
+            return this.TrainName1;
+        },
+        Depart2() {
+            return this.DepartName2;
+        },
+        Arrival2() {
+            return this.ArrivalName2;
+        },
+        Train2() {
+            return this.TrainName2;
+        },
     }
 })

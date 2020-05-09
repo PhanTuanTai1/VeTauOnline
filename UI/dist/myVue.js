@@ -6,6 +6,11 @@ new Vue({
         this.Stations = res.data;
         this.round_trip = true;
       })
+      localStorage.clear();
+  },
+  mounted: function(){
+      document.body.style['overflow'] = "scroll";
+      document.getElementById('waiting_overlay').style['display'] = "none";
   },
   data: {   
     FROM: '',

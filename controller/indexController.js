@@ -406,7 +406,7 @@ module.exports.createSession = function(req,res){
             'ID' : RepresentativeID,
             'TotalCost' : total
         })
-    
+        console.log(JSON.stringify(TicketInfo));
         CreateListPassengerModel(ListPassenger, RepresentativeID).then(data =>{
             CreateTicket(data, TicketInfo, ListSeat).then(data2 => {
                 TicketInfo.PassengerQuantity = data.length;

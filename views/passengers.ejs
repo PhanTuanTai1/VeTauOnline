@@ -34,7 +34,7 @@
     <script type="text/javascript" src="../vendor/js/jquery.min.js"></script>
 </head>
 
-<body>
+<body style="overflow: hidden;">
     <input type="hidden" value="<%=JSON.stringify(result.DateDeparture)%>" id="dateDepart">
         <input type="hidden" value="<%=JSON.stringify(result)%>" id="result">
         <%if(typeof(result2) != "undefined"){%>
@@ -70,15 +70,7 @@
         </div>
     </div>
 
-    <div id="waiting_overlay" style="display:none">
-        <div class="container">
-            <h2 style="color: #fff; text-transform: uppercase;" id="waiting_text1" class="refrigerator"></h2>
-            <span id="waiting_text2" class="big-big-text"></span>
-            <br>
-            <br>
-            <img src="../images/genaral/white-spinner.gif" style="width:35px">
-        </div>
-    </div>
+    
 <!-- Sidebar Content -->
 
 <section class="left side-nav">
@@ -118,7 +110,19 @@
 </section><!--End side-menu-left-->
 
 <!---------------------------END Mobile Sidebar Content-------------------------------------->
-
+<div id="waiting_overlay" style="display:block;background-color: lightgoldenrodyellow;">
+    <div class="container">
+        <h2 style="color: #fff; text-transform: uppercase;" id="waiting_text1" class="refrigerator"></h2>
+        <span id="waiting_text2" class="big-big-text"></span>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <img src="../images/genaral/244.gif" style="width:100px">
+    </div>
+</div>
 <div id="menu_overlay"></div>
 
 <div id="main_container" >
@@ -163,7 +167,7 @@
 
 <div class="subpage panel-dark search_result_page" id="app">
 
-   
+    
     <!-- container -->
     <!-- END PC progress-bar-holder -->
 
@@ -282,7 +286,7 @@
         
                                 <div class="js-selected_result">
                                     <h1 class="booking-desp big-text">
-                    Summary of Departure from <span class="blue-text bold" id="summaryDepart2">Da Nang</span> to <span class="blue-text bold" id="summaryArrival2">Ho Chi Minh</span> on <span class="bold"><%=moment(result2.DateDeparture).format('DD-MM-YYYY')%></span>
+                    Summary of Departure from <span class="blue-text bold">{{Depart2}}</span> to <span class="blue-text bold">{{Arrival2}}</span> on <span class="bold"><%=moment(result2.DateDeparture).format('DD-MM-YYYY')%></span>
                 </h1>
                                     <div class="gap gap-mini"></div>
         
@@ -327,7 +331,7 @@
     
                             <div class="js-selected_result">
                                 <h1 class="booking-desp big-text">
-                Summary of Departure from <span class="blue-text bold" id="summaryDepart1">Da Nang</span> to <span class="blue-text bold" id="summaryArrival1">Ho Chi Minh</span> on <span class="bold"><%=moment(result.DateDeparture).format('DD-MM-YYYY')%></span>
+                Summary of Departure from <span class="blue-text bold" id="summaryDepart1">{{Depart1}}</span> to <span class="blue-text bold" id="summaryArrival1">{{Arrival1}}</span> on <span class="bold"><%=moment(result.DateDeparture).format('DD-MM-YYYY')%></span>
             </h1>
                                 <div class="gap gap-mini"></div>
     
@@ -438,14 +442,14 @@
                                     <div class="carriage_titles">
                                         <div class="text-center item">
                                             <p class="big-text bold" style="text-transform: capitalize">
-                                                Soft seat </p>
+                                                {{SeatTypeName1}} </p>
                                         </div>
                                     </div>
                                     <div class="gap gap-small hidden-sm hidden-xs"></div>
             
                                     <!-- <div style="opacity: .8; margin-top: 15px" class="horizontal-devider"></div> -->
             
-                                    <div class="row">
+                                    <div class="row" v-if="SeatTypeID != 1 || SeatTypeID != 6">
                                         <div style="margin-top: 15px; margin-bottom: 30px;" class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12 col-xs-offset-0">
                                             <div class="legend">
                                                 <div class="col-md-3 col-sm-3 col-xs-6">
@@ -511,7 +515,7 @@
                     <%}%>
                     <div>
                         <p class="big-text seat-gap">
-                            Please select your preferred seats for the itinerary from <span class="blue-text super-bold">Da Nang</span> to <span class="blue-text super-bold">Ho Chi Minh</span> on <span class="bold">Thursday, 16 April 2020</span>.
+                            Please select your preferred seats for the itinerary from <span class="blue-text super-bold">{{Depart1}}</span> to <span class="blue-text super-bold">{{Arrival1}}</span> on <span class="bold"><%=moment(result.DateDeparture).format('DD-MM-YYYY')%></span>.
                         </p>
                         <div class="gap gap-mini"></div>
                         <div class="panel-light">
@@ -520,14 +524,14 @@
                                 <div class="carriage_titles">
                                     <div class="text-center item">
                                         <p class="big-text bold" style="text-transform: capitalize">
-                                            Soft seat </p>
+                                            {{SeatTypeName}} </p>
                                     </div>
                                 </div>
                                 <div class="gap gap-small hidden-sm hidden-xs"></div>
         
                                 <!-- <div style="opacity: .8; margin-top: 15px" class="horizontal-devider"></div> -->
         
-                                <div class="row">
+                                <div class="row" v-if="SeatTypeID != 'undefined' && (SeatTypeID === 2 || SeatTypeID === 3 || SeatTypeID === 4 || SeatTypeID === 5)">
                                     <div style="margin-top: 15px; margin-bottom: 30px;" class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12 col-xs-offset-0">
                                         <div class="legend">
                                             <div class="col-md-3 col-sm-3 col-xs-6">
@@ -546,7 +550,25 @@
                                         <!-- End legend-->
                                     </div>
                                 </div>
-        
+                                <div class="row" v-else-if="SeatTypeID != 'undefined' && SeatTypeID === 1 || SeatTypeID === 6">
+                                    <div style="margin-top: 15px; margin-bottom: 30px;" class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12 col-xs-offset-0">
+                                        <div class="legend">
+                                                                <div class="col-md-3 col-sm-3 col-xs-6">
+                                                <span> <i style="font-size: 40px;" class="icon-soft-bed-bottom"></i> <br> Available                        </span>
+                                            </div>
+                                            <div class="col-md-3 col-sm-3 col-xs-6">
+                                                <span style="color: #ffbb00;"> <i style="font-size: 40px;" class="icon-soft-bed-people-bottom"></i> <br> Selected                        </span>
+                                            </div>
+                                            <div class="seat_legend col-md-3 col-sm-3 col-xs-6">
+                                                <span style="color: #d54844;"> <i style="font-size: 40px;" class="icon-soft-bed-people-bottom"></i> <br> Sold out                        </span>
+                                            </div>
+                                            <div class="seat_legend col-md-3 col-sm-3 col-xs-6">
+                                                <span style="color: #666b71;"> <i style="font-size: 40px; opacity: .3" class="icon-soft-bed-reserve-bottom"></i> <br> Reserved                        </span>
+                                            </div>
+                                        </div>
+                                        <!-- End legend-->
+                                    </div>
+                                </div>
                                 <div class="horizontal-devider"></div>
                                 <div class="gap gap-mini"></div>
                                 <div class="row hidden-sm hidden-xs">

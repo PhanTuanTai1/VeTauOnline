@@ -47,7 +47,7 @@
     <script type="text/javascript" src="../vendor/js/jquery.min.js"></script>
 </head>
 
-<body>
+<body style="overflow: hidden;">
     <input type="hidden" id="myData" value="<%=result%>"/>
     <input type="hidden" id="query" value="<%=query%>"/>
 
@@ -81,13 +81,17 @@
         </div>
     </div>
 
-    <div id="waiting_overlay" style="display:none">
+    <div id="waiting_overlay" style="display:block;background-color: lightgoldenrodyellow;">
         <div class="container">
             <h2 style="color: #fff; text-transform: uppercase;" id="waiting_text1" class="refrigerator"></h2>
             <span id="waiting_text2" class="big-big-text"></span>
             <br>
             <br>
-            <img src="../images/genaral/white-spinner.gif" style="width:35px">
+            <br>
+            <br>
+            <br>
+            <br>
+            <img src="../images/genaral/244.gif" style="width:100px">
         </div>
     </div>
     

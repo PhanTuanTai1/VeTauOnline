@@ -21,7 +21,8 @@ new Vue({
         this.displayDepartureStation();
     },
     mounted: function(){
-        document.getElementById('waiting_overlay').style['display'] = 'none';
+        document.body.style['overflow'] = "scroll";
+        document.getElementById('waiting_overlay').style['display'] = "none";
     },
     data: {
         station: null,
