@@ -107,7 +107,8 @@ app.get('/getSeatTypeBySeatID', function(req,res){
 })
 
 app.get('/paymentSuccess',function(req,res){
-    console.log(req);
+    //console.log(req);
+    controller.InsertData(req,res);
 })
 
 app.get('/RedirectToNganLuong', function(req,res){
