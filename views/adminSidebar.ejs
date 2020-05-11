@@ -1,5 +1,4 @@
-Vue.component('my-sidebar', {
-    template: `<div><nav class="main-header navbar navbar-expand navbar-white navbar-light">
+<nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <ul class="navbar-nav">
         <li class="nav-item">
             <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
@@ -94,14 +93,14 @@ Vue.component('my-sidebar', {
                     class="fa fa-th-large"></i></a>
         </li>
     </ul>
-  </nav>
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+</nav>
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
     <a href="index3.html" class="brand-link">
         <img src="../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
             style="opacity: .8">
         <span class="brand-text font-weight-light">AdminLTE 3</span>
     </a>
-    <div class="sidebar">
+    <div id="sidebarContent" class="sidebar">
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
                 <img src="../dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
@@ -110,11 +109,10 @@ Vue.component('my-sidebar', {
                 <a href="#" class="d-block">Alexander Pierce</a>
             </div>
         </div>
-        <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                data-accordion="false">
+        <nav id="menuOfSidebar" class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item has-treeview menu-open">
-                    <a href="/admin" class="nav-link active">
+                    <a href="/admin" class="nav-link">
                         <i class="nav-icon fa fa-dashboard"></i>
                         <p>
                             Dashboard
@@ -122,51 +120,51 @@ Vue.component('my-sidebar', {
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="./customer" class="nav-link active">
-                                <i class="fa fa-male nav-icon"></i>
+                        <li class="nav-item active">
+                            <a href="./customer" class="nav-link">
+                                <i class="fa fa-map nav-icon"></i>
                                 <p>Customer</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                        <a href="./station" class="nav-link">
-                            <i class="fa fa-map nav-icon"></i>
-                            <p>Station</p>
-                        </a>
+                            <a href="./station" class="nav-link">
+                                <i class="fa fa-map nav-icon"></i>
+                                <p>Station</p>
+                            </a>
                         </li>
                         <li class="nav-item">
-                        <a href="./train" class="nav-link">
-                            <i class="fa fa-train nav-icon"></i>
-                            <p>Train</p>
-                        </a>
+                            <a id="abc" href="./train" class="nav-link">
+                                <i class="fa fa-train nav-icon"></i>
+                                <p id="t">Train</p>
+                            </a>
                         </li>
                         <li class="nav-item has-treeview">
-                            <a href="/Ticket" class="nav-link">
-                            <i class="nav-icon fa fa-chart-pie"></i>
-                            <p>
-                                Ticket
-                                <i class="right fa fa-angle-left"></i>
-                            </p>
+                            <a class="nav-link">
+                                <i class="nav-icon fa fa-chart-pie"></i>
+                                <p>
+                                    Charts
+                                    <i class="right fa fa-angle-left"></i>
+                                </p>
                             </a>
                             <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="pages/charts/chartjs.html" class="nav-link">
-                                <i class="fa fa-circle nav-icon"></i>
-                                <p>ChartJS</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="pages/charts/flot.html" class="nav-link">
-                                <i class="fa fa-circle nav-icon"></i>
-                                <p>Flot</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="pages/charts/inline.html" class="nav-link">
-                                <i class="fa fa-circle nav-icon"></i>
-                                <p>Inline</p>
-                                </a>
-                            </li>
+                                <li class="nav-item">
+                                    <a href="pages/charts/chartjs.html" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>ChartJS</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="pages/charts/flot.html" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Flot</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="pages/charts/inline.html" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Inline</p>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     </ul>
@@ -174,17 +172,16 @@ Vue.component('my-sidebar', {
             </ul>
         </nav>
     </div>
-  </aside></div>`,
-    computed() {
-        const hasTree = $('.has-treeview');
-
-        $.each(hasTree, function () {
-            $(this).click(function () {
-                $(this).children('.nav-treeview').slideToggle();
-            });
+</aside>
+<script>
+    var path = window.location.pathname;
+    $(window).on("load", function () {
+        $('#myTable').DataTable();
+        $('.nav-link').each(function () {
+            var navItem = $(this);
+            if (path.includes(navItem.attr("href").substring(2)) === true) {
+                navItem.addClass("active");
+            }
         });
-    }
-})
-new Vue({
-    el: "#sidebar",
-})
+    })
+</script>

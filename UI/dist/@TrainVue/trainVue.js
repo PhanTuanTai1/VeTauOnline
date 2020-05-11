@@ -19,9 +19,6 @@ new Vue({
     }
   },
   methods: {
-    update() {
-      this.$forceUpdate()
-    },
     async createTrain() {
       const Toast = await Swal.mixin({
         toast: true,
@@ -52,7 +49,7 @@ new Vue({
       })
 
       if (train) {
-        axios.post(window.origin + '/admin/train?Name=' + train[0]).then(res => {
+        axios.post('/admin/train?Name=' + train[0]).then(res => {
           this.Trains.push({
             "ID": res.data.ID,
             "Name": res.data.Name
@@ -61,7 +58,6 @@ new Vue({
             icon: 'success',
             title: 'New train comes'
           })
-
         })
       }
     },
@@ -141,13 +137,10 @@ new Vue({
         if (result.value) {
           axios.delete(window.origin + '/admin/train?ID=' + IDinput);
           this.Trains.splice(index, 1)
-
           Toast.fire({
             icon: 'success',
             title: `Train #${IDinput} deleted`
           });
-
-
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           swalWithBootstrapButtons.fire(
             'Cancelled',
