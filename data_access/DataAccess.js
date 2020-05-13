@@ -102,6 +102,7 @@ ScheduleDetail.init({
     'ID' : {type: Sequelize.INTEGER,primaryKey: true},
     'Length' : Sequelize.INTEGER,
     'Time' : Sequelize.FLOAT,
+    'StartTime' : Sequelize.TIME
 },
 { 
     sequelize, 
