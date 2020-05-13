@@ -15,11 +15,11 @@ Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
 // })
 
 // database local
-var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '123456', {
+var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '79495291', {
     dialect: 'mssql',
     host: 'localhost',
-    //port: '1433',
-    port: '57031'
+    port: '1433',
+    //port: '57031'
 })
 
 //  database cloud sql5059.site4now.net
@@ -101,7 +101,7 @@ class ScheduleDetail extends Model{}
 ScheduleDetail.init({
     'ID' : {type: Sequelize.INTEGER,primaryKey: true},
     'Length' : Sequelize.INTEGER,
-    'Time' : Sequelize.TIME,
+    'Time' : Sequelize.FLOAT,
 },
 { 
     sequelize, 
@@ -175,7 +175,8 @@ Representative.init({
     'Phone' : Sequelize.STRING,
     'Passport' : Sequelize.STRING,
     'TotalCost' : Sequelize.FLOAT,
-    'Name' : Sequelize.STRING
+    'Name' : Sequelize.STRING,
+    'DateBooking' : Sequelize.DATE
 },
 { 
     sequelize, 

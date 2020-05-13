@@ -35,9 +35,6 @@ module.exports.search =  function(req,res){
     if(typeof(req.query.ONE_WAY) != "undefined" && req.query.ONE_WAY == "true"){
         db.Schedule.findAll({
             attributes: ['ID','DateDeparture','TimeDeparture','TrainID'],
-            where:{
-                DateDeparture: req.query.DEPART
-            },
             include:[{
                 model: db.ScheduleDetail,
                 attributes: ['ID','ScheduleID','DepartureStationID', 'ArrivalStationID','Time'],
@@ -51,7 +48,8 @@ module.exports.search =  function(req,res){
             if(Schedule.length === 0) {
                 res.render('searchResultOneWay',{result : [], query: JSON.stringify(req.query), error: 1, arrivalID: req.query.TO, departureID: req.query.FROM});
                 res.end();
-            }     
+            } 
+            //var ListSchedule = await getScheduleMatch(req.query.DEPART, Schedule)    
             var result = [];
             var count = 0;
             Schedule.forEach((schedule, index, array ) => {     
@@ -143,6 +141,11 @@ module.exports.search =  function(req,res){
     }
 }
 
+function getScheduleMatch(Date, ListSchedule){
+    return new Promise(resolve => {
+
+    });
+}
 module.exports.scheduleDetail = function(req,res) {
     db.Schedule.findAll({
         attributes: ['ID','TrainID','TimeDeparture','DateDeparture'],
@@ -360,9 +363,7 @@ module.exports.createSession = function(req,res){
     var ListSeat2;
     var TicketInfo = req.body.data.TicketInfo
     var TicketInfo2;
-    var RepresentativeID = UUID.genV4().intFields.clockSeqLow;
-    console.log('TicketInfo: ' + JSON.stringify(TicketInfo));
-    console.log('TicketInfo2 : ' + JSON.stringify(req.body.data));
+    var RepresentativeID = parseInt(UUID.genV4().bitFields.clockSeqLow) + parseInt(Math.random() * 10000000);
     var total = TicketInfo.Price * ListPassenger.length;
      
     if(typeof(req.body.data.TicketInfo2) != "undefined"){
@@ -376,7 +377,8 @@ module.exports.createSession = function(req,res){
             'Email' : Representative.Email,
             'Phone' : Representative.Phone,
             'ID' : RepresentativeID,
-            'TotalCost' : total
+            'TotalCost' : total,
+            'DateBooking' : moment(moment()._d).format('YYYY-MM-DD')
         })
 
         CreateListPassengerModel(ListPassenger, RepresentativeID).then(data =>{
@@ -404,7 +406,8 @@ module.exports.createSession = function(req,res){
             'Email' : Representative.Email,
             'Phone' : Representative.Phone,
             'ID' : RepresentativeID,
-            'TotalCost' : total
+            'TotalCost' : total,
+            'DateBooking' : moment(moment()._d).format('YYYY-MM-DD')
         })
         console.log(JSON.stringify(TicketInfo));
         CreateListPassengerModel(ListPassenger, RepresentativeID).then(data =>{
@@ -478,7 +481,7 @@ module.exports.InsertData = function(req,res) {
     var Representative = req.cookies.data;
     var ListPassenger = req.cookies.data2;
     var ListTicket = req.cookies.data3;
-    console.log("req.cookies.data3:" +  JSON.stringify(req.cookies.data3));
+    console.log("req.query:" +  JSON.stringify(req.query));
     var ListTicket2;
     if(typeof(req.cookies.data5) != undefined) {
         ListTicket2 = req.cookies.data5;
@@ -492,7 +495,7 @@ module.exports.InsertData = function(req,res) {
                         if(typeof(req.cookies.data5) != "undefined") {
                             InsertTicket(ListTicket2).then(data2 => {
                                 if(data2){
-                                    res.end("Success");
+                                    res.render('confirmation', {ROUND_TRIP: true , Representative: req.cookies.data,moment: moment});
                                 }
                                 else {
                                     res.end("Error");
@@ -500,7 +503,7 @@ module.exports.InsertData = function(req,res) {
                             })
                         }
                         else {
-                            res.end("Success");
+                            res.render('confirmation', {Representative: req.cookies.data, moment: moment});
                         }
                     }
                     else {
@@ -516,6 +519,10 @@ module.exports.InsertData = function(req,res) {
       
 }
 
+module.exports.ManageBooking = function(req,res) {
+
+}
+
 function InsertPassenger(ListPassenger) {
     return new Promise(resolve => {
         ListPassenger.forEach(passenger => {
@@ -523,6 +530,7 @@ function InsertPassenger(ListPassenger) {
             .then(data =>{
                 resolve(true);
             }).catch(err => {
+                console.log(err);
                 resolve(false);
             })
         })
@@ -535,6 +543,7 @@ function InsertTicket(ListTicket) {
             .then(data =>{
                 resolve(true);
             }).catch(err => {
+                console.log(err);
                 resolve(false);
             })
         })
@@ -565,7 +574,7 @@ function CreateTicket(ListPassengerModel, TicketInfo, ListSeat){
     
     return new Promise(resolve => {
         ListPassengerModel.forEach((data, index) => {
-            var ID = UUID.genV4().bitFields.clockSeqLow;
+            var ID = parseInt(UUID.genV4().bitFields.clockSeqLow) + parseInt(Math.random() * 10000000);
 
             var TicketModel = db.Ticket.build({
                 'ID' : ID,
@@ -587,7 +596,7 @@ function CreateTicket(ListPassengerModel, TicketInfo, ListSeat){
 
 function RandomCustomerID(){
     return new Promise(resolve => {
-        resolve(UUID.genV4().bitFields.clockSeqLow);
+        resolve(parseInt(UUID.genV4().bitFields.clockSeqLow) + parseInt(Math.random() * 10000000));
     })
 }
 
@@ -596,8 +605,6 @@ async function checkSeat(trainID, numberOfPassenger, departDate){
     var Trains = await getListCarriageAndSeat(trainID);
     for(var i = 0; i < Trains[0].Carriages.length; i++){
         var Tickets = await getListTicketByDepartureDate(departDate, Trains[0].Carriages[i].ID);  
-        console.log(Tickets.length);
-        console.log(Trains[0].Carriages[i].Seats.length);
         if((Trains[0].Carriages[i].Seats.length - Tickets.length) > 0 && (Trains[0].Carriages[i].Seats.length - Tickets.length) >= parseInt(numberOfPassenger)) 
             return true;  
     }   

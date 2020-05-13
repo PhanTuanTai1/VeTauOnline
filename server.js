@@ -102,6 +102,9 @@ app.get('/payment', function(req,res){
     controller.payment(req,res);
 })
 
+app.get('/manageBooking', function(req,res) {
+    res.render('managebooking');
+})
 app.get('/getSeatTypeBySeatID', function(req,res){
     controller.getSeatTypeBySeatID(req,res);
 })

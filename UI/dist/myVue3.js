@@ -100,6 +100,8 @@ var vm = new Vue({
         document.getElementById('waiting_overlay').style['display'] = "none";
         this.hrefDeparture = localStorage.getItem('departure');
         this.hrefReturn = localStorage.getItem('return');
+        var data = this.createElementFromHTML(document.getElementById("tableResult_1").innerHTML);
+        localStorage.setItem("tableResult", data.innerHTML);
     },
     data:{
         train: [],
@@ -185,7 +187,7 @@ var vm = new Vue({
             listCarriage.forEach(element => {
                 var object = document.getElementsByName('carriage_' + element.ID);
 
-                for(var i = 0; i < object.length - 1;i++){
+                for(var i = 0; i < object.length;i++){
                     var seat =  this.listSeat.filter(seat => {
                         return seat.SeatNumber == object[i].firstChild.innerHTML && seat.CarriageID == element.ID;
                     })
@@ -528,6 +530,14 @@ var vm = new Vue({
                 this.seatTypeDisplay1 = result2;
            }
         },
+
+        createElementFromHTML: function(htmlString){
+            var div = document.createElement('div');
+            div.innerHTML = htmlString.trim();
+
+            // Change this to div.childNodes to support multiple top-level nodes
+            return div; 
+        }
         
     },
     computed:{
