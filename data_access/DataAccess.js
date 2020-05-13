@@ -1,18 +1,34 @@
 var { Sequelize, Model, DataTypes } = require('sequelize');
 var moment = require('moment');
+
 Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
     date = this._applyTimezone(date, options);
-  
-    // Z here means current timezone, _not_ UTC
-    // return date.format('YYYY-MM-DD HH:mm:ss.SSS Z');
     return moment(date).format('YYYY-MM-DD');
-  };
+};
 
-var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '123456789', {
+// database cloud sql.freeasphost.net
+// var sequelize = new Sequelize('tuantai1234_trainticketdatabase', 'tuantai1234', '79495291', {
+//     dialect: 'mssql',
+//     host: 'sql.freeasphost.net',
+//     //port: '1433',
+//     //port: '57031'
+// })
+
+// database local
+var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '79495291', {
     dialect: 'mssql',
     host: 'localhost',
-    port: '1433'
+    port: '1433',
+    //port: '57031'
 })
+
+//  database cloud sql5059.site4now.net
+// var sequelize = new Sequelize('DB_A5DDEE_trainticket', 'DB_A5DDEE_trainticket_admin', '79495291Z*z', {
+//     dialect: 'mssql',
+//     host: 'sql5059.site4now.net',
+//     //port: '1433',
+//     //port: '57031'
+// })
 
 //1 Train Entity
 class Train extends Model{}
@@ -85,7 +101,8 @@ class ScheduleDetail extends Model{}
 ScheduleDetail.init({
     'ID' : {type: Sequelize.INTEGER,primaryKey: true},
     'Length' : Sequelize.INTEGER,
-    'Time' : Sequelize.TIME,
+    'Time' : Sequelize.FLOAT,
+    'StartTime' : Sequelize.TIME
 },
 { 
     sequelize, 
@@ -158,7 +175,9 @@ Representative.init({
     'Email' : Sequelize.STRING,
     'Phone' : Sequelize.STRING,
     'Passport' : Sequelize.STRING,
-    'TotalCost' : Sequelize.FLOAT
+    'TotalCost' : Sequelize.FLOAT,
+    'Name' : Sequelize.STRING,
+    'DateBooking' : Sequelize.DATE
 },
 { 
     sequelize, 
@@ -198,6 +217,8 @@ Customer.belongsTo(TypeObject,{foreignKey:"TypeObjectID"});
 Ticket.belongsTo(Customer,{foreignKey:"CustomerID"});
 Ticket.belongsTo(Seat,{foreignKey: "SeatID"});
 ScheduleDetail.hasMany(TableCost,{foreignKey:"ScheduleID"})
+Ticket.belongsTo(Station, {foreignKey: 'DepartureStationID'})
+Ticket.belongsTo(Station, {foreignKey: 'ArrivalStationID'})
 
 module.exports.Train = Train;
 module.exports.Carriage = Carriage;

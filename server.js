@@ -2,30 +2,43 @@ var express = require("express");
 var config = require("./config/connectionString");
 var controller = require("./controller/indexController");
 var managerCtrler = require("./controller/managerController");
+var loginController = require("./controller/loginController");
 var bodyParser = require("body-parser");
+var session = require('express-session');
+var cookieParser = require('cookie-parser')
 var port = process.env.PORT || 3000;
+var Cookies = require('cookies')
+var keys = ['keyboard cat']
 // create application/json parser
 var jsonParser = bodyParser.json();
- 
+
 // create application/x-www-form-urlencoded parser
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
-
 var app = express();
-
+app.use(express.static('./node_modules'));
 app.use(express.static('UI'));
-app.use(express.static('node_modules'));
 app.use(urlencodedParser);
 app.use(jsonParser);
 app.set('view engine',"ejs");
 app.locals.moment = require('moment');
-
+app.use(cookieParser())
+app.set('trust proxy', 1)
+app.use(session({  
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true ,
+        maxAge: 600000}
+}))
 
 app.get("/",function(req,res){
    res.render('index2');
 })
 
 app.get("/passenger", function(req,res){
-    //res.render('passengers');
+
+    console.log(req.headers.cookie);
+    
     controller.passenger(req,res);
 })
 
@@ -67,6 +80,42 @@ app.get("/getAllTypeObject", function(req,res){
 
 app.get("/getListSeatSold", function(req,res){
     controller.getListSeatSold(req,res);
+})
+
+app.post("/createInfomation", function(req,res){
+    console.log("Type of: " + typeof(req.headers.cookie))
+    if(typeof(req.headers.cookie == "undefined")) {
+        console.log(req.headers.cookie);
+        console.log("req.session.id: " +  req.session.id);
+        res.cookie('session_id', req.session.id)
+    } 
+    controller.createSession(req,res);
+})
+
+app.get('/CheckLogin' , function(req,res){
+    loginController.CheckLogin(req,res);
+})
+app.get('/login', function(req,res){
+    loginController.Login(req,res);
+})
+app.get('/payment', function(req,res){
+    controller.payment(req,res);
+})
+
+app.get('/manageBooking', function(req,res) {
+    res.render('managebooking');
+})
+app.get('/getSeatTypeBySeatID', function(req,res){
+    controller.getSeatTypeBySeatID(req,res);
+})
+
+app.get('/paymentSuccess',function(req,res){
+    //console.log(req);
+    controller.InsertData(req,res);
+})
+
+app.get('/RedirectToNganLuong', function(req,res){
+    controller.RedirectToNganLuong(req,res);
 })
 
 //get List

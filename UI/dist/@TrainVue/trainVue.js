@@ -151,5 +151,9 @@ new Vue({
       })
     },
   },
-
+  computed: {
+    listTrain() {
+      return this.Trains;
+    }
+  }
 })

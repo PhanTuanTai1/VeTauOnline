@@ -1,4 +1,5 @@
 
+
 new Vue({
     el: "#app",
     created: async function(){
@@ -7,21 +8,32 @@ new Vue({
         document.getElementById("myData").replaceWith("");
         this.query = JSON.parse(document.getElementById("query").value);
 
-        await axios.get('http://localhost:3000/getAllTrain')
+        if(typeof(document.getElementById('step_trip')) != "undefined" && document.getElementById('step_trip') != null) 
+            this.step = document.getElementById('step_trip').value;
+        axios.get('/getAllStation')
+        .then(res => {
+          this.Stations = res.data;
+          this.round_trip = true;
+        })
+
+        await axios.get('/getAllTrain')
         .then(res => {                 
             this.train = res.data;
         })
 
-        await axios.get('http://localhost:3000/getAllStation')
+        await axios.get('/getAllStation')
         .then(res => {
             this.Stations = res.data;
         }) 
 
         this.departure = this.getStationName(this.result[0].ScheduleDetails[0].DepartureStationID);
         this.arrival = this.getStationName(this.result[0].ScheduleDetails[0].ArrivalStationID);
-        this.listTrain = this.loadListTrain();
-        //alert(JSON.stringify(this.result));
-        
+        this.listTrain = this.loadListTrain();       
+        localStorage.setItem('departure', location.href);
+    },
+    updated: function(){
+        document.body.style['overflow'] = "scroll";
+        document.getElementById('waiting_overlay').style['display'] = "none";
     },
     data:{
         result: null,
@@ -32,6 +44,21 @@ new Vue({
         listTrain: [],
         seatType: null,
         query: null,
+        step: null,
+        FROM: '',
+        TO: '',
+        Stations: null,
+        Trains: null,
+        SearchFrom: null,
+        SearchTo: null,
+        depart_date: new Date(),
+        return_date: new Date(),
+        departureStationID: null,
+        arrivalStationID: null,
+        round_trip: true,
+        one_way: false,   
+        passengers: 1,
+        errors: null,
     },
 
     methods:{
@@ -62,13 +89,29 @@ new Vue({
             tr.setAttribute("class","result clickable_tr train vr clicked checking");
 
             var train = this.getScheduleDetailByTrainID(trainID);
+            var url;
 
-            var url = "http://localhost:3000/scheduleDetail?TRAINID=" 
+            if(typeof(this.query.ONE_WAY) != "undefined")
+            {
+                url = "/scheduleDetail?TRAINID=" 
                         + train[0].TrainID + "&SCHEDULEID=" + train[0].ID + "&DepartID=" 
                         + train[0].ScheduleDetails[0].DepartureStationID
                         + "&ArrivalID=" + train[0].ScheduleDetails[0].ArrivalStationID
                         + "&ONE_WAY=" + this.query.ONE_WAY
-                        + "&PASSENGERS=" + this.query.PASSENGERS; 
+                        + "&PASSENGERS=" + this.query.PASSENGERS
+                        + "&Query=" + JSON.stringify(this.query);     
+            }
+            else if(typeof(this.query.ROUND_TRIP) != "undefined"){
+                alert(this.step);
+                url = "/scheduleDetail?TRAINID=" 
+                        + train[0].TrainID + "&SCHEDULEID=" + train[0].ID + "&DepartID=" 
+                        + train[0].ScheduleDetails[0].DepartureStationID
+                        + "&ArrivalID=" + train[0].ScheduleDetails[0].ArrivalStationID
+                        + "&ROUND_TRIP=" + this.query.ROUND_TRIP
+                        + "&PASSENGERS=" + this.query.PASSENGERS
+                        + "&Query=" + JSON.stringify(this.query)
+                        + "&STEP=" + this.step;
+            }
 
             axios.get(url)
             .then( resp => {
@@ -117,20 +160,24 @@ new Vue({
         },
 
         formatTime: function(dateTime){
-            return moment(dateTime).format("LT");
+            return moment(dateTime).subtract('hour', 7).format("LT");
         },
 
         getFirstCost: function(scheduleDetailID){
             
-            axios.get('http://localhost:3000/getFirstCost?ScheduleID=' + scheduleDetailID)
+            axios.get('/getFirstCost?ScheduleID=' + scheduleDetailID)
             .then(res =>{
                 //alert(JSON.stringify(res.data.Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " VND");
                 document.getElementById('cost' + scheduleDetailID).innerHTML = JSON.stringify(res.data.Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " VND";
             })
-        }
+        },
     },
     components: {
         vuejsDatepicker,
       }
 })
+
+
+  
+  
 

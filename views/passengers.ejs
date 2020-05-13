@@ -34,29 +34,20 @@
     <script type="text/javascript" src="../vendor/js/jquery.min.js"></script>
 </head>
 
-<body>
-    <div id="errors" class="modal fade">
-        <input type="hidden" value="<%=JSON.stringify(result.DateDeparture)%>" id="dateDepart">
+<body style="overflow: hidden;">
+    <input type="hidden" value="<%=JSON.stringify(result.DateDeparture)%>" id="dateDepart">
         <input type="hidden" value="<%=JSON.stringify(result)%>" id="result">
-        <input type="hidden" value="2" id="number">
+        <%if(typeof(result2) != "undefined"){%>
+            <input type="hidden" value="<%=JSON.stringify(result2)%>" id="result2">
+        <%}%>
+        <input type="hidden" value="<%=passengers%>" id="number">
         <input type="hidden" value="<%=SeatTypeID%>" id="SeatTypeID">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-               <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                </div>
-                <div class="modal-body text-center">
-                   <div class="gap gap-super-small"></div>
-                    <div style="letter-spacing: 3px; margin: -30px 0 35px;" class="refrigerator uppercase yellow-text super-big-text">
-                        Error                    </div>
-                    <div class="gap gap-small"></div>
-                    <div class="message" style="letter-spacing: 1px; color: #f5f5f5" class="message big-text italic">
-                                            </div>
-                </div><!-- /.modal-content -->
-                <div class="gap gap-super-small"></div>
-            </div>
-        </div>
-    </div>
+        <input type="hidden" value="<%=FROM%>" id="FROM">
+        <input type="hidden" value="<%=TO%>" id="TO">
+        <input type="hidden" value="<%=DEPART%>" id="DEPART">
+        <input type="hidden" value="<%=ONE_WAY%>" id="ONE_WAY">
+        <input type="hidden" value="<%=query%>" id="query">
+    
 
     <div id="modal_message" class="modal fade">
         <div class="modal-dialog" role="document">
@@ -79,21 +70,8 @@
         </div>
     </div>
 
-    <div id="waiting_overlay" style="display:none">
-        <div class="container">
-            <h2 style="color: #fff; text-transform: uppercase;" id="waiting_text1" class="refrigerator"></h2>
-            <span id="waiting_text2" class="big-big-text"></span>
-            <br>
-            <br>
-            <img src="../images/genaral/white-spinner.gif" style="width:35px">
-        </div>
-    </div>
     
-        
-    
-
 <!-- Sidebar Content -->
-
 
 <section class="left side-nav">
     <button type="button" class="close visible-xs visible-sm">&times;</button>
@@ -132,7 +110,19 @@
 </section><!--End side-menu-left-->
 
 <!---------------------------END Mobile Sidebar Content-------------------------------------->
-
+<div id="waiting_overlay" style="display:block;background-color: lightgoldenrodyellow;">
+    <div class="container">
+        <h2 style="color: #fff; text-transform: uppercase;" id="waiting_text1" class="refrigerator"></h2>
+        <span id="waiting_text2" class="big-big-text"></span>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <img src="../images/genaral/244.gif" style="width:100px">
+    </div>
+</div>
 <div id="menu_overlay"></div>
 
 <div id="main_container" >
@@ -177,7 +167,7 @@
 
 <div class="subpage panel-dark search_result_page" id="app">
 
-   
+    
     <!-- container -->
     <!-- END PC progress-bar-holder -->
 
@@ -186,11 +176,19 @@
         <div class="row booking-progress uppercase">
             <div class="col-xs-2 col-sm-3 small-text">
                 &nbsp; </div>
-
+                <%if(typeof(result2)!="undefined"){%>
+                    <input hidden type="text" value="2" id="indexIti">
+                <%}%>
+                <input hidden type="text" value="1" id="indexIti">
             <div class="col-xs-8 col-sm-6">
                 <div class="current bold">
                     <span>Departure</span>
                 </div>
+                <%if(typeof(ROUND_TRIP) != "undefined"){%>
+                    <div class="current bold">
+                        <span>Departure</span>
+                    </div>
+                <%}%>
             </div>
 
             <div style="opacity: .3" class="col-xs-2 col-sm-3 small-text">
@@ -208,9 +206,15 @@
                 <div class="progress-bar-holder hidden-sm hidden-xs">
                     <ul class="progressbar small-text bold">
                         <li class="active">
-                            <a href="https://booking.baolau.com/en/results?departure=&amp;return=&amp;sess_key=b9ea2d577e0c5e3ae3b7eab2e8e8b574">DEPARTURE</a>
+                            <a v-bind:href="hrefDeparture">DEPARTURE</a>
                             <em class="progress-bar-arrow "></em>
                         </li>
+                        <%if(typeof(ROUND_TRIP) != "undefined"){%>
+                            <li class="active">
+                                <a v-bind:href="hrefReturn">RETURN</a>
+                                <em class="progress-bar-arrow "></em>
+                            </li>
+                        <%}%>
                         <li class="current">
                             <span>PASSENGERS</span>
                             <em class="progress-bar-arrow"></em>
@@ -249,53 +253,120 @@
                 </div>
             </div>
             <!-- END MOBILE progress-bar-holder -->
-    
-            <form action="/passenger" id="booking_form" data-passengers="1" method="post" accept-charset="utf-8">
-    
-                <div class="container">
-                    <div id="search_results" class="row">
-                        <div class="col-xs-12">
-                            <div class="gap gap-section"></div>
-                            <div class="gap gap-title">
-                                <h2>Your itinerary</h2>
-                                <div class="horizontal-devider hidden-sm hidden-xs"></div>
-                            </div>
-    
-                            <div class="js-selected_result">
-                                <h1 class="booking-desp big-text">
-                Summary of Departure from <span class="blue-text bold" id="summaryDepart">Da Nang</span> to <span class="blue-text bold" id="summaryArrival">Ho Chi Minh</span> on <span class="bold"><%=moment(result.DateDeparture).format('DD-MM-YYYY')%></span>
-            </h1>
-                                <div class="gap gap-mini"></div>
-    
-                                <!-- table Result -->
-                                <%- include('tableResult', {result: result})%>
-                                <!-- Disclaimer Ticket Collection -->
-                            </div>
-                            <!-- // js-selected_result -->
-    
+            <div id="errors" class="modal fade">
+        
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                       <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         </div>
-                        <!-- End col-xs-12-->
+                        <div class="modal-body text-center">
+                           <div class="gap gap-super-small"></div>
+                            <div style="letter-spacing: 3px; margin: -30px 0 35px;" class="refrigerator uppercase yellow-text super-big-text">
+                                Error                    </div>
+                            <div class="gap gap-small"></div>
+                            <div class="message" style="letter-spacing: 1px; color: #f5f5f5" class="message big-text italic">
+                                {{error}}
+                            </div>
+                        </div><!-- /.modal-content -->
+                        <div class="gap gap-super-small"></div>
                     </div>
-                    <!-- End Search result-->
-    
-                    <!-- Modals -->
-                    <div id="map" class="modal fade">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div style="padding: 0px; margin-top: 0px" class="modal-body">
-                                    <button type="button" class="close" style="position: absolute; top:10px; right:15px; z-index: 1; color: #000; opacity: .8; font-size: 24px;" data-dismiss="modal" aria-label="Close">×</button>
-                                    <div id="map_canvas">
-                                        <div class="map"></div>
+                </div>
+            </div>
+            <form action="/payment" id="booking_form" data-passengers="1" method="post" accept-charset="utf-8">
+                <div id="tableResult_1">
+                    <%if(typeof(result2) != "undefined" && result2 != null){%>
+                        <div class="container">
+                            <div id="search_results_2" class="row">
+                                <div class="col-xs-12">
+                                    <div class="gap gap-section"></div>
+                                    <div class="gap gap-title">
+                                        <h2>Your itinerary</h2>
+                                        <div class="horizontal-devider hidden-sm hidden-xs"></div>
+                                    </div>
+            
+                                    <div class="js-selected_result">
+                                        <h1 class="booking-desp big-text">
+                        Summary of Departure from <span class="blue-text bold">{{Depart2}}</span> to <span class="blue-text bold">{{Arrival2}}</span> on <span class="bold"><%=moment(result2.DateDeparture).format('DD-MM-YYYY')%></span>
+                    </h1>
+                                        <div class="gap gap-mini"></div>
+            
+                                        <!-- table Result -->
+                                        <%- include('tableResult', {result: result2, index: 2})%>
+                                        
+                                        <!-- Disclaimer Ticket Collection -->
+                                    </div>
+                                    <!-- // js-selected_result -->
+            
+                                </div>
+                                <!-- End col-xs-12-->
+                            </div>
+                            <!-- End Search result-->
+            
+                            <!-- Modals -->
+                            <div id="map" class="modal fade">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div style="padding: 0px; margin-top: 0px" class="modal-body">
+                                            <button type="button" class="close" style="position: absolute; top:10px; right:15px; z-index: 1; color: #000; opacity: .8; font-size: 24px;" data-dismiss="modal" aria-label="Close">×</button>
+                                            <div id="map_canvas">
+                                                <div class="map"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.modal-content -->
+                                </div>
+                                <!-- /.modal-dialog -->
+                            </div>
+                            <!-- /.modal -->
+                        </div>
+                    <%}%>
+                    <div class="container">
+                        <div id="search_results" class="row">
+                            <div class="col-xs-12">
+                                <div class="gap gap-section"></div>
+                                <div class="gap gap-title">
+                                    <h2>Your itinerary</h2>
+                                    <div class="horizontal-devider hidden-sm hidden-xs"></div>
+                                </div>
+        
+                                <div class="js-selected_result">
+                                    <h1 class="booking-desp big-text">
+                    Summary of Departure from <span class="blue-text bold" id="summaryDepart1">{{Depart1}}</span> to <span class="blue-text bold" id="summaryArrival1">{{Arrival1}}</span> on <span class="bold"><%=moment(result.DateDeparture).format('DD-MM-YYYY')%></span>
+                </h1>
+                                    <div class="gap gap-mini"></div>
+        
+                                    <!-- table Result -->
+                                    <%- include('tableResult', {result: result, index: 1})%>
+                                    
+                                    <!-- Disclaimer Ticket Collection -->
+                                </div>
+                                <!-- // js-selected_result -->
+        
+                            </div>
+                            <!-- End col-xs-12-->
+                        </div>
+                        <!-- End Search result-->
+        
+                        <!-- Modals -->
+                        <div id="map" class="modal fade">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div style="padding: 0px; margin-top: 0px" class="modal-body">
+                                        <button type="button" class="close" style="position: absolute; top:10px; right:15px; z-index: 1; color: #000; opacity: .8; font-size: 24px;" data-dismiss="modal" aria-label="Close">×</button>
+                                        <div id="map_canvas">
+                                            <div class="map"></div>
+                                        </div>
                                     </div>
                                 </div>
+                                <!-- /.modal-content -->
                             </div>
-                            <!-- /.modal-content -->
+                            <!-- /.modal-dialog -->
                         </div>
-                        <!-- /.modal-dialog -->
+                        <!-- /.modal -->
                     </div>
-                    <!-- /.modal -->
                 </div>
-    
+            
                 <div class="container">
                     <!-- Hidden fields -->
                     <input id="first_travel_date" type="hidden" name="first_travel_date" value="2020-04-16">
@@ -361,83 +432,188 @@
                     </div>
     
                     <input type="hidden" name="seats_69951216" id="seats_69951216" value="">
-    
-                    <p class="big-text seat-gap">
-                        Please select your preferred seats for the itinerary from <span class="blue-text super-bold">Da Nang</span> to <span class="blue-text super-bold">Ho Chi Minh</span> on <span class="bold">Thursday, 16 April 2020</span>.
-                    </p>
-                    <div class="gap gap-mini"></div>
-                    <div class="panel-light">
-                        <div class="special padded-heading text-center">
-    
-                            <div class="carriage_titles">
-                                <div class="text-center item">
-                                    <p class="big-text bold" style="text-transform: capitalize">
-                                        Soft seat </p>
-                                </div>
-                            </div>
-                            <div class="gap gap-small hidden-sm hidden-xs"></div>
-    
-                            <!-- <div style="opacity: .8; margin-top: 15px" class="horizontal-devider"></div> -->
-    
-                            <div class="row">
-                                <div style="margin-top: 15px; margin-bottom: 30px;" class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12 col-xs-offset-0">
-                                    <div class="legend">
-                                        <div class="col-md-3 col-sm-3 col-xs-6">
-                                            <span> <i style="font-size: 40px;" class="icon-soft-seat-bottom"></i> <br> Available                        </span>
-                                        </div>
-                                        <div class="col-md-3 col-sm-3 col-xs-6">
-                                            <span style="color: #ffbb00;"> <i style="font-size: 40px;" class="icon-soft-seat-people-bottom"></i> <br> Selected                        </span>
-                                        </div>
-                                        <div class="seat_legend col-md-3 col-sm-3 col-xs-6">
-                                            <span style="color: #d54844;"> <i style="font-size: 40px;" class="icon-soft-seat-people-bottom"></i> <br> Sold out                        </span>
-                                        </div>
-                                        <div class="seat_legend col-md-3 col-sm-3 col-xs-6">
-                                            <span style="color: #666b71;"> <i style="font-size: 40px; opacity: .3" class="icon-soft-seat-reserve-bottom"></i> <br> Reserved                        </span>
-                                        </div>
-                                    </div>
-                                    <!-- End legend-->
-                                </div>
-                            </div>
-    
-                            <div class="horizontal-devider"></div>
+                    <%if(typeof(result2) != "undefined" && result2 != null){%>
+                        <div>
+                            <p class="big-text seat-gap">
+                                Please select your preferred seats for the itinerary from <span class="blue-text super-bold">Da Nang</span> to <span class="blue-text super-bold">Ho Chi Minh</span> on <span class="bold">Thursday, 16 April 2020</span>.
+                            </p>
                             <div class="gap gap-mini"></div>
-                            <div class="row hidden-sm hidden-xs">
-                                <div class="col-md-12">
-                                    <div class="diagram-train">
-                                        <div class="mobile-scroll">
-                                            <div class="diagram_cell train-block etc"> 
-                                                <div class="diagram-number">...</div>
+                            <div class="panel-light">
+                                <div class="special padded-heading text-center">
+            
+                                    <div class="carriage_titles">
+                                        <div class="text-center item">
+                                            <p class="big-text bold" style="text-transform: capitalize">
+                                                {{SeatTypeName1}} </p>
+                                        </div>
+                                    </div>
+                                    <div class="gap gap-small hidden-sm hidden-xs"></div>
+            
+                                    <!-- <div style="opacity: .8; margin-top: 15px" class="horizontal-devider"></div> -->
+            
+                                    <div class="row" v-if="SeatTypeID != 1 || SeatTypeID != 6">
+                                        <div style="margin-top: 15px; margin-bottom: 30px;" class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12 col-xs-offset-0">
+                                            <div class="legend">
+                                                <div class="col-md-3 col-sm-3 col-xs-6">
+                                                    <span> <i style="font-size: 40px;" class="icon-soft-seat-bottom"></i> <br> Available                        </span>
+                                                </div>
+                                                <div class="col-md-3 col-sm-3 col-xs-6">
+                                                    <span style="color: #ffbb00;"> <i style="font-size: 40px;" class="icon-soft-seat-people-bottom"></i> <br> Selected                        </span>
+                                                </div>
+                                                <div class="seat_legend col-md-3 col-sm-3 col-xs-6">
+                                                    <span style="color: #d54844;"> <i style="font-size: 40px;" class="icon-soft-seat-people-bottom"></i> <br> Sold out                        </span>
+                                                </div>
+                                                <div class="seat_legend col-md-3 col-sm-3 col-xs-6">
+                                                    <span style="color: #666b71;"> <i style="font-size: 40px; opacity: .3" class="icon-soft-seat-reserve-bottom"></i> <br> Reserved                        </span>
+                                                </div>
                                             </div>
-                                           <span v-if="carriageDisplay" v-for="(carriage, index) in carriageDisplay">
-                                            <div style="cursor: pointer;" onclick="change(this)" v-bind:id="carriageDisplay[carriageDisplay.length - (index + 1)].ID" class="diagram_cell train-block selectable selected" v-if="carriageDisplay.length - (index + 1) == 0">
-                                                <div class="diagram-number" >{{carriageDisplay.length - index}}</div>
+                                            <!-- End legend-->
+                                        </div>
+                                    </div>
+            
+                                    <div class="horizontal-devider"></div>
+                                    <div class="gap gap-mini"></div>
+                                    <div class="row hidden-sm hidden-xs">
+                                        <div class="col-md-12">
+                                            <div class="diagram-train">
+                                                <div class="mobile-scroll">
+                                                    <div class="diagram_cell train-block etc"> 
+                                                        <div class="diagram-number">...</div>
+                                                    </div>
+                                                   <span v-if="carriageDisplay2" v-for="(carriage, index) in carriageDisplay2">
+                                                    <div style="cursor: pointer;" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 2)" v-bind:id="carriageDisplay2[carriageDisplay2.length - (index + 1)].ID" name="carriageSelected2" class="diagram_cell train-block selectable selected" v-if="carriageDisplay2.length - (index + 1) == 0">
+                                                        <div class="diagram-number" >{{carriageDisplay2.length - index}}</div>
+                                                    </div>
+                                                    <div style="cursor: pointer;" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 2)" class="diagram_cell train-block available" v-bind:id="carriageDisplay2[carriageDisplay2.length - (index + 1)].ID" v-else>
+                                                        <div class="diagram-number" >{{carriageDisplay2.length - index}}</div>
+                                                    </div>
+                                                    <!-- <div style="cursor: pointer;" class="diagram_cell train-block selectable selected">
+                                                        <div class="diagram-number" data-carriage-id="5179">2</div>
+                                                    </div>
+                                                    <div style="cursor: pointer;" class="diagram_cell train-block selectable available">
+                                                        <div class="diagram-number" data-carriage-id="5176">1</div>
+                                                    </div> -->
+                                                   </span>
+                                                    <div class="diagram_cell train-block etc">
+                                                        <div class="diagram-number">...</div>
+                                                    </div>
+                                                    <div class="diagram_cell train-block last">
+                                                        <div class="diagram-number" name="hiddenTrain2">SE3</div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div style="cursor: pointer;" onclick="change(this)" class="diagram_cell train-block available" v-bind:id="carriageDisplay[carriageDisplay.length - (index + 1)].ID" v-else>
-                                                <div class="diagram-number" >{{carriageDisplay.length - index}}</div>
+                                        </div>
+                                    </div>
+            
+                                    <div class="gap gap-medium hidden-sm hidden-xs"></div>
+                                    <div style="position: relative; height: 300px;">
+                                        <%- include('chooseSeat2') %>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                           
+                        </div>
+                    <%}%>
+                    <div>
+                        <p class="big-text seat-gap">
+                            Please select your preferred seats for the itinerary from <span class="blue-text super-bold">{{Depart1}}</span> to <span class="blue-text super-bold">{{Arrival1}}</span> on <span class="bold"><%=moment(result.DateDeparture).format('DD-MM-YYYY')%></span>.
+                        </p>
+                        <div class="gap gap-mini"></div>
+                        <div class="panel-light">
+                            <div class="special padded-heading text-center">
+        
+                                <div class="carriage_titles">
+                                    <div class="text-center item">
+                                        <p class="big-text bold" style="text-transform: capitalize">
+                                            {{SeatTypeName}} </p>
+                                    </div>
+                                </div>
+                                <div class="gap gap-small hidden-sm hidden-xs"></div>
+        
+                                <!-- <div style="opacity: .8; margin-top: 15px" class="horizontal-devider"></div> -->
+        
+                                <div class="row" v-if="SeatTypeID != 'undefined' && (SeatTypeID === 2 || SeatTypeID === 3 || SeatTypeID === 4 || SeatTypeID === 5)">
+                                    <div style="margin-top: 15px; margin-bottom: 30px;" class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12 col-xs-offset-0">
+                                        <div class="legend">
+                                            <div class="col-md-3 col-sm-3 col-xs-6">
+                                                <span> <i style="font-size: 40px;" class="icon-soft-seat-bottom"></i> <br> Available                        </span>
                                             </div>
-                                            <!-- <div style="cursor: pointer;" class="diagram_cell train-block selectable selected">
-                                                <div class="diagram-number" data-carriage-id="5179">2</div>
+                                            <div class="col-md-3 col-sm-3 col-xs-6">
+                                                <span style="color: #ffbb00;"> <i style="font-size: 40px;" class="icon-soft-seat-people-bottom"></i> <br> Selected                        </span>
                                             </div>
-                                            <div style="cursor: pointer;" class="diagram_cell train-block selectable available">
-                                                <div class="diagram-number" data-carriage-id="5176">1</div>
-                                            </div> -->
-                                           </span>
-                                            <div class="diagram_cell train-block etc">
-                                                <div class="diagram-number">...</div>
+                                            <div class="seat_legend col-md-3 col-sm-3 col-xs-6">
+                                                <span style="color: #d54844;"> <i style="font-size: 40px;" class="icon-soft-seat-people-bottom"></i> <br> Sold out                        </span>
                                             </div>
-                                            <div class="diagram_cell train-block last">
-                                                <div class="diagram-number" name="hiddenTrain">SE3</div>
+                                            <div class="seat_legend col-md-3 col-sm-3 col-xs-6">
+                                                <span style="color: #666b71;"> <i style="font-size: 40px; opacity: .3" class="icon-soft-seat-reserve-bottom"></i> <br> Reserved                        </span>
+                                            </div>
+                                        </div>
+                                        <!-- End legend-->
+                                    </div>
+                                </div>
+                                <div class="row" v-else-if="SeatTypeID != 'undefined' && SeatTypeID === 1 || SeatTypeID === 6">
+                                    <div style="margin-top: 15px; margin-bottom: 30px;" class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12 col-xs-offset-0">
+                                        <div class="legend">
+                                                                <div class="col-md-3 col-sm-3 col-xs-6">
+                                                <span> <i style="font-size: 40px;" class="icon-soft-bed-bottom"></i> <br> Available                        </span>
+                                            </div>
+                                            <div class="col-md-3 col-sm-3 col-xs-6">
+                                                <span style="color: #ffbb00;"> <i style="font-size: 40px;" class="icon-soft-bed-people-bottom"></i> <br> Selected                        </span>
+                                            </div>
+                                            <div class="seat_legend col-md-3 col-sm-3 col-xs-6">
+                                                <span style="color: #d54844;"> <i style="font-size: 40px;" class="icon-soft-bed-people-bottom"></i> <br> Sold out                        </span>
+                                            </div>
+                                            <div class="seat_legend col-md-3 col-sm-3 col-xs-6">
+                                                <span style="color: #666b71;"> <i style="font-size: 40px; opacity: .3" class="icon-soft-bed-reserve-bottom"></i> <br> Reserved                        </span>
+                                            </div>
+                                        </div>
+                                        <!-- End legend-->
+                                    </div>
+                                </div>
+                                <div class="horizontal-devider"></div>
+                                <div class="gap gap-mini"></div>
+                                <div class="row hidden-sm hidden-xs">
+                                    <div class="col-md-12">
+                                        <div class="diagram-train">
+                                            <div class="mobile-scroll">
+                                                <div class="diagram_cell train-block etc"> 
+                                                    <div class="diagram-number">...</div>
+                                                </div>
+                                               <span v-if="carriageDisplay" v-for="(carriage, index) in carriageDisplay">
+                                                <div style="cursor: pointer;" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 1)" v-bind:id="carriageDisplay[carriageDisplay.length - (index + 1)].ID" name="carriageSelected1" class="diagram_cell train-block selectable selected" v-if="carriageDisplay.length - (index + 1) == 0">
+                                                    <div class="diagram-number" >{{carriageDisplay.length - index}}</div>
+                                                </div>
+                                                <div style="cursor: pointer;" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 1)" class="diagram_cell train-block available" v-bind:id="carriageDisplay[carriageDisplay.length - (index + 1)].ID" v-else>
+                                                    <div class="diagram-number" >{{carriageDisplay.length - index}}</div>
+                                                </div>
+                                                <!-- <div style="cursor: pointer;" class="diagram_cell train-block selectable selected">
+                                                    <div class="diagram-number" data-carriage-id="5179">2</div>
+                                                </div>
+                                                <div style="cursor: pointer;" class="diagram_cell train-block selectable available">
+                                                    <div class="diagram-number" data-carriage-id="5176">1</div>
+                                                </div> -->
+                                               </span>
+                                                <div class="diagram_cell train-block etc">
+                                                    <div class="diagram-number">...</div>
+                                                </div>
+                                                <div class="diagram_cell train-block last">
+                                                    <div class="diagram-number" name="hiddenTrain">SE3</div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+        
+                                <div class="gap gap-medium hidden-sm hidden-xs"></div>
+                                <div style="position: relative; height: 300px;">
+                                    <%- include('chooseSeat') %>
+                                </div>
                             </div>
-    
-                            <div class="gap gap-medium hidden-sm hidden-xs"></div>
-                            <%- include('chooseSeat') %>
                         </div>
+                        <br>
                     </div>
-                    <br>
+                    
                     <div class="bs-callout bs-callout-info">
                         <div class="padded-heading">
                             <div class="bold">
@@ -445,7 +621,6 @@
                             <div class="italic" style="padding-top: 10px;">Please note that the position of the seats is just for reference. The railway operator may change the orientation of the carriage at the departure station anytime at their convenience. We hope you understand that this situation escapes our control and we cannot guarantee that the position of your seat will be the same as you select here.</div>
                         </div>
                     </div>
-    
                     <!-- END Seat selection -->
     
                     <!-- Seat preference -->
@@ -466,24 +641,24 @@
                             <div class="row">
                                 <div class="col-sm-6 col-xs-6">
                                     <div class="form-group">
-                                        <input id="book_last_name" class="form-control english" name="book_last_name" type="text" placeholder="surname (last name)" value="">
+                                        <input id="book_full_name" class="form-control english" name="book_full_name" type="text" placeholder="Full Name" value="Full Name Test">
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-xs-6">
                                     <div class="form-group">
-                                        <input id="book_first_name" class="form-control english" name="book_first_name" type="text" placeholder="given name (first &amp; middle name)" value="">
+                                        <input id="book_passport" class="form-control english" name="book_passport" type="text" placeholder="Passport" value="123456789">
                                     </div>
                                 </div>
     
                                 <div class="col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
-                                        <input id="book_email" onpaste="return false;" class="form-control" name="book_email" type="email" placeholder="email" value="">
+                                        <input id="book_email" onpaste="return false;" class="form-control" name="book_email" type="email" placeholder="email" value="emailtest@gmail.com">
                                     </div>
                                 </div>
     
                                 <div class="col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
-                                        <input id="verify_email" onpaste="return false;" class="form-control" name="verify_email" type="email" placeholder="confirm email" value="">
+                                        <input id="verify_email" onpaste="return false;" class="form-control" name="verify_email" type="email" placeholder="confirm email" value="emailtest@gmail.com">
                                     </div>
                                 </div>
     
@@ -491,13 +666,13 @@
                                     <div class="row">
                                         <div class="col-md-4 col-md-offset-0 col-sm-2 col-sm-offset-4 col-xs-4">
                                             <div class="form-group">
-                                                <input id="book_country_code" class="form-control" name="book_country_code" type="tel" maxlength="3" placeholder="+00" value="">
+                                                <input id="book_country_code" class="form-control" name="book_country_code" type="tel" maxlength="3" placeholder="+00" value="84">
                                             </div>
                                         </div>
     
                                         <div class="col-md-8 col-sm-6 col-xs-8">
                                             <div class="form-group">
-                                                <input id="book_phone" class="form-control" name="book_phone" type="tel" maxlength="11" placeholder="phone" value="">
+                                                <input id="book_phone" class="form-control" name="book_phone" type="tel" maxlength="11" placeholder="phone" value="3664338283">
                                             </div>
                                         </div>
                                     </div>
@@ -509,7 +684,7 @@
                     <div class="gap gap-small"></div>
     
                     <input type="hidden" name="submit" value="submit">
-                    <button type="submit" class="btn green full-width">CONTINUE</button>
+                    <button type="button" class="btn green full-width" v-on:click="submitForm()">CONTINUE</button>
     
                     <div class="gap gap-footer"></div>
     
@@ -650,7 +825,6 @@
 <!-- END WINDOW POPUP -->
 
     <script src="../dist/vue.js"></script>
-    <script src="https://unpkg.com/vue-router@2.0.0/dist/vue-router.js"></script>
     <script src="../dist/axios.js"></script>
     <script src="../dist/vuejs-datepickker.js"></script>
     <script src="../dist/myVue3.js"></script>	
@@ -660,10 +834,7 @@
     <!-- <script src="../dist/moment.js"></script>             -->
     <!-- Language dependant libraries -->
     <script type="text/javascript" src="../vendor/bootstrap-datepicker/locales/bootstrap-datepicker.en.min.js"></script>
-    <script>
-        var _freshenUrlAfter = ['googleAnalytics', 'pardot', 'hubspot'];
-       
-    </script>
+    
     
 </body>
 
