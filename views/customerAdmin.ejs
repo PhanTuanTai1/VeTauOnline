@@ -2,25 +2,14 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-
-    <title>Customer Manager || Admin</title>
-
-
-    <link rel="stylesheet" href="../dist/css/adminlte.min.css">
-    <!-- Google Font: Source Sans Pro -->
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+    <%- include('adminheader'); -%>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
     <div class="wrapper">
         <!-- Navbar -->
-        <div  id="sidebar">
-            <my-sidebar></my-sidebar>
+        <div id="sidebar">
+            <%- include('adminsidebar'); -%>
         </div>
 
         <!-- Content Wrapper. Contains page content -->
@@ -118,8 +107,9 @@
 
         <!-- /.content-wrapper -->
         <!-- Main Footer -->
-        <footer  id="myfooter" class="main-footer">
-            <my-footer></my-footer>
+        
+        <footer>
+            <%- include('adminfooter'); -%>
         </footer>
     </div>
 
@@ -133,8 +123,6 @@
     <script src="../dist/vue-router.js"></script>
     <script src="../dist/axios.js"></script>
     <script type="module" src="../dist/@CustomerVue/cusVue.js"></script>
-    <script src="../dist/sidebar.js"></script>
-    <script src="../dist/footer.js"></script>
     <script src="../dist/sweetalert2.all.min.js"></script>
     <!-- Language dependant libraries -->
 </body>
