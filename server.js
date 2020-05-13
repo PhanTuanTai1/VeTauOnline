@@ -82,7 +82,7 @@ app.get("/getAllTrain",function(req,res){
 
 
 //render
-app.get("/admin",function(req,res){
+app.get("/admin/dashboard",function(req,res){
     res.render('admin');
 })
 app.get("/admin/customer",function(req,res){
@@ -125,6 +125,10 @@ app.get("/testprint",function(req,res){
 })
 app.get("/test",function(req,res){
     managerCtrler.printTicketByRepresentativeId(req,res);
+})
+
+app.get("/admin/schedule",function(req,res){
+    managerCtrler.createSchedule(req,res);
 })
 
 var server = app.listen(port,function(){

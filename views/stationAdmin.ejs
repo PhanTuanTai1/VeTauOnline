@@ -20,30 +20,25 @@
                     <div id="app" class="card">
                         <div class="card-header">
                             <button type="button" class="btn btn-success"><i class="fa fa-plus"></i> Create</button>
-                            <div class="card-tools">
-                                <ul class="pagination pagination-sm float-right">
-                                    <li class="page-item"><a class="page-link" href="#">«</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">»</a></li>
-                                </ul>
-                            </div>
                         </div>
 
-                        <table v-if="Stations" class="table">
+                        <table id="myTable" v-if="Stations" class="table">
                             <thead class="font-weight-bold table-info">
-                                <td>#</td>
-                                <td>Name</td>
-                                <td class="text-right">....</td>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th class="text-right">...</th>
+                                </tr>
                             </thead>
-                            <tr v-for="item in Stations">
-                                <td v-text="item.ID"></td>
-                                <td v-text="item.Name"></td>
-                                <td class="text-right"><button type="button" class="btn btn-warning"><i
-                                            class="fa fa-edit"></i> Edit</button> <button type="button"
-                                        class="btn btn-info"><i class="fa fa-trash"></i> Delete</button></td>
-                            </tr>
+                            <tbody>
+                                <tr v-for="item in Stations">
+                                    <td v-text="item.ID"></td>
+                                    <td v-text="item.Name"></td>
+                                    <td class="text-right"><button type="button" class="btn btn-warning"><i
+                                                class="fa fa-edit"></i> Edit</button> <button type="button"
+                                            class="btn btn-info"><i class="fa fa-trash"></i> Delete</button></td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
 
