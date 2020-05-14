@@ -75,7 +75,8 @@
                                 </div>
                             </td>
                         </tr>
-
+                        <%var hour = parseInt(moment(result[0].TimeDeparture).format('hh'))%>
+                        <%var min = parseInt(moment(result[0].TimeDeparture).format('mm'))%>
                         <!-- Vessel -->
                         <tr style="border:none">
                             <td style="text-align: center; width: 161px; height: 94px;">
@@ -84,7 +85,10 @@
                             </td>
                             <td class="text-right" style="width: 190px;">
                                 <span>
-                                                <span class="bold"><%=moment().add(result[0].ScheduleDetails[0].Time * 60, 'minutes').format('HH:mm')%></span>
+                                    
+                                    <%var DateDepart = new Date(moment(result[0].DateDeparture).add(hour,'hour').add(min, 'minutes').format('YYYY-MM-DDTHH:MM:SS'))%>
+                                    <%var DateArrive = new Date(moment(result[0].DateDeparture).add(result[0].ScheduleDetails[0].Time * 60 + min, 'minutes').add(hour, 'hour').format('YYYY-MM-DDTHH:MM:SS'))%>
+                                                <span class="bold"><%=new duration(DateDepart, DateArrive).toString("%Hs hour %M minutes")%></span>
                                 </span>
                             </td>
                             <td class="text-center" style="width: 163px;">
@@ -100,13 +104,11 @@
                                         </div>-->
                             </td>
                         </tr>
-                        <%var hour = parseInt(moment(result[0].TimeDeparture).format('hh'))%>
-                        <%var min = parseInt(moment(result[0].TimeDeparture).format('mm'))%>
                         <!--  Destination -->
                         <tr style="border:none">
                             <td style="width: 161px; height: 94px;"></td>
                             <td class="text-right" style="width: 190px;">
-                                <span class="blue-text super-bold"><%=moment(result[0].TimeDeparture).add(result[0].ScheduleDetails[0].Time * 60 + 15, 'minutes').subtract(7, "hour").format("LT")%></span>
+                                <span class="blue-text super-bold"><%=moment(result[0].TimeDeparture).add(result[0].ScheduleDetails[0].Time * 60 + min + (hour * 60), 'minutes').subtract(7, "hour").format("LT")%></span>
                                 <p><%=moment(result[0].DateDeparture).add(result[0].ScheduleDetails[0].Time * 60 + min , 'minutes').add(hour,"hour").subtract(7, "hour").format("DD-MM-YYYY")%></p>
                             </td>
                             <td class="relative text-center" style="width: 163px;">
