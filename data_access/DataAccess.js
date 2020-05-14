@@ -73,7 +73,8 @@ Seat.init({
 class SeatType extends Model{}
 SeatType.init({
     'ID' : {type: Sequelize.INTEGER,primaryKey: true},
-    'TypeName' : Sequelize.STRING
+    'TypeName' : Sequelize.STRING,
+    'CostPerKm': Sequelize.INTEGER
 },
 { 
     sequelize, 
@@ -115,7 +116,9 @@ ScheduleDetail.init({
 class Station extends Model{}
 Station.init({
     'ID' : {type: Sequelize.INTEGER,primaryKey: true},
-    'Name' : Sequelize.STRING
+    'Name' : Sequelize.STRING,
+    'Location': Sequelize.STRING,
+    'Distance': Sequelize.INTEGER
 },
 { 
     sequelize, 
@@ -159,7 +162,8 @@ TableCost.init({
 class TypeObject extends Model{}
 TypeObject.init({
     'ID' : {type: Sequelize.INTEGER,primaryKey: true},
-    'TypeObjectName' : Sequelize.STRING
+    'TypeObjectName' : Sequelize.STRING,
+    'Discount': Sequelize.FLOAT
 },
 { 
     sequelize, 
