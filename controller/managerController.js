@@ -2,6 +2,8 @@ var { Sequelize, Model, DataTypes, Op } = require('sequelize');
 var db = require("../data_access/DataAccess");
 var moment = require('moment');
 var uuid = require('uuidjs');
+
+
 //#region Customer
 module.exports.getAllCustomer = function (req, res) {
   db.Customer.findAll({
@@ -109,7 +111,7 @@ module.exports.printTicketByRepresentativeId = (req, res) => {
 //#endregion
 
 //#region Schedule
-module.exports.createSchedule = async function(req,res){
+module.exports.createSchedule = async function (req, res) {
   const travel = await db.Station.findAll(
     {
       where: {
@@ -120,25 +122,122 @@ module.exports.createSchedule = async function(req,res){
       raw: true
     }
   );
-  var id = await uuid.genV4().bitFields.clockSeqLow;
-  const schedule = await {
+
+
+  var id = uuid.genV4().bitFields.clockSeqLow;
+  var ss = moment(req.query.DateDeparture).add(7, "h");
+  const schedule = {
     ID: id,
     TrainID: req.query.TrainID,
-    DateDeparture: new Date(),
+    DateDeparture: ss,
     TimeDeparture: req.query.TimeDeparture,
   };
-  console.log(schedule);
-  travel.forEach(item => {
-    var scheduleDetail =  {
-      ID:item.ID,
-      ScheduleID:id,
-      DepartureStationID:req.query.from,
-      ArrivalStationID:item.ID,
-      Length:0,
-      Time:0
+  db.Schedule.create(schedule);
+  var shortDistance = 0;
+  var timeStart = moment(req.query.DateDeparture + " " + req.query.TimeDeparture);
+  var i = 1;
+  let tong = 0;
+  let time = "";
+  count = (await db.ScheduleDetail.findAll({ raw: true })).length;
+  travel.forEach(async item => {
+    let arrival = item.ID;
+    if (arrival == req.query.from) {
+      shortDistance = 0;
+    }
+    else {
+      shortDistance = item.Distance - shortDistance;
+    }
+    tong = item.Distance;
+    count++;
+    const scheduleDetail = {
+      ID: count,
+      ScheduleID: id,
+      DepartureStationID: req.query.from,
+      ArrivalStationID: item.ID,
+      StartTime: timeStart.format("HH:mm"),
+      Length: tong,
+      Time: (shortDistance / 90).toFixed(2),
     };
-    console.log(scheduleDetail);
+    time = shortDistance / 90;
+    db.ScheduleDetail.create(scheduleDetail);
+    timeStart.add(time, "hours");
+    i++;
+    shortDistance = item.Distance;
   });
-  // console.log(station.map(e=>e.Name));
 }
 //#endregion
+
+//#region Seat
+module.exports.getAllSeat = function (req, res) {
+  db.Seat.findAll({
+    include: { all: true }
+  }).then(seat => res.end(JSON.stringify(seat)))
+}
+async function createSeat(carriageID, seatTypeID, seatNum) {
+  const seat = await {
+    ID: parseInt(uuid.genV4().intFields.timeLow.toString().substring(0, 9)),
+    CarriageID: carriageID,
+    SeatTypeID: seatTypeID,
+    SeatNumber: seatNum
+  }
+  db.Seat.create(seat);
+}
+async function delSeat(seatID) {
+  db.Seat.destroy({
+    where: {
+      ID: seatID
+    }
+  })
+}
+//#endregion
+module.exports.getAllSeatType = function (req, res) {
+  db.SeatType.findAll().then(seatType => res.end(JSON.stringify(seatType)))
+}
+module.exports.getAllCarriage = function (req, res) {
+  db.Carriage.findAll().then(carriage => res.end(JSON.stringify(carriage)))
+}
+module.exports.createCarriage = async function (req, res) {
+  const carr = await {
+    ID: uuid.genV4().bitFields.clockSeqLow,
+    Name: req.query.Name,
+    TrainID: req.query.TrainID
+  }
+  await db.Carriage.create(carr);
+  let seatTypeID = await req.query.SeatTypeID;
+  let seatCount = "";
+  if (seatTypeID == 1)//khoang 4
+  {
+    seatCount = 28;
+  }
+  else if (seatTypeID == 2) //khoang 6
+  {
+    seatCount = 42;
+  }
+  else seatCount = 56;
+  for (let i = 1; i <= seatCount; i++) {
+    createSeat(carr.ID, seatTypeID, i);
+  }
+}
+module.exports.delCarriage = async function (req, res) {
+  let carrID = req.query.ID;
+  await db.Seat.findAll({
+    where: {
+      CarriageID: carrID
+    },
+    raw: true
+  }).then(seat => {
+    seat.forEach(s => db.Seat.destroy({
+      where: {
+        ID: s.ID
+      }
+    }))
+  });
+  db.Carriage.destroy({
+    where: {
+      ID: carrID
+    }
+  });
+}
+// module.exports.getAllSeat = function (req,res){
+//   db.Seat.findAll().then(seat=>res.end(JSON.stringify(seat)))
+// }

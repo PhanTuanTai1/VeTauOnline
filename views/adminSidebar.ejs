@@ -148,27 +148,19 @@
                             <a class="nav-link">
                                 <i class="nav-icon fa fa-chart-pie"></i>
                                 <p>
-                                    Charts
+                                    Seat
                                     <i class="right fa fa-angle-left"></i>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="pages/charts/chartjs.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>ChartJS</p>
+                                    <a href="./seat" class="nav-link">
+                                        <p>Seat</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="pages/charts/flot.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Flot</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/charts/inline.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Inline</p>
+                                    <a href="#" class="nav-link">
+                                        <p>Seat Type</p>
                                     </a>
                                 </li>
                             </ul>
@@ -182,7 +174,6 @@
 <script>
     var path = window.location.pathname;
     $(window).on("load", function () {
-        $('#myTable').DataTable();
         $('#menuOfSidebar .nav-item .nav-link').each(function () {
             var navItem = $(this);
             if (path.includes(navItem.attr("href").substring(2)) === true) {
