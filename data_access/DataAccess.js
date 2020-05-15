@@ -74,6 +74,7 @@ Seat.init({
 //4 SeatType Entity
 class SeatType extends Model { }
 SeatType.init({
+
     'ID': { type: Sequelize.INTEGER, primaryKey: true },
     'TypeName': Sequelize.STRING,
     'CostPerKm': Sequelize.INTEGER

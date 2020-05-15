@@ -111,11 +111,17 @@
         </div>
         <nav id="menuOfSidebar" class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-item active">
+                    <a href="./dashboard" class="nav-link">
+                        <i class="fas fa-chart-line"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
                 <li class="nav-item has-treeview menu-open">
-                    <a href="/admin" class="nav-link">
-                        <i class="nav-icon fa fa-dashboard"></i>
+                    <a class="nav-link">
+                        <i class="fas fa-tasks"></i>
                         <p>
-                            Dashboard
+                            Entities Manager
                             <i class="right fa fa-angle-left"></i>
                         </p>
                     </a>
@@ -142,27 +148,19 @@
                             <a class="nav-link">
                                 <i class="nav-icon fa fa-chart-pie"></i>
                                 <p>
-                                    Charts
+                                    Seat
                                     <i class="right fa fa-angle-left"></i>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="pages/charts/chartjs.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>ChartJS</p>
+                                    <a href="./seat" class="nav-link">
+                                        <p>Seat</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="pages/charts/flot.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Flot</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/charts/inline.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Inline</p>
+                                    <a href="#" class="nav-link">
+                                        <p>Seat Type</p>
                                     </a>
                                 </li>
                             </ul>
@@ -176,10 +174,10 @@
 <script>
     var path = window.location.pathname;
     $(window).on("load", function () {
-        $('#myTable').DataTable();
-        $('.nav-link').each(function () {
+        $('#menuOfSidebar .nav-item .nav-link').each(function () {
             var navItem = $(this);
             if (path.includes(navItem.attr("href").substring(2)) === true) {
+                console.log(navItem.html());
                 navItem.addClass("active");
             }
         });
