@@ -133,6 +133,12 @@ app.get("/getAllTrain", function (req, res) {
 app.get("/getAllSeat", function (req, res) {
     managerCtrler.getAllSeat(req, res);
 })
+app.get("/getAllTypeOfSeat", function (req, res) {
+    managerCtrler.getAllTypeOfSeat(req, res)
+})
+app.get("/getAllCarriage", function (req, res) {
+    managerCtrler.getAllCarriage(req, res);
+})
 
 //render
 app.get("/admin/dashboard", function (req, res) {
@@ -142,13 +148,22 @@ app.get("/admin/customer", function (req, res) {
     res.render('customerAdmin');
 })
 app.get("/admin/station", function (req, res) {
-    res.render('stationAdmin')
+    res.render('stationAdmin');
 })
 app.get("/admin/train", function (req, res) {
-    res.render(__dirname + '/admintrainAdmin')
+    res.render('trainAdmin');
 })
 app.get("/admin/seat", function (req, res) {
-    res.render('seatAdmin')
+    res.render('seatAdmin');
+})
+app.get("/admin/seattype", function (req, res) {
+    res.render('seatTypeAdmin');
+})
+app.get("/admin/carriage", function (req, res) {
+    res.render('carriageadmin')
+})
+app.get("/admin/schedule", function (req, res) {
+    res.render('scheduleadmin')
 })
 
 //action customer
@@ -183,7 +198,7 @@ app.delete("/admin/carriage", function (req, res) {
 
 //test print
 app.get("/testprint", function (req, res) {
-    res.render('test');
+    res.render('ticketadmin');
 })
 app.get("/test", function (req, res) {
     managerCtrler.printTicketByRepresentativeId(req, res);

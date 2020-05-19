@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Admin | Ticket</title>
+
+    <%- include('adminheader'); -%>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <div id="sidebar">
+            <%- include('adminsidebar'); -%>
+        </div>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper p-4">
+            <h3>Train List</h3>
+            <div class="card">
+                <div class="card-body pb-0">
+                    <div id="app" class="card">
+                        <div class="card-header">
+                            <button type="button" @click="createTrain" class="btn btn-success"><i
+                                    class="fa fa-plus"></i> Create</button>
+                        </div>
+                        <table id="myTable" v-if="Trains" class="table">
+                            <thead class="font-weight-bold table-info">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th class="text-right">...</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(item,index) in Trains" :key="index">
+                                    <td>{{item.ID}}</td>
+                                    <td>{{item.Name}}</td>
+                                    <td class="text-right"><button type="button" class="btn btn-warning"
+                                            @click="updateTrain(item.ID,index)"><i class="fa fa-edit"></i> Edit</button>
+                                        <button type="button" class="btn btn-info" @click="delTrain(item.ID,index)"><i
+                                                class="fa fa-trash"></i>
+                                            Delete</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- /.content-wrapper -->
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
+
+        <!-- Main Footer -->
+        <footer class="main-footer">
+            <%- include('adminFooter'); -%>
+        </footer>
+    </div>
+    <!-- <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script> -->
+
+    <!-- ./wrapper -->
+    <!-- AdminLTE App -->
+
+    <!-- PAGE SCRIPTS -->
+    <script src="../dist/js/pages/dashboard2.js"></script>
+
+    <script src="../dist/vue.js"></script>
+    <script src="../dist/vue-router.js"></script>
+    <script src="../dist/axios.js"></script>
+    <script type="module" src="../dist/@TrainVue/trainVue.js"></script>
+    <script src="../dist/sweetalert2.all.min.js"></script>
+    <script src="../dist/uuid.js"></script>
+    <script>
+
+    </script>
+
+
+
+</body>
+
+</html>

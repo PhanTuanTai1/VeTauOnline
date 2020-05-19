@@ -103,7 +103,9 @@ module.exports.createTrain = (req, res) => {
 
 //#region Ticket
 module.exports.printTicketByRepresentativeId = (req, res) => {
-  db.Ticket.findAll().then(ticket => {
+  db.Ticket.findAll({
+    include: { all: true }
+  }).then(ticket => {
     res.end(JSON.stringify(ticket))
   })
 }
@@ -190,11 +192,29 @@ async function delSeat(seatID) {
   })
 }
 //#endregion
-module.exports.getAllSeatType = function (req, res) {
-  db.SeatType.findAll().then(seatType => res.end(JSON.stringify(seatType)))
+module.exports.getAllTypeOfSeat = async function (req, res) {
+  const d = await db.SeatType.findAll({
+    group: ['SeatType.ID', 'SeatType.TypeName', 'SeatType.CostPerKm'],
+    attributes: [
+      'ID', 'TypeName', 'CostPerKm',
+      [
+        Sequelize.fn('COUNT', Sequelize.col('Seats.SeatTypeID')), 'Seats'
+      ]
+    ],
+    include: [
+      {
+        model: db.Seat,
+        attributes: []
+      }
+    ],
+    raw: true,
+  }).then(seatType => res.end(JSON.stringify(seatType)));
 }
+
 module.exports.getAllCarriage = function (req, res) {
-  db.Carriage.findAll().then(carriage => res.end(JSON.stringify(carriage)))
+  db.Carriage.findAll({
+    include: db.Train,
+  }).then(carriage => res.end(JSON.stringify(carriage)))
 }
 module.exports.createCarriage = async function (req, res) {
   const carr = await {
@@ -238,6 +258,21 @@ module.exports.delCarriage = async function (req, res) {
     }
   });
 }
-// module.exports.getAllSeat = function (req,res){
-//   db.Seat.findAll().then(seat=>res.end(JSON.stringify(seat)))
-// }
+module.exports.getAllRepre = function (req, res) {
+  db.Representative.findAll({
+    group: ['SeatType.ID', 'SeatType.TypeName', 'SeatType.CostPerKm'],
+    attributes: [
+      'ID', 'TypeName', 'CostPerKm',
+      [
+        Sequelize.fn('COUNT', Sequelize.col('Seats.SeatTypeID')), 'Seats'
+      ]
+    ],
+    include: [
+      {
+        model: db.Seat,
+        attributes: []
+      }
+    ],
+    raw: true,
+  }).then(seat => res.end(JSON.stringify(seat)))
+}

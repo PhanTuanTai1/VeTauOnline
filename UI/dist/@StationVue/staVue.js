@@ -12,5 +12,8 @@ new Vue({
   methods: {
 
   },
+  updated: function () {
+    $("#myTable").DataTable();
+  }
 
 })

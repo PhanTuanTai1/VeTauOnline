@@ -47,7 +47,8 @@ Train.init({
 class Carriage extends Model { }
 Carriage.init({
     'ID': { type: Sequelize.INTEGER, primaryKey: true },
-    'Name': Sequelize.STRING
+    'Name': Sequelize.STRING,
+    'TrainID': Sequelize.INTEGER
 },
     {
         sequelize,
@@ -208,10 +209,12 @@ Customer.init({
     });
 
 Train.hasMany(Carriage, { foreignKey: "TrainID" });
+Carriage.belongsTo(Train, { foreignKey: "TrainID" });
 Carriage.hasMany(Seat, { foreignKey: "CarriageID" });
 Seat.hasMany(Ticket, { foreignKey: "SeatID" });
 Seat.belongsTo(Carriage, { foreignKey: "CarriageID" });
 Seat.belongsTo(SeatType, { foreignKey: "SeatTypeID" });
+SeatType.hasMany(Seat, { foreignKey: "SeatTypeID" });
 Schedule.belongsTo(Train, { foreignKey: "TrainID" });
 Schedule.hasMany(ScheduleDetail, { foreignKey: "ScheduleID" });
 ScheduleDetail.belongsTo(Station, { foreignKey: "DepartureStationID" });

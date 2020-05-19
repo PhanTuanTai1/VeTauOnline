@@ -144,6 +144,12 @@
                                 <p id="t">Train</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a id="abc" href="./carriage" class="nav-link">
+                                <i class="fa fa-shopping-cart nav-icon"></i>
+                                <p id="t">Carriage</p>
+                            </a>
+                        </li>
                         <li class="nav-item has-treeview">
                             <a class="nav-link">
                                 <i class="nav-icon fa fa-chart-pie"></i>
@@ -159,7 +165,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="./seattype" class="nav-link">
                                         <p>Seat Type</p>
                                     </a>
                                 </li>
@@ -172,14 +178,14 @@
     </div>
 </aside>
 <script>
-    var path = window.location.pathname;
-    $(window).on("load", function () {
-        $('#menuOfSidebar .nav-item .nav-link').each(function () {
-            var navItem = $(this);
-            if (path.includes(navItem.attr("href").substring(2)) === true) {
-                console.log(navItem.html());
-                navItem.addClass("active");
-            }
-        });
-    })
+    // var path = window.location.pathname;
+    // $(window).on("load", function () {
+    //     $('#menuOfSidebar .nav-item .nav-link').each(function () {
+    //         var navItem = $(this);
+    //         if (path.includes(navItem.attr("href").substring(2)) === true) {
+    //             console.log(navItem.html());
+    //             navItem.addClass("active");
+    //         }
+    //     });
+    // })
 </script>
