@@ -197,12 +197,19 @@ app.delete("/admin/carriage", function (req, res) {
 })
 
 //test print
-app.get("/testprint", function (req, res) {
+app.get("/admin/ticket", function (req, res) {
     res.render('ticketadmin');
 })
-app.get("/test", function (req, res) {
+app.get("/printTicket", function (req, res) {
     managerCtrler.printTicketByRepresentativeId(req, res);
 })
+app.get("/getAllRepre", function (req, res) {
+    managerCtrler.getAllRepreBByID(req, res)
+})
+app.put("/admin/ticket", function (req, res) {
+    managerCtrler.editStatusTicket(req, res);
+})
+
 
 app.post("/admin/schedule", function (req, res) {
     managerCtrler.createSchedule(req, res);

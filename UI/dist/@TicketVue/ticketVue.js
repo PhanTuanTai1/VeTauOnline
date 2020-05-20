@@ -4,10 +4,12 @@
 //     `,
 // })
 
+
+
 new Vue({
     el: "#app",
     created: async function () {
-        await axios.get(window.origin + '/test')
+        await axios.get(window.origin + '/printTicket')
             .then(res => {
                 this.Tickets = res.data;
             })
@@ -19,9 +21,75 @@ new Vue({
     data: {
         Tickets: null,
         Staions: null,
+
     },
     methods: {
-        async print() {
+        async SearchForTicket() {
+            let input = await $("#repreID").val();
+            if (input == "") {
+                Swal.fire({
+                    icon: 'error',
+                    text: 'Please input representative ID!'
+                })
+            }
+            else {
+                let repre = await axios.get(window.origin + '/getAllRepre?repreID=' + input);
+                if (repre.data.length == 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        text: 'Invalid representative ID!'
+                    })
+                }
+                else {
+                    let cus = await axios.get(window.origin + '/getAllCus');
+                    let ticketList = [];
+                    cus.data.filter(x => x.RepresentativeID == repre.data[0].ID).forEach(c => {
+                        var tick = this.Tickets.find(t => t.CustomerID == c.ID && t.Status == 1);
+                        if (tick != null) {
+                            ticketList.push(tick);
+                        }
+                    });
+                    if (ticketList.length == 0) {
+                        Swal.fire({
+                            icon: 'error',
+                            text: 'Tickets are not available!'
+                        })
+                    }
+                    else {
+                        Swal.fire({
+                            title: 'Ticket information',
+                            html: `
+                            <div>
+                                <p>Name: <strong>${repre.data[0].Name}</strong></p>
+                                <p>Email: ${repre.data[0].Email}</p>
+                                <p>Passport: ${repre.data[0].Passport}</p>
+                                <p>Phone: ${repre.data[0].Phone}</p>
+                                <p>Ticket amount: ${ticketList.length}</p>
+                                <p>Date booking: ${new Date(repre.data[0].DateBooking).toDateString()}</p>
+                            </div>
+                            `,
+                            icon: 'success',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Print'
+                        }).then((result) => {
+                            if (result.value) {
+                                this.editStatus(ticketList);
+                            }
+                        })
+
+                    }
+                }
+            }
+        },
+        async editStatus(ticketList) {
+            await ticketList.forEach(ticket => {
+                axios.put(window.origin + '/admin/ticket?cusID=' + ticket.CustomerID + '&request=print')
+            });
+            this.printTicket(ticketList);
+        },
+        printTicket(arr) {
             var newWin = window.open("", "");
             newWin.document.write(`<html><head>
             <meta charset="utf-8">
@@ -189,36 +257,36 @@ new Vue({
             </style><body><section class="ticket"> 
             `);
             var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-            newWin.document.write(`${this.Tickets.map(t => {
+            newWin.document.write(`${arr.map(t => {
                 newWin.document.write(`<div class="row">
-                <article class="card fl-left" style="">
-                  <section class="date">
-                    <time datetime="23th feb">
-                      <span>${new Date(t.DepartureDate).getDate()} </span> <span>${months[new Date(t.DepartureDate).getMonth()]}</span>
-                    </time>
-                  </section>
-                  <section class="card-cont">
-                    <p style="font-size:1em;">${t.Customer.Name}</p>
-                    <h3>${this.Staions.find(x => x.ID == t.DepartureStationID).Name} to ${this.Staions.find(x => x.ID == t.ArrivalStationID).Name}</h3 >
-                <div class="even-date">
-                    <i class="fa fa-calendar"></i>
-                    <time>
-                        <span>${new Date(t.DepartureDate).toDateString()}</span>
-                        <span>${new Date(t.DepartureTime).toLocaleTimeString()}</span>
-                    </time>
-                </div>
-                <div class="even-info">
-                    <i class="fa fa-map-marker"></i>
-                    <h3 style="color:red;">${t.TrainName}</h3>
-                    <p>${t.Price}</p>
-                </div>
-                <h1 class="seat" style="color:red;">${t.Seat.SeatNumber}</h1>
-                  </section >
-                </article >
-                    <hr style="width: 100%;border-top: 1px dashed black;">
-                    </hr>
+                    <article class="card fl-left" style="">
+                    <section class="date">
+                        <time datetime="23th feb">
+                        <span>${new Date(t.DepartureDate).getDate()} </span> <span>${months[new Date(t.DepartureDate).getMonth()]}</span>
+                        </time>
+                    </section>
+                    <section class="card-cont">
+                        <p style="font-size:1em;">${t.Customer.Name}</p>
+                        <h3>${this.Staions.find(x => x.ID == t.DepartureStationID).Name} to ${this.Staions.find(x => x.ID == t.ArrivalStationID).Name}</h3 >
+                    <div class="even-date">
+                        <i class="fa fa-calendar"></i>
+                        <time>
+                            <span>${new Date(t.DepartureDate).toDateString()}</span>
+                            <span>${new Date(t.DepartureTime).toLocaleTimeString()}</span>
+                        </time>
+                    </div>
+                    <div class="even-info">
+                        <i class="fa fa-map-marker"></i>
+                        <h3 style="color:red;">${t.TrainName}</h3>
+                        <p>${t.Price}</p>
+                    </div>
+                    <h1 class="seat" style="color:red;">${t.Seat.SeatNumber}</h1>
+                    </section >
+                    </article >
+                        <hr style="width: 100%;border-top: 1px dashed black;">
+                        </hr>
 
-              </div > `)
+                </div > `)
             })}`)
             newWin.document.write(`</section></body></html>`)
             newWin.print();

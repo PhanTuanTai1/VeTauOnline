@@ -110,6 +110,45 @@ module.exports.printTicketByRepresentativeId = (req, res) => {
   })
 }
 
+module.exports.editStatusTicket = (req, res) => {
+  if (req.query.request == "print") {
+    db.Ticket.update({
+      Status: 2
+    }, {
+      where: {
+        CustomerID: req.query.cusID,
+      },
+
+    }).then(data => {
+      res.send(data);
+    })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while creating the customer."
+        });
+      });
+  }
+  else if (req.query.request == "cancel") {
+    db.Ticket.update({
+      Status: 3
+    }, {
+      where: {
+        CustomerID: req.query.cusID,
+      },
+
+    }).then(data => {
+      res.send(data);
+    })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while creating the customer."
+        });
+      });
+  }
+}
+
 //#endregion
 
 //#region Schedule
@@ -258,21 +297,24 @@ module.exports.delCarriage = async function (req, res) {
     }
   });
 }
-module.exports.getAllRepre = function (req, res) {
+module.exports.getAllRepreBByID = function (req, res) {
   db.Representative.findAll({
-    group: ['SeatType.ID', 'SeatType.TypeName', 'SeatType.CostPerKm'],
+    where: {
+      ID: req.query.repreID
+    },
+    group: ['Representative.ID', 'Representative.Name', 'Representative.Phone', 'Representative.Passport', 'Representative.TotalCost', 'Representative.Email', 'Representative.DateBooking'],
     attributes: [
-      'ID', 'TypeName', 'CostPerKm',
+      'ID', 'Name', 'Phone', 'Passport', 'TotalCost', 'Email', 'DateBooking',
       [
-        Sequelize.fn('COUNT', Sequelize.col('Seats.SeatTypeID')), 'Seats'
+        Sequelize.fn('COUNT', Sequelize.col('Customers.RepresentativeID')), 'Customers'
       ]
     ],
     include: [
       {
-        model: db.Seat,
+        model: db.Customer,
         attributes: []
       }
     ],
     raw: true,
-  }).then(seat => res.end(JSON.stringify(seat)))
+  }).then(repre => res.end(JSON.stringify(repre)))
 }

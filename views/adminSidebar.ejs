@@ -111,11 +111,28 @@
         </div>
         <nav id="menuOfSidebar" class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a href="./dashboard" class="nav-link">
                         <i class="fas fa-chart-line"></i>
                         <p>Dashboard</p>
                     </a>
+                </li>
+                <li class="nav-item has-treeview menu-open">
+                    <a class="nav-link">
+                        <i class="fas fa-ticket"></i>
+                        <p>
+                            Ticket
+                            <i class="right fa fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item active">
+                            <a href="./ticket" class="nav-link">
+                                <i class="fa fa-map nav-icon"></i>
+                                <p>Print ticket</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="nav-item has-treeview menu-open">
                     <a class="nav-link">
