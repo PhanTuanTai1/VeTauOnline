@@ -27,7 +27,7 @@ module.exports.Login = async function(req,res){
                 console.log('Login success');
                 console.log("req.session[firebaseUser.email]: " + JSON.stringify(req.session[firebaseUser.email]));
                 console.log("Role: " + Role[data.Role]);
-                res.redirect('/admin');
+                res.redirect('/admin/dashboard');
             }
         });
     })
