@@ -1240,43 +1240,7 @@
       "resolved": "https://registry.npmjs.org/neo-async/-/neo-async-2.6.1.tgz",
       "version": "2.6.1"
     },
-    "nodemon": {
-      "dependencies": {
-        "debug": {
-          "integrity": "sha512-mel+jf7nrtEl5Pn1Qx46zARXKDpBbvzezse7p7LqINmdoIk8PYP5SySaxEmYv6TZ0JyEKA1hsCId6DIhgITtWQ==",
-          "requires": {
-            "ms": "^2.1.1"
-          },
-          "resolved": "https://registry.npmjs.org/debug/-/debug-3.2.6.tgz",
-          "version": "3.2.6"
-        },
-        "ms": {
-          "integrity": "sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==",
-          "resolved": "https://registry.npmjs.org/ms/-/ms-2.1.2.tgz",
-          "version": "2.1.2"
-        },
-        "semver": {
-          "integrity": "sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==",
-          "resolved": "https://registry.npmjs.org/semver/-/semver-5.7.1.tgz",
-          "version": "5.7.1"
-        }
-      },
-      "integrity": "sha512-GWhYPMfde2+M0FsHnggIHXTqPDHXia32HRhh6H0d75Mt9FKUoCBvumNHr7LdrpPBTKxsWmIEOjoN+P4IU6Hcaw==",
-      "requires": {
-        "chokidar": "^3.2.2",
-        "debug": "^3.2.6",
-        "ignore-by-default": "^1.0.1",
-        "minimatch": "^3.0.4",
-        "pstree.remy": "^1.1.7",
-        "semver": "^5.7.1",
-        "supports-color": "^5.5.0",
-        "touch": "^3.1.0",
-        "undefsafe": "^2.0.2",
-        "update-notifier": "^2.5.0"
-      },
-      "resolved": "https://registry.npmjs.org/nodemon/-/nodemon-2.0.2.tgz",
-      "version": "2.0.2"
-    },
+    "nodemon": "^2.0.4",
     "nopt": {
       "integrity": "sha1-bd0hvSoxQXuScn3Vhfim83YI6+4=",
       "requires": {
@@ -1588,6 +1552,7 @@
       "resolved": "https://registry.npmjs.org/schema-utils/-/schema-utils-2.6.4.tgz",
       "version": "2.6.4"
     },
+    "select2": "^4.0.13",
     "semver": {
       "integrity": "sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==",
       "resolved": "https://registry.npmjs.org/semver/-/semver-6.3.0.tgz",

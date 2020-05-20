@@ -2,10 +2,12 @@
 <html lang="en">
 
 <head>
+    <title>Admin | Train</title>
+
     <%- include('adminheader'); -%>
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+<body onload="dataTable();" class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
     <div class="wrapper">
         <!-- Navbar -->
         <div id="sidebar">
@@ -20,18 +22,9 @@
                         <div class="card-header">
                             <button type="button" @click="createTrain" class="btn btn-success"><i
                                     class="fa fa-plus"></i> Create</button>
-                            <div class="card-tools">
-                                <ul class="pagination pagination-sm float-right">
-                                    <li class="page-item"><a class="page-link" href="#">«</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">»</a></li>
-                                </ul>
-                            </div>
                         </div>
-                        <table id="myTable" v-if="Trains" class="display">
-                            <thead>
+                        <table id="myTable" v-if="Trains" class="table">
+                            <thead class="font-weight-bold table-info">
                                 <tr>
                                     <th>#</th>
                                     <th>Name</th>
@@ -69,11 +62,11 @@
             <%- include('adminFooter'); -%>
         </footer>
     </div>
-    <script type="text/javascript" charset="utf8"
-        src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+    <!-- <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script> -->
+
     <!-- ./wrapper -->
     <!-- AdminLTE App -->
-    <script src="../dist/js/adminlte.js"></script>
 
     <!-- PAGE SCRIPTS -->
     <script src="../dist/js/pages/dashboard2.js"></script>
@@ -85,7 +78,7 @@
     <script src="../dist/sweetalert2.all.min.js"></script>
     <script src="../dist/uuid.js"></script>
     <script>
-        
+
     </script>
 
 
