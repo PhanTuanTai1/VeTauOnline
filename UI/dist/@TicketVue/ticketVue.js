@@ -72,10 +72,29 @@ new Vue({
                             showCancelButton: true,
                             confirmButtonColor: '#3085d6',
                             cancelButtonColor: '#d33',
-                            confirmButtonText: 'Print'
+                            confirmButtonText: 'Print',
+                            cancelButtonText: 'Cancel ticket!'
+
                         }).then((result) => {
                             if (result.value) {
-                                this.editStatus(ticketList);
+                                this.editStatus(ticketList, "print");
+                            }
+                            else {
+                                Swal.fire({
+                                    title: 'Cancel confirmation!',
+                                    text: 'Are you sure?',
+                                    icon: 'question',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Confirm',
+                                    cancelButtonText: 'Cancel'
+                                }).then((confirm) => {
+                                    if (confirm.value) {
+                                        this.editStatus(ticketList, "cancel");
+                                        Swal.fire('Cancel succesfull!')
+                                    }
+                                })
                             }
                         })
 
@@ -83,11 +102,13 @@ new Vue({
                 }
             }
         },
-        async editStatus(ticketList) {
+        async editStatus(ticketList, request) {
+
             await ticketList.forEach(ticket => {
-                axios.put(window.origin + '/admin/ticket?cusID=' + ticket.CustomerID + '&request=print')
+                axios.put(window.origin + '/admin/ticket?cusID=' + ticket.CustomerID + '&request=' + request)
             });
-            this.printTicket(ticketList);
+            if (request == "print")
+                this.printTicket(ticketList);
         },
         printTicket(arr) {
             var newWin = window.open("", "");
