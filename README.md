@@ -6,3 +6,4 @@
 - Ghế Nằm Khoang 6 42 ghế
 - dtthuha79@gmail.com
 - Link google doc: https://docs.google.com/document/d/1qUMNcZl9H5yn4pF-s1CfiojHJQeI9_jUSZ1LR-eM2NY/edit
+- Tài khoản admin google firebase: admin@gmail.com;admin1234
