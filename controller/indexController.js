@@ -156,7 +156,7 @@ function getScheduleMatch(Date, DepartureID, ListSchedule){
     var ListFilter = [];
     return new Promise(resolve => {
         ListSchedule.forEach(async (schedule, index, array ) => {
-            var TimeScheduleDetails = parseInt(schedule.ScheduleDetails[0].Time * 60 + (array.length * 15));
+            var TimeScheduleDetails = parseInt(schedule.ScheduleDetails[0].Time * 60);
             var TimeDepartInt = parseInt(moment(schedule.TimeDeparture).format('hh'));
             var MinutesDepartInt = parseInt(moment(schedule.TimeDeparture).format('mm'));
             var DateDepart = moment(schedule.DateDeparture).add(TimeDepartInt, 'hour').add(MinutesDepartInt + TimeScheduleDetails, 'minutes').format('DD-MM-YYYY');
@@ -164,17 +164,48 @@ function getScheduleMatch(Date, DepartureID, ListSchedule){
             console.log("Expected:" +  moment(Date).subtract(7, 'hour').format('DD-MM-YYYY'));
             console.log("Actual:" +  DateDepart);
             if(DateDepartFormat === DateDepart) 
-            {
+            {           
                 ListFilter.push(schedule)
+                // await checkIsSameDepartureStationIDFirst(DepartureID, schedule.ID).then(data => {
+                //     if(data) {
+                        
+                //     }
+                //     else {
+                //         schedule.DifDepartureID
+                //         console.log("schedule: " + JSON.stringify(schedule));
+                //         ListFilter.push(schedule)
+                //     }
+                // })         
             }       
             else {
                 await checkIsDepartureStationFirst(DepartureID, schedule).then(data => {
                     if(data){
-                        ListFilter.push(schedule)
+                        schedule.First = true;
+                        console.log("First: " + JSON.stringify(schedule));
+                        ListFilter.push(schedule);
                     }  
                 });                          
             }
             if(index + 1 === array.length) resolve(ListFilter);
+        })
+    });
+}
+
+function checkIsSameDepartureStationIDFirst(DepartureID, ScheduleID){
+    return new Promise(resolve => {
+        db.Schedule.findOne({
+            attributes: ['ID'],
+            where:{
+                ID: ScheduleID
+            },
+            include:{
+                model: db.ScheduleDetail,
+                attributes: ['ID','DepartureStationID']
+            }
+        }).then(data => {
+            console.log(JSON.stringify(data));
+            if(data.ScheduleDetails[0].DepartureStationID == DepartureID) resolve(true);
+            else resolve(false);
         })
     });
 }
@@ -220,70 +251,81 @@ module.exports.scheduleDetail = function(req,res) {
         var DepartureStation = await getStationByID(result[0].ScheduleDetails[0].DepartureStationID);
         var ArrivalStation = await getStationByID(result[0].ScheduleDetails[0].ArrivalStationID);
         var Train = await getTrainByID(result[0].TrainID);
-        var dic = await getAllSeatType();
-        var getListSeatSold = await getListSeatSoldDetail(result[0])
-        var data = JSON.parse(req.query.Query);
-
-        if(typeof(req.query.ONE_WAY) != "undefined"){
-            res.render('scheduleDetail', 
-            {result: result, 
-            departureStation: DepartureStation, 
-            arrivalStation: ArrivalStation, 
-            train: Train, 
-            moment: moment, 
-            duration: Duration,
-            dic: dic, 
-            ONE_WAY: req.query.ONE_WAY, 
-            PASSENGERS: req.query.PASSENGERS, 
-            DEPART: data.DEPART,
-            FROM: data.FROM,
-            TO: data.TO,
-            SCHEDULEID: req.query.SCHEDULEID,
-            TrainID:  req.query.TRAINID,
-            SCHEDULEDETAILID: result[0].ScheduleDetails[0].ID,
-            query: req.query.Query});
-        }
-        else if(typeof(req.query.ROUND_TRIP) != "undefined" && req.query.STEP == 2){
-            res.render('scheduleDetail', 
-            {result: result, 
-            departureStation: DepartureStation, 
-            arrivalStation: ArrivalStation, 
-            train: Train, 
-            moment: moment, 
-            dic: dic, 
-            ROUND_TRIP: req.query.ROUND_TRIP, 
-            PASSENGERS: req.query.PASSENGERS, 
-            DEPART: data.DEPART,
-            RETURN: data.RETURN,
-            FROM: data.FROM,
-            TO: data.TO,
-            SCHEDULEID: req.query.SCHEDULEID,
-            TrainID:  req.query.TRAINID,
-            SCHEDULEDETAILID: result[0].ScheduleDetails[0].ID,
-            STEP:2,
-            query: req.query.Query});
-        }
-        else {
-            res.render('scheduleDetail', 
-            {result: result, 
-            departureStation: DepartureStation, 
-            arrivalStation: ArrivalStation, 
-            train: Train, 
-            moment: moment, 
-            dic: dic, 
-            ROUND_TRIP: req.query.ROUND_TRIP, 
-            PASSENGERS: req.query.PASSENGERS, 
-            DEPART: data.DEPART,
-            RETURN: data.RETURN,
-            FROM: data.FROM,
-            TO: data.TO,
-            SCHEDULEID: req.query.SCHEDULEID,
-            TrainID:  req.query.TRAINID,
-            SCHEDULEDETAILID: result[0].ScheduleDetails[0].ID,
-            STEP:req.query.STEP,
-            DepartureQuery: data,
-            query: req.query.Query});
-        }
+        var data2 = await getAllSeatType(Train);
+        console.log("Schedule: " + JSON.stringify(result));
+        await getListSeatSoldDetail(result[0], false).then(data3 => {
+            console.log("Empty: " + data3.isEmpty())
+            var data = JSON.parse(req.query.Query);
+            console.log("Result: " + JSON.stringify(result));
+            console.log("Empty dic: " + data2.isEmpty())
+            console.log("RENDER");
+            if(typeof(req.query.ONE_WAY) != "undefined"){
+                res.render('scheduleDetail', 
+                {result: result, 
+                departureStation: DepartureStation, 
+                arrivalStation: ArrivalStation, 
+                train: Train, 
+                moment: moment, 
+                duration: Duration,
+                dic: data2, 
+                ONE_WAY: req.query.ONE_WAY, 
+                PASSENGERS: req.query.PASSENGERS, 
+                DEPART: data.DEPART,
+                FROM: data.FROM,
+                TO: data.TO,
+                SCHEDULEID: req.query.SCHEDULEID,
+                TrainID:  req.query.TRAINID,
+                SCHEDULEDETAILID: result[0].ScheduleDetails[0].ID,
+                query: req.query.Query,
+                ListSeatSold: data3});
+            }
+            else if(typeof(req.query.ROUND_TRIP) != "undefined" && req.query.STEP == 2){
+                res.render('scheduleDetail', 
+                {result: result, 
+                departureStation: DepartureStation, 
+                arrivalStation: ArrivalStation, 
+                train: Train, 
+                moment: moment,       
+                duration: Duration,
+                dic: data2, 
+                ROUND_TRIP: req.query.ROUND_TRIP, 
+                PASSENGERS: req.query.PASSENGERS, 
+                DEPART: data.DEPART,
+                RETURN: data.RETURN,
+                FROM: data.FROM,
+                TO: data.TO,
+                SCHEDULEID: req.query.SCHEDULEID,
+                TrainID:  req.query.TRAINID,
+                SCHEDULEDETAILID: result[0].ScheduleDetails[0].ID,
+                STEP:2,
+                query: req.query.Query,
+                ListSeatSold: data3});
+            }
+            else {
+                res.render('scheduleDetail', 
+                {result: result, 
+                departureStation: DepartureStation, 
+                arrivalStation: ArrivalStation, 
+                train: Train, 
+                moment: moment, 
+                duration: Duration,
+                dic: data2, 
+                ROUND_TRIP: req.query.ROUND_TRIP, 
+                PASSENGERS: req.query.PASSENGERS, 
+                DEPART: data.DEPART,
+                RETURN: data.RETURN,
+                FROM: data.FROM,
+                TO: data.TO,
+                SCHEDULEID: req.query.SCHEDULEID,
+                TrainID:  req.query.TRAINID,
+                SCHEDULEDETAILID: result[0].ScheduleDetails[0].ID,
+                STEP:req.query.STEP,
+                DepartureQuery: data,
+                query: req.query.Query,
+                ListSeatSold: data3 });
+            }     
+            })
+        
     })
 }
 
@@ -387,19 +429,31 @@ module.exports.getAllCarriage = function(req,res) {
 module.exports.getAllTypeObject = function(req,res){
     db.TypeObject.findAll({
         attributes: ['ID','TypeObjectName']
-    }).then(data =>{
+    }).then(data => {
         res.end(JSON.stringify(data));
     })
 }
 
-module.exports.getListSeatSold = function(req,res){ 
-    db.Ticket.findAll({
-        attributes: ['SeatID'],
-        where: {
-            DepartureDate : JSON.parse(req.query.dateDepart)
+module.exports.getListSeatSold = async  function(req,res){ 
+    console.log("Schedule: " + req.query.Schedule)
+    await getListSeatSoldDetail(JSON.parse(req.query.Schedule),true).then(data => {
+        ListSeatSold = [];
+        if(data.length == 0) {
+            console.log("data.length = 0");
+            res.end(JSON.stringify(ListSeatSold));
         }
-    }).then(data => {
-        res.end(JSON.stringify(data));
+        data.forEach((ListSeat, index, array) => {
+            ListSeat.forEach(ticket => {
+                ListSeatSold.push({
+                    "SeatID" : ticket.SeatID
+                })
+            })
+
+            if(index + 1 === array.length) {
+                console.log("array.length: " + array.length)
+                res.end(JSON.stringify(ListSeatSold));
+            }
+        })
     })
 }
 
@@ -589,6 +643,7 @@ function InsertPassenger(ListPassenger) {
         })
     });
 }
+
 function InsertTicket(ListTicket) {
     return new Promise(resolve => {
         ListTicket.forEach(ticket => {
@@ -602,6 +657,7 @@ function InsertTicket(ListTicket) {
         })
     });
 }
+
 function CreateListPassengerModel(ListPassenger, RepresentativeID){
     var ListPassengerModel = [];
     return new Promise(resolve => {
@@ -647,7 +703,7 @@ function CreateTicket(ListPassengerModel, TicketInfo, ListSeat){
     })
 }
 
-function getListSeatSoldDetail(Schedule){
+function getListSeatSoldDetail(Schedule, isBreak){
     return new Promise(resolve => {
         db.Schedule.findOne({
             attributes: ['ID', 'DateDeparture','TrainID'],
@@ -658,41 +714,111 @@ function getListSeatSoldDetail(Schedule){
                 model: db.ScheduleDetail,
                 attributes: ['ID','DepartureStationID','ArrivalStationID'],
                 where: {
-                    Time:{
-                        [Op.gt]: Schedule.ScheduleDetails[0].Time
-                    }
+                    [Op.or]: [{Time:{[Op.gte]: Schedule.ScheduleDetails[0].Time}},{DepartureStationID: Schedule.ScheduleDetails[0].DepartureStationID}]
                 }
             }
         }).then(async data => {
+            console.log("getListSeatSoldDetail: " + JSON.stringify(data));
+            data.ScheduleDetails.forEach((detail,index,array) => {
+                if(detail.DepartureStationID >= Schedule.ScheduleDetails[0].ArrivalStationID){
+                    array.splice(index,1)
+                }
+            })
+            console.log("getListSeatSoldDetail After: " + JSON.stringify(data));
             var ListTicket = await getListTicketSold(data);
-            console.log(JSON.stringify(ListTicket));
-            resolve(ListTicket);
+            if(isBreak) {
+                var dataFilter = ListTicket.filter(data => {
+                    return data.length > 1;
+                })
+                resolve(dataFilter);
+                return;
+            }
+            else {
+                var dataFilter = ListTicket.filter(data => {
+                    return data.length > 1;
+                })
+                var dic = await convertToDictionary(dataFilter);
+                console.log("Empty Function: " + dic.isEmpty());
+                resolve(dic);
+            }
         })
     })
 }
 
 function getListTicketSold(Schedule){
     var ListTicketFilter = [];
-    return new Promise(resolve => {
-        getTrainByID(Schedule.TrainID).then(data => {
-            console.log(JSON.stringify(data));
-            Schedule.ScheduleDetails.forEach((detail, index, array) => {
-                db.Ticket.findAll({
+    return new Promise(async resolve => {
+       await getTrainByID(Schedule.TrainID).then(data => {
+            console.log("getTrainByID: " + JSON.stringify(data));
+            if(Schedule.ScheduleDetails.length === 0) resolve(ListTicketFilter);
+            Schedule.ScheduleDetails.forEach(async (detail, index, array) => {
+                await db.Ticket.findAll({
                     attributes: ['ID','SeatID'],
                     where: {
-                        DepartureDate: Schedule.DateDeparture,
                         DepartureStationID: detail.DepartureStationID,
                         ArrivalStationID: detail.ArrivalStationID,
-                        TrainName: data[0].Name
+                        TrainName: data.Name
                     }
                 }).then(result => {
+                    
+                    console.log("DepartureStationID " + index + ": " + detail.DepartureStationID);
+                    console.log("ArrivalStationID " + index + ": " + detail.ArrivalStationID);
                     ListTicketFilter.push(result);
 
                     if(index + 1 === array.length) {
-                        resolve(ListTicketFilter);
+                        console.log("Array.length 2: " + array.length);
+                        if(ListTicketFilter.length == array.length)
+                        {
+                            console.log("ListTicketFilter.length == array.length");
+                            resolve(ListTicketFilter);
+                        }
+                        else {
+                            console.log("Call getListTicketSold function again");                       
+                            resolve(getListTicketSold(Schedule));
+                        }                       
                     }
-                })
+                })             
             })
+        })
+    })
+}
+
+function convertToDictionary(ListSeatSold){
+    console.log("Length ListSeatSold: " + ListSeatSold.length);
+    var dic = new bucketjs.Dictionary();
+    console.log("ListSeatSold: " + JSON.stringify(ListSeatSold));
+    return new Promise(resolve => {
+        if(ListSeatSold.length == 0){
+            resolve(dic);
+        }
+        
+        ListSeatSold.forEach((ticket,index,array) => {
+            ticket.forEach(ticket => {
+                db.Seat.findOne({
+                    attributes: ['ID'],
+                    where: {
+                        ID: ticket.SeatID
+                    },
+                    include:{
+                        model: db.SeatType,
+                        attributes: ['ID','TypeName']
+                    }
+                }).then(data => {
+                    console.log("Data Search: " + JSON.stringify(data));
+                    if(typeof(dic.get(data.SeatType.ID)) == "undefined") {
+                        dic.set(data.SeatType.ID, {SeatSold: 1});
+                        console.log("Dictionary : " + dic.get(data.SeatType.ID).SeatSold)
+                    }
+                    else {
+                        dic.get(data.SeatType.ID).SeatSold += 1;
+                        
+                    } 
+                    if(index + 1 === array.length) {
+                        resolve(dic);
+                    }                                  
+                })
+            }) 
+                    
         })
     })
 }
@@ -736,6 +862,7 @@ function getAllSeat(){
         })
     })
 }
+
 function getListCarriageAndSeat(trainID){
     return new Promise(resolve => {
         db.Train.findAll({
@@ -790,10 +917,14 @@ function getStationByID(StationID){
 
 function getTrainByID(TrainID){
     return new Promise(resolve => {
-        db.Train.findAll({
+        db.Train.findOne({
             attributes:["ID","Name"],
             where: {
                 ID : TrainID
+            },
+            include:{
+                model: db.Carriage,
+                attributes: ['ID']
             }
         }).then(Train =>{
             resolve(Train);
@@ -801,21 +932,52 @@ function getTrainByID(TrainID){
     })  
 }
 
-function getAllSeatType(){
-    return new Promise(resolve => {
-        db.SeatType.findAll({
-            attributes: ['ID','TypeName'],
-        }).then(seatType => {
-            var dic = new bucketjs.Dictionary();
-            seatType.forEach((seat, index, array) =>{
-                dic.set(seat.ID, seat.TypeName);
-    
-                if(index + 1 == array.length) {
+function getAllSeatType(Train){
+    var dic = new bucketjs.Dictionary();
+    var pre;
+    return new Promise(resolve => {    
+       Train.Carriages.forEach((carriage,index,array) => {
+            db.Carriage.findOne({
+                attributes: ['ID'],
+                where : {
+                    ID: carriage.ID
+                },
+                include: {
+                    model: db.Seat,
+                    attributes: ['ID'],
+                    include: {
+                        model: db.SeatType,
+                        attributes: ['ID','TypeName']
+                    }
+                }
+            }).then(data => {
+                console.log("Data Get All Seat Type: " + JSON.stringify(data));
+                if(typeof(dic.get(data.Seats[0].SeatType.ID)) != "undefined"){
+                    dic.get(data.Seats[0].SeatType.ID).TotalSeat += data.Seats.length;
+                }
+                else {
+                    dic.set(data.Seats[0].SeatType.ID, {SeatTypeName: data.Seats[0].SeatType.TypeName, TotalSeat: data.Seats.length});     
+                    console.log("GET: " + dic.get(data.Seats[0].SeatType.ID).SeatTypeName); 
+                }   
+                
+                if(index + 1 === array.length) {
                     resolve(dic);
                 }
-            })
-        })
+
+            })      
     })
+        // db.SeatType.findAll({
+        //     attributes: ['ID','TypeName'],
+        // }).then(seatType => {          
+        //     seatType.forEach((seat, index, array) =>{
+        //         dic.set(seat.ID, seat.TypeName);
+        //         if(index + 1 == array.length) {
+        //             resolve(dic);
+        //         }
+        //     })
+        // })
+    })
+    
 }
 
 function convertTypeObjectToDictionary(object){

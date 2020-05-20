@@ -1,4 +1,5 @@
 var firebase = require('firebase');
+
 var firebaseConfig = {
     apiKey: "AIzaSyAji9PEi6sRHVql6v-SkDDMtx-QJ3_U_6k",
     authDomain: "myauthen-c3e5a.firebaseapp.com",
@@ -8,27 +9,47 @@ var firebaseConfig = {
     messagingSenderId: "94604538850",
     appId: "1:94604538850:web:c14218cff021f81b30bfbb"
 };
+
+var Role = {1 : "Staff", 2 : "Management_Staff", 3: "Admin"}
+
 firebase.initializeApp(firebaseConfig);
 
 module.exports.Login = async function(req,res){
     var auth = firebase.auth();   
-    auth.signInWithEmailAndPassword(req.query.email,req.query.password)
+    auth.signInWithEmailAndPassword(req.body.email,req.body.pass)
     .then(() => {
-        auth.onAuthStateChanged(firebaseUser => {
+        auth.onAuthStateChanged(async firebaseUser => {
             if(firebaseUser){
-                console.log('Login success')
-                res.redirect('/');
+                var data = await GetDataFromCloudDB(firebaseUser.email);
+                console.log("Current User: " + firebaseUser);
+                req.session[firebaseUser.email] = data;
+                var data = req.session[firebaseUser.email]
+                console.log('Login success');
+                console.log("req.session[firebaseUser.email]: " + JSON.stringify(req.session[firebaseUser.email]));
+                console.log("Role: " + Role[data.Role]);
+                res.redirect('/admin');
             }
         });
     })
     .catch(error => {
-        console.log('Login fail')
-        res.render('login');
+        console.log(JSON.stringify(error));
+        res.render('login' , {error: JSON.stringify(error)});
     })
-    // res.render('login', {data : auth.onAuthStateChanged()});
 }
 
-module.exports.CheckLogin = function(req,res){
-    var currentUser = firebase.auth().currentUser;   
-    if(currentUser == null) res.render('login')
+module.exports.CheckLogin = function(){
+    return new Promise(resolve => {
+        var currentUser = firebase.auth().currentUser;   
+        if(currentUser == null) resolve(false);
+        else resolve(true);
+    })
+}
+
+function GetDataFromCloudDB(Account){
+    return new Promise(resolve => {
+        var database = firebase.firestore();
+        database.collection('Employee').doc(Account).get().then(data => {
+            resolve(data.data());
+        })
+    })
 }
