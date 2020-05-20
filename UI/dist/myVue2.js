@@ -102,7 +102,6 @@ new Vue({
                         + "&Query=" + JSON.stringify(this.query);     
             }
             else if(typeof(this.query.ROUND_TRIP) != "undefined"){
-                alert(this.step);
                 url = "/scheduleDetail?TRAINID=" 
                         + train[0].TrainID + "&SCHEDULEID=" + train[0].ID + "&DepartID=" 
                         + train[0].ScheduleDetails[0].DepartureStationID

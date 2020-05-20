@@ -94,14 +94,19 @@ app.post("/createInfomation", function (req, res) {
     controller.createSession(req, res);
 })
 
-app.get('/CheckLogin', function (req, res) {
-    loginController.CheckLogin(req, res);
+// app.get('/CheckLogin' , function(req,res){
+//     loginController.CheckLogin(req,res);
+// })
+app.get('/login', function(req,res){
+    res.render("login");
 })
-app.get('/login', function (req, res) {
-    loginController.Login(req, res);
+
+app.post('/verifyLogin', function(req,res){
+    loginController.Login(req,res);
 })
-app.get('/payment', function (req, res) {
-    controller.payment(req, res);
+
+app.get('/payment', function(req,res){
+    controller.payment(req,res);
 })
 
 app.get('/manageBooking', function (req, res) {

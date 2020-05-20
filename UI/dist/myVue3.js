@@ -53,16 +53,17 @@ var vm = new Vue({
            this.typeObject = res.data;
        })
        
-       await axios.get('/getListSeatSold?dateDepart=' + JSON.stringify(this.result.DateDeparture)).then(res => {          
+       if(typeof(this.result2) != "undefined" && this.result2 != null) {
+            await axios.get('/getListSeatSold?Schedule=' + JSON.stringify(this.result2)).then(res => {          
+                    this.seatSold2 = res.data;
+            })
+        }
+
+       await axios.get('/getListSeatSold?Schedule=' + JSON.stringify(this.result)).then(res => {          
            this.seatSold = res.data;
        })
-    
-       if(typeof(this.result2) != "undefined" && this.result2 != null) {
-            await axios.get('/getListSeatSold?dateDepart=' + JSON.stringify(this.result2.DateDeparture)).then(res => {          
-                this.seatSold2 = res.data;
-            })
-       }
 
+        
        await this.setCarriageDisplay();
        if(typeof(this.result2)  != "undefined" && this.result2 != null) await this.setCarriageDisplay2();
 
