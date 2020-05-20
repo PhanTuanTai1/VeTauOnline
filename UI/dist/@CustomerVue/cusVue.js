@@ -11,6 +11,9 @@ new Vue({
   data: {
     Customers: null,
   },
+  updated: function () {
+    $("#myTable").DataTable();
+  },
   methods: {
     //Test toast
     show() {
@@ -34,13 +37,13 @@ new Vue({
       const { value: cus } = await Swal.fire({
         title: 'Multiple inputs',
         html:
-          '<label for="fname">ID:</label><br>'+
-          '<input type="text" id="ID""><br>'+
-          '<label for="fname">Name:</label><br>'+
-          '<input type="text" id="Name""><br>'+
-          '<label for="lname">Passport:</label><br>'+
-          '<input type="text" id="Passport"><br><br>'+
-          '<label for="lname">Repre:</label><br>'+
+          '<label for="fname">ID:</label><br>' +
+          '<input type="text" id="ID""><br>' +
+          '<label for="fname">Name:</label><br>' +
+          '<input type="text" id="Name""><br>' +
+          '<label for="lname">Passport:</label><br>' +
+          '<input type="text" id="Passport"><br><br>' +
+          '<label for="lname">Repre:</label><br>' +
           '<input type="text" id="Repre" value="1"><br><br>',
         focusConfirm: false,
         preConfirm: () => {
@@ -54,7 +57,7 @@ new Vue({
       })
 
       if (cus) {
-        axios.post('http://localhost:3000/admin/customer?ID=' + cus[0]+'&Name='+cus[1]+'&Passport='+cus[2]+'&RepresentativeID='+cus[3]);
+        axios.post('http://localhost:3000/admin/customer?ID=' + cus[0] + '&Name=' + cus[1] + '&Passport=' + cus[2] + '&RepresentativeID=' + cus[3]);
         swal.fire(
           'Created!',
           'New customer arrived.',

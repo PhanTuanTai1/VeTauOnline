@@ -103,9 +103,50 @@ module.exports.createTrain = (req, res) => {
 
 //#region Ticket
 module.exports.printTicketByRepresentativeId = (req, res) => {
-  db.Ticket.findAll().then(ticket => {
+  db.Ticket.findAll({
+    include: { all: true }
+  }).then(ticket => {
     res.end(JSON.stringify(ticket))
   })
+}
+
+module.exports.editStatusTicket = (req, res) => {
+  if (req.query.request == "print") {
+    db.Ticket.update({
+      Status: 2
+    }, {
+      where: {
+        CustomerID: req.query.cusID,
+      },
+
+    }).then(data => {
+      res.send(data);
+    })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while creating the customer."
+        });
+      });
+  }
+  else if (req.query.request == "cancel") {
+    db.Ticket.update({
+      Status: 3
+    }, {
+      where: {
+        CustomerID: req.query.cusID,
+      },
+
+    }).then(data => {
+      res.send(data);
+    })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while creating the customer."
+        });
+      });
+  }
 }
 
 //#endregion
@@ -190,11 +231,29 @@ async function delSeat(seatID) {
   })
 }
 //#endregion
-module.exports.getAllSeatType = function (req, res) {
-  db.SeatType.findAll().then(seatType => res.end(JSON.stringify(seatType)))
+module.exports.getAllTypeOfSeat = async function (req, res) {
+  const d = await db.SeatType.findAll({
+    group: ['SeatType.ID', 'SeatType.TypeName', 'SeatType.CostPerKm'],
+    attributes: [
+      'ID', 'TypeName', 'CostPerKm',
+      [
+        Sequelize.fn('COUNT', Sequelize.col('Seats.SeatTypeID')), 'Seats'
+      ]
+    ],
+    include: [
+      {
+        model: db.Seat,
+        attributes: []
+      }
+    ],
+    raw: true,
+  }).then(seatType => res.end(JSON.stringify(seatType)));
 }
+
 module.exports.getAllCarriage = function (req, res) {
-  db.Carriage.findAll().then(carriage => res.end(JSON.stringify(carriage)))
+  db.Carriage.findAll({
+    include: db.Train,
+  }).then(carriage => res.end(JSON.stringify(carriage)))
 }
 module.exports.createCarriage = async function (req, res) {
   const carr = await {
@@ -238,6 +297,24 @@ module.exports.delCarriage = async function (req, res) {
     }
   });
 }
-// module.exports.getAllSeat = function (req,res){
-//   db.Seat.findAll().then(seat=>res.end(JSON.stringify(seat)))
-// }
+module.exports.getAllRepreBByID = function (req, res) {
+  db.Representative.findAll({
+    where: {
+      ID: req.query.repreID
+    },
+    group: ['Representative.ID', 'Representative.Name', 'Representative.Phone', 'Representative.Passport', 'Representative.TotalCost', 'Representative.Email', 'Representative.DateBooking'],
+    attributes: [
+      'ID', 'Name', 'Phone', 'Passport', 'TotalCost', 'Email', 'DateBooking',
+      [
+        Sequelize.fn('COUNT', Sequelize.col('Customers.RepresentativeID')), 'Customers'
+      ]
+    ],
+    include: [
+      {
+        model: db.Customer,
+        attributes: []
+      }
+    ],
+    raw: true,
+  }).then(repre => res.end(JSON.stringify(repre)))
+}

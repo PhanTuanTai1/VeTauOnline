@@ -155,5 +155,8 @@ new Vue({
     listTrain() {
       return this.Trains;
     }
+  },
+  updated: function () {
+    $("#myTable").DataTable();
   }
 })
