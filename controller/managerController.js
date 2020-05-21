@@ -302,7 +302,7 @@ module.exports.getAllRepreBByID = function (req, res) {
     where: {
       ID: req.query.repreID
     },
-    group: ['Representative.ID', 'Representative.Name', 'Representative.Phone', 'Representative.Passport', 'Representative.TotalCost', 'Representative.Email', 'Representative.DateBooking'],
+    group: ['Customers.Name', 'Representative.ID', 'Representative.Name', 'Representative.Phone', 'Representative.Passport', 'Representative.TotalCost', 'Representative.Email', 'Representative.DateBooking'],
     attributes: [
       'ID', 'Name', 'Phone', 'Passport', 'TotalCost', 'Email', 'DateBooking',
       [
@@ -312,7 +312,7 @@ module.exports.getAllRepreBByID = function (req, res) {
     include: [
       {
         model: db.Customer,
-        attributes: []
+        attributes: ['Name']
       }
     ],
     raw: true,

@@ -59,13 +59,46 @@ new Vue({
                         Swal.fire({
                             title: 'Ticket information',
                             html: `
+                            <style>
+                                #ticktab{
+                                    padding:100px !important;
+                                }
+                            </style>
                             <div>
                                 <p>Name: <strong>${repre.data[0].Name}</strong></p>
                                 <p>Email: ${repre.data[0].Email}</p>
                                 <p>Passport: ${repre.data[0].Passport}</p>
                                 <p>Phone: ${repre.data[0].Phone}</p>
-                                <p>Ticket amount: ${ticketList.length}</p>
-                                <p>Date booking: ${new Date(repre.data[0].DateBooking).toDateString()}</p>
+                                <table id="ticktab" border="1" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Customer</th>
+                                            <th>Seat</th>
+                                            <th>Price</th>
+                                            <th>Date</th>
+                                            <th>Time</th>
+                                            <th>Train</th>
+                                            <th>From</th>
+                                            <th>To</th>
+                                            <th>...</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${ticketList.map(e => `<tr>
+                                                <td>${e.ID}</td>
+                                                <td>${e.Customer.Name}</td>
+                                                <td>${e.Seat.SeatNumber}</td>
+                                                <td>${e.Price}</td>
+                                                <td>${new Date(e.DepartureDate).toLocaleDateString("vi-VN")}</td>
+                                                <td>${new Date(e.DepartureTime).toLocaleTimeString()}</td>
+                                                <td>${e.TrainName}</td>
+                                                <td>${this.Staions.find(x => x.ID == e.DepartureStationID).Name}</td>
+                                                <td>${this.Staions.find(x => x.ID == e.ArrivalStationID).Name}</td>
+                                                <td><button class="cancelTick" value="${e.CustomerID}" class="btn btn-success" >Cancel</button></td>
+                                                </tr>` )}
+                                    </tbody>
+                                </table>
                             </div>
                             `,
                             icon: 'success',
@@ -73,7 +106,12 @@ new Vue({
                             confirmButtonColor: '#3085d6',
                             cancelButtonColor: '#d33',
                             confirmButtonText: 'Print',
-                            cancelButtonText: 'Cancel ticket!'
+                            cancelButtonText: 'Cancel ticket!',
+                            customClass: 'swal-ticket',
+
+                            // onOpen: function test() {
+                            //     $("#ticktab").DataTable();
+                            // }
 
                         }).then((result) => {
                             if (result.value) {
@@ -101,6 +139,12 @@ new Vue({
                     }
                 }
             }
+        },
+        test() {
+            alert('ok')
+        },
+        async editStatusOne(ticket, request) {
+
         },
         async editStatus(ticketList, request) {
 
@@ -319,5 +363,13 @@ new Vue({
     },
     updated: function () {
         $("#myTable").DataTable();
+
+    },
+    mounted: function () {
+        $(document).on("click", ".cancelTick", function () {
+            // axios.put(window.origin + '/admin/ticket?cusID=' + this.value + '&request=cancel');
+            // this.prop('disabled', true);
+            $(this).attr("disabled", true);
+        });
     }
 })
