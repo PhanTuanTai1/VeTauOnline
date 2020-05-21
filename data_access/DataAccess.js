@@ -139,7 +139,7 @@ Ticket.init({
     'DepartureDate': Sequelize.DATE,
     'DepartureTime': Sequelize.TIME,
     'TrainName': Sequelize.STRING,
-    'Status': Sequelize.BOOLEAN
+    'Status': Sequelize.INTEGER
 },
     {
         sequelize,
@@ -230,6 +230,7 @@ Ticket.belongsTo(Seat, { foreignKey: "SeatID" });
 ScheduleDetail.hasMany(TableCost, { foreignKey: "ScheduleID" })
 Ticket.belongsTo(Station, { foreignKey: 'DepartureStationID' })
 Ticket.belongsTo(Station, { foreignKey: 'ArrivalStationID' })
+Customer.hasOne(Ticket);
 
 module.exports.Train = Train;
 module.exports.Carriage = Carriage;

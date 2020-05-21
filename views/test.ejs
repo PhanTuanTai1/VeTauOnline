@@ -5,13 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script>
+        var socket = io('http://localhost:3000');
+        socket.on('response', (data)=> {
+            
+        })
 
+        function changeStatus(data) {
+            // socket.emit('changeStatus', data);
+        }
+    </script>
 </head>
 
 <body>
     <div id="app">
         <div>
-            <button @click="print">ok</button>
+            <button onclick="changeStatus('yellow')">ok</button>
         </div>
     </div>
     <script src="https://unpkg.com/vue-html-to-paper/build/vue-html-to-paper.js"></script>

@@ -1,5 +1,16 @@
+var socket = io('http://localhost:3000');
+socket.on('response', (data)=> {
+    document.getElementById(data.id).setAttribute('class', data.class);        
+})
+
+function changeStatus(data) {
+    socket.emit('changeStatus', data);
+}        
+
+
 function select(element, number){
     vm.selectSeat(element, number);
+    
 }
 function change(element, number){
     // diagram_cell train-block selectable selected
@@ -227,15 +238,17 @@ var vm = new Vue({
         selectSeat: function(element, number){
             if(this.seatTypeDisplay[0].ID == 1 || this.seatTypeDisplay[0].ID == 6) {
                 if($(element).attr('class') == 'train_bed_cell bed can_block hard_bed_left sold_out') return;
-
+                
                 if($(element).attr('class').search("available") != -1)
                 {
                     if(number == 1 && this.numberPass.length > this.listSelected.length){
                         if($(element).attr('class').search("soft_bed_left") != -1){
                             $(element).attr('class','train_bed_cell bed can_block soft_bed_left selected');
+                            changeStatus({id: $(element).attr('id'), class: $(element).attr('class')});
                         }
                         else if($(element).attr('class').search("soft_bed_right") != -1) {
                             $(element).attr('class','train_bed_cell bed can_block soft_bed_right selected');
+                            changeStatus({id: $(element).attr('id'), class: $(element).attr('class')});
                         }
                         
                         this.listSelected.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
@@ -243,9 +256,11 @@ var vm = new Vue({
                     else if(number == 2 && this.numberPass.length > this.listSelected2.length){
                         if($(element).attr('class').search("soft_bed_left") != -1){
                             $(element).attr('class','train_bed_cell bed can_block soft_bed_left selected');
+                            changeStatus($(element));
                         }
                         else if($(element).attr('class').search("soft_bed_right") != -1) {
                             $(element).attr('class','train_bed_cell bed can_block soft_bed_right selected');
+                            changeStatus($(element));
                         }
 
                         this.listSelected2.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
@@ -269,6 +284,7 @@ var vm = new Vue({
                         return data != ($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
                     })
                     this.listSelected = filteredItems;
+                    changeStatus($(element));
                     }
                     else if(number == 2){
                         if($(element).attr('class').search("soft_bed_left") != -1){
@@ -281,22 +297,23 @@ var vm = new Vue({
                             return data != ($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
                         })
                         this.listSelected2 = filteredItems;
+                        changeStatus($(element));
                     }
                 }
             }
             else {
                 if($(element).attr('class') == 'train_cell seat can_block soft_seat_right sold_out') return;
-
+                
                 if($(element).attr('class') == "train_cell seat can_block soft_seat_right available")
                 {
                     if(number == 1 && this.numberPass.length > this.listSelected.length){
                         $(element).attr('class','train_cell seat can_block soft_seat_right selected');
-
+                        changeStatus($(element));
                         this.listSelected.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
                     }
                     else if(number == 2 && this.numberPass.length > this.listSelected2.length){
                         $(element).attr('class','train_cell seat can_block soft_seat_right selected');
-
+                        changeStatus($(element));
                         this.listSelected2.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
                     }
                     else 
@@ -311,6 +328,7 @@ var vm = new Vue({
                         return data != ($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
                     })
                     this.listSelected = filteredItems;
+                    changeStatus($(element));
                     }
                     else if(number == 2){
                         $(element).attr('class','train_cell seat can_block soft_seat_right available');
@@ -318,6 +336,7 @@ var vm = new Vue({
                             return data != ($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
                         })
                         this.listSelected2 = filteredItems;
+                        changeStatus($(element));
                     }
                 }
             }

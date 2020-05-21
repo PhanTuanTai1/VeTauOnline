@@ -44,18 +44,18 @@
                                                 <div class="relative fares-choose-items" >
                                                     <div class="fares-choose radio">
                                                         <%if(index == 0){%>
-                                                            <input type="radio" id="cost_fare<%=index%>"
-                                                            name="cost" 
+                                                            <input type="radio" id="cost_fare<%=index%><%=SCHEDULEDETAILID%>"
+                                                            name="cost<%=SCHEDULEDETAILID%>" 
                                                             class="fare_radio"
                                                             value="<%=cost.Cost%>"  checked>
-                                                            <label for="cost_fare<%=index%>" onclick="changeHref('<%=SCHEDULEDETAILID%>', '<%=cost.SeatTypeID%>')"></label>
+                                                            <label for="cost_fare<%=index%><%=SCHEDULEDETAILID%>" onclick="changeHref('<%=SCHEDULEDETAILID%>', '<%=cost.SeatTypeID%>')"></label>
                                                         <%}else {%>
-                                                            <input type="radio" id="cost_fare<%=index%>"
-                                                            name="cost" 
+                                                            <input type="radio" id="cost_fare<%=index%><%=SCHEDULEDETAILID%>"
+                                                            name="cost<%=SCHEDULEDETAILID%>" 
                                                             class="fare_radio"
                                                             value="<%=cost.Cost%>"  
                                                             >
-                                                            <label for="cost_fare<%=index%>" onclick="changeHref('<%=SCHEDULEDETAILID%>', '<%=cost.SeatTypeID%>')"></label>
+                                                            <label for="cost_fare<%=index%><%=SCHEDULEDETAILID%>" onclick="changeHref('<%=SCHEDULEDETAILID%>', '<%=cost.SeatTypeID%>')"></label>
                                                         <%}%>
                                                     </div>
 
@@ -96,18 +96,18 @@
                                                 <div class="relative fares-choose-items" >
                                                     <div class="fares-choose radio">
                                                         <%if(index == 0){%>
-                                                            <input type="radio" id="cost_fare<%=index%>"
-                                                            name="cost" 
+                                                            <input type="radio" id="cost_fare<%=index%><%=SCHEDULEDETAILID%>"
+                                                            name="cost<%=SCHEDULEDETAILID%>" 
                                                             class="fare_radio"
                                                             value="<%=cost.Cost%>"  checked>
-                                                            <label for="cost_fare<%=index%>" onclick="changeHref('<%=SCHEDULEDETAILID%>', '<%=cost.SeatTypeID%>')"></label>
+                                                            <label for="cost_fare<%=index%><%=SCHEDULEDETAILID%>" onclick="changeHref('<%=SCHEDULEDETAILID%>', '<%=cost.SeatTypeID%>')"></label>
                                                         <%}else {%>
-                                                            <input type="radio" id="cost_fare<%=index%>"
-                                                            name="cost" 
+                                                            <input type="radio" id="cost_fare<%=index%><%=SCHEDULEDETAILID%>"
+                                                            name="cost<%=SCHEDULEDETAILID%>" 
                                                             class="fare_radio"
                                                             value="<%=cost.Cost%>"  
                                                             >
-                                                            <label for="cost_fare<%=index%>" onclick="changeHref('<%=SCHEDULEDETAILID%>', '<%=cost.SeatTypeID%>')"></label>
+                                                            <label for="cost_fare<%=index%><%=SCHEDULEDETAILID%>" onclick="changeHref('<%=SCHEDULEDETAILID%>', '<%=cost.SeatTypeID%>')"></label>
                                                         <%}%>
                                                         <%index++%>
                                                         
@@ -247,6 +247,18 @@
                     <section class="scrolling-section">
                         <div class="fare-content horizontal-items" style="width:516px">
                             <div class="fares fare-type-items" data-route="66890155">
+                                <%var index = 0%>
+                                <%result[0].ScheduleDetails[0].TableCosts.forEach(function(cost){%>
+                                    <%if(typeof(ListSeatSold.get(cost.SeatTypeID)) != "undefined"){%>
+                                        <%if(dic.get(cost.SeatTypeID).TotalSeat - ListSeatSold.get(cost.SeatTypeID).SeatSold > 0){%>
+                                            
+                                        <%}else{%>
+
+                                        <%}%>
+                                    <%}else{%>
+
+                                    <%}%>
+                                <%})%>             
                                 <label class="mobile-fare" for="mobile_fare_1f38e1631532974a701fa783bcb1c1cc_66890155_NML56">
                                     <div class="fare-type-title">
                                         <span>Ngồi mềm</span>
@@ -260,7 +272,7 @@
                                         <div style="padding-bottom: 20px;">
                                             <span class="yellow-text js-fare_price bold money" data-amount="995000" data-currency="VND">995,000&nbsp;đ</span>
                                         </div>
-                                        <div style="padding-bottom: 10px; text-decoration: underline;" class="fare-info-button blue-text" data-origin_country_code="VN" data-destination_country_code="VN" data-transport="vr" data-alert="eyJvcmlnaW5faWQiOiIyODEiLCJkZXN0aW5hdGlvbl9pZCI6IjMyNCIsInRyYXZlbF9kYXRlIjoiMjAyMC0wMy0yNiIsInRyYW5zcG9ydF9jb2RlIjoidnIiLCJ2ZXNzZWwiOiJTRTEifQ==" data-fare="NML56" data-status="1"><i style="margin-right: 8px" class="fa-info-circle" aria-hidden="true"></i>Điều kiện giá vé</div>
+                                        <!-- <div style="padding-bottom: 10px; text-decoration: underline;" class="fare-info-button blue-text" data-origin_country_code="VN" data-destination_country_code="VN" data-transport="vr" data-alert="eyJvcmlnaW5faWQiOiIyODEiLCJkZXN0aW5hdGlvbl9pZCI6IjMyNCIsInRyYXZlbF9kYXRlIjoiMjAyMC0wMy0yNiIsInRyYW5zcG9ydF9jb2RlIjoidnIiLCJ2ZXNzZWwiOiJTRTEifQ==" data-fare="NML56" data-status="1"><i style="margin-right: 8px" class="fa-info-circle" aria-hidden="true"></i>Điều kiện giá vé</div> -->
                                     </div>
                                 </label>
                                 <label class="mobile-fare" for="mobile_fare_1f38e1631532974a701fa783bcb1c1cc_66890155_BnL">

@@ -45,15 +45,19 @@ module.exports.search = function (req, res) {
             }],
         }).then(async Schedule => {
             console.log('Schedule: ' + JSON.stringify(Schedule));
-            if (Schedule.length === 0) {
+            // if (Schedule.length === 0) {
+            //     res.render('searchResultOneWay', { result: [], query: JSON.stringify(req.query), error: 1, arrivalID: req.query.TO, departureID: req.query.FROM });
+            //     res.end();
+            // }
+            var ListSchedule = await getScheduleMatch(req.query.DEPART, parseInt(req.query.FROM), Schedule);
+            if(ListSchedule.length == 0) {
                 res.render('searchResultOneWay', { result: [], query: JSON.stringify(req.query), error: 1, arrivalID: req.query.TO, departureID: req.query.FROM });
                 res.end();
             }
-            var ListSchedule = await getScheduleMatch(req.query.DEPART, parseInt(req.query.FROM), Schedule);
-            console.log("ListSchedule: " + JSON.stringify(ListSchedule));
-            var result = [];
-            var count = 0;
-            res.render('searchResultOneWay', { result: JSON.stringify(ListSchedule), query: JSON.stringify(req.query) });
+            else{
+                console.log("ListSchedule: " + JSON.stringify(ListSchedule));
+                res.render('searchResultOneWay', { result: JSON.stringify(ListSchedule), query: JSON.stringify(req.query), numberOfPassenger: req.query.PASSENGERS});
+            }
             // ListSchedule.forEach((schedule, index, array ) => {     
             //     res.render('searchResultOneWay',{result : JSON.stringify(Schedule), query: JSON.stringify(req.query)});
             //     // checkSeat(schedule.TrainID,req.query.PASSENGERS, req.query.DEPART).then(check =>{
@@ -111,12 +115,12 @@ module.exports.search = function (req, res) {
             var count = 0;
             var ListSchedule = await getScheduleMatch(date, parseInt(from), Schedule);
             if (typeof (req.query.STEP) == "undefined") {
-                res.render('searchResultRoundTrip', { result: JSON.stringify(ListSchedule), query: JSON.stringify(req.query), STEP: 1 });
+                res.render('searchResultRoundTrip', { result: JSON.stringify(ListSchedule), query: JSON.stringify(req.query), STEP: 1 , numberOfPassenger: req.query.PASSENGERS});
             }
             else {
                 var data = { 'SCHEDULEID': req.query.SCHEDULEID, 'SCHEDULEDETAILID': req.query.SCHEDULEDETAILID, 'costID': req.query.costID }
                 res.cookie('step1', data)
-                res.render('searchResultRoundTrip', { result: JSON.stringify(ListSchedule), query: JSON.stringify(req.query), STEP: 2, DepartureQuery: req.query.DepartureQuery });
+                res.render('searchResultRoundTrip', { result: JSON.stringify(ListSchedule), query: JSON.stringify(req.query), STEP: 2, DepartureQuery: req.query.DepartureQuery , numberOfPassenger: req.query.PASSENGERS});
             }
             // ListSchedule.forEach((schedule, index, array ) => {     
 
@@ -161,6 +165,8 @@ function getScheduleMatch(Date, DepartureID, ListSchedule) {
             var MinutesDepartInt = parseInt(moment(schedule.TimeDeparture).format('mm'));
             var DateDepart = moment(schedule.DateDeparture).add(TimeDepartInt, 'hour').add(MinutesDepartInt + TimeScheduleDetails, 'minutes').format('DD-MM-YYYY');
             var DateDepartFormat = (moment(Date).subtract(7, 'hour').format('DD-MM-YYYY'));
+            var parseDateDepart = moment(DateDepart);
+            var parseDateDepartFormat = moment(DateDepartFormat);
             console.log("Expected:" +  moment(Date).subtract(7, 'hour').format('DD-MM-YYYY'));
             console.log("Actual:" +  DateDepart);
             if(DateDepartFormat === DateDepart) 
@@ -177,16 +183,18 @@ function getScheduleMatch(Date, DepartureID, ListSchedule) {
                 //     }
                 // })         
             }       
-            else {
-                await checkIsDepartureStationFirst(DepartureID, schedule).then(data => {
-                    if(data){
-                        schedule.First = true;
-                        console.log("First: " + JSON.stringify(schedule));
-                        ListFilter.push(schedule);
-                    }  
-                });                          
+            else if(parseDateDepartFormat - parseDateDepart <= 129600000){
+                ListFilter.push(schedule)
+                // await checkIsDepartureStationFirst(DepartureID, schedule).then(data => {
+                //     if(data){
+                //         schedule.First = true;
+                //         console.log("First: " + JSON.stringify(schedule));
+                //         ListFilter.push(schedule);
+                //     }  
+                // });                          
             }
-            if (index + 1 === array.length) resolve(ListFilter);
+
+            if(index + 1 === array.length) resolve(ListFilter);
         })
     });
 }
@@ -631,7 +639,22 @@ module.exports.InsertData = function (req, res) {
 }
 
 module.exports.ManageBooking = function (req, res) {
-
+    db.Representative.findOne({
+        attributes: ['ID', 'DateBooking', 'TotalCost', 'Passport', 'Email'],
+        where: {
+            ID : req.body.booking_code
+        },
+        include: {
+            model: db.Customer,
+            attributes: ['ID', 'Name','TypeObjectID', 'Passport'],
+            include: {
+                model: db.Ticket,
+                attributes: ['ID', 'CustomerID', 'Price','Status','DepartureStationID','ArrivalStationID']
+            }
+        }
+    }).then(data => {
+        res.render('managebooking', {result: data});
+    })
 }
 
 function InsertPassenger(ListPassenger) {

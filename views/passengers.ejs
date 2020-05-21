@@ -29,7 +29,7 @@
     <link rel="stylesheet" type="text/css" href="../vendor/owl-carousel2/owl.theme.default.css">
     <link rel="stylesheet" type="text/css" href="../vendor/lightgallery/lightgallery.css">
     <link rel="stylesheet" type="text/css" href="../dist/baolau.min6ffc.css">
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <!-- jQuery -->
     <script type="text/javascript" src="../vendor/js/jquery.min.js"></script>
 </head>
@@ -435,7 +435,7 @@
                     <%if(typeof(result2) != "undefined" && result2 != null){%>
                         <div>
                             <p class="big-text seat-gap">
-                                Please select your preferred seats for the itinerary from <span class="blue-text super-bold">Da Nang</span> to <span class="blue-text super-bold">Ho Chi Minh</span> on <span class="bold">Thursday, 16 April 2020</span>.
+                                Please select your preferred seats for the itinerary from <span class="blue-text super-bold">{{Depart2}}</span> to <span class="blue-text super-bold">{{Arrival2}}</span> on <span class="bold"><%=moment(result2.DateDeparture).format('DD-MM-YYYY')%></span>.
                             </p>
                             <div class="gap gap-mini"></div>
                             <div class="panel-light">
