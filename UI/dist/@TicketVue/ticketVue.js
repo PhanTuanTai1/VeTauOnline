@@ -95,7 +95,7 @@ new Vue({
                                                 <td>${e.TrainName}</td>
                                                 <td>${this.Staions.find(x => x.ID == e.DepartureStationID).Name}</td>
                                                 <td>${this.Staions.find(x => x.ID == e.ArrivalStationID).Name}</td>
-                                                <td><button class="cancelTick" value="${e.CustomerID}" class="btn btn-success" >Cancel</button></td>
+                                                <td><button id="cancelTick" value="${e.CustomerID}" class="btn btn-danger" >Cancel</button></td>
                                                 </tr>` )}
                                     </tbody>
                                 </table>
@@ -366,7 +366,7 @@ new Vue({
 
     },
     mounted: function () {
-        $(document).on("click", ".cancelTick", function () {
+        $(document).on("click", "#cancelTick", function () {
             // axios.put(window.origin + '/admin/ticket?cusID=' + this.value + '&request=cancel');
             // this.prop('disabled', true);
             $(this).attr("disabled", true);

@@ -151,11 +151,6 @@ new Vue({
       })
     },
   },
-  computed: {
-    listTrain() {
-      return this.Trains;
-    }
-  },
   updated: function () {
     $("#myTable").DataTable();
   }
