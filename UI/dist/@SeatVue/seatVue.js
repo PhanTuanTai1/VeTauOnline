@@ -13,6 +13,8 @@ new Vue({
     },
     updated: function () {
         $("#myTable").DataTable();
+
+        console.log(this.Seats.find(x => x.CarriageID == null))
     }
 
 })

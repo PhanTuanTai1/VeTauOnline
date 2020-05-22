@@ -31,7 +31,7 @@
                 <div class="card-body pb-0">
                     <div id="app">
                         <button @click="testdialog">ok</button>
-                        <!-- <div class="form-group">
+                        <div class="form-group">
                             <label for="train">Train</label>
                             <select style="width: 100%; " id="train" class="js-example-basic-single" name="state"
                                 required>
@@ -54,9 +54,29 @@
                             <input id="time" type="time" style="width: 100%;">
                             <div>
                                 <button type="button" class="btn btn-success"><i class="fa fa-check"></i>
-                                    Edit</button>
+                                    Confirm</button>
                             </div>
-                        </div> -->
+                        </div>
+                        <table id="myTable" v-if="Trains" class="table">
+                            <thead class="font-weight-bold table-info">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th class="text-right">...</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(item,index) in Trains" :key="index">
+                                    <td>{{item.ID}}</td>
+                                    <td>{{item.Name}}</td>
+                                    <td class="text-right"><button type="button" class="btn btn-warning"
+                                            @click="updateTrain(item.ID,index)"><i class="fa fa-edit"></i> Edit</button>
+                                        <button type="button" class="btn btn-info" @click="delTrain(item.ID,index)"><i
+                                                class="fa fa-trash"></i>
+                                            Delete</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

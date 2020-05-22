@@ -206,12 +206,35 @@ module.exports.createSchedule = async function (req, res) {
     shortDistance = item.Distance;
   });
 }
+module.exports.createScheduleDetail = async function (req, res) {
+  let departID = await req.query.DepartureStationID;
+  let arrivalID = await req.query.ArrivalStationID;
+  let sta = await db.Station.findAll({ raw: true });
+  let distance = 0;
+  if (departID > arrivalID) {
+    distance = await (parseInt(sta.find(x => x.ID == departID).Distance) - parseInt(sta.find(x => x.ID == arrivalID).Distance));
+  }
+  else {
+    distance = await (parseInt(sta.find(x => x.ID == arrivalID).Distance) - parseInt(sta.find(x => x.ID == departID).Distance));
+  }
+  let time = moment(req.query.DateDeparture + " " + req.query.TimeDeparture).add(distance / 60, "hours");
+  const sche = await {
+    ID: parseInt(uuid.genV4().intFields.timeLow.toString().substring(0, 9)),
+    ScheduleID: req.query.ScheduleID,
+    DepartureStationID: departID,
+    ArrivalStationID: arrivalID,
+    Length: distance,
+    Time: (distance / 60).toFixed(2),
+    StartTime: time.format("HH:mm")
+  }
+  console.log(distance);
+}
 //#endregion
 
 //#region Seat
 module.exports.getAllSeat = function (req, res) {
   db.Seat.findAll({
-    include: { all: true }
+    include: [db.Carriage, db.SeatType]
   }).then(seat => res.end(JSON.stringify(seat)))
 }
 async function createSeat(carriageID, seatTypeID, seatNum) {
@@ -257,11 +280,11 @@ module.exports.getAllCarriage = function (req, res) {
 }
 module.exports.createCarriage = async function (req, res) {
   const carr = await {
-    ID: uuid.genV4().bitFields.clockSeqLow,
+    ID: parseInt(uuid.genV4().intFields.timeLow.toString().substring(0, 9)),
     Name: req.query.Name,
     TrainID: req.query.TrainID
   }
-  await db.Carriage.create(carr);
+  await db.Carriage.create(carr).then(a => res.send(a));
   let seatTypeID = await req.query.SeatTypeID;
   let seatCount = "";
   if (seatTypeID == 1)//khoang 4
@@ -276,6 +299,49 @@ module.exports.createCarriage = async function (req, res) {
   for (let i = 1; i <= seatCount; i++) {
     createSeat(carr.ID, seatTypeID, i);
   }
+}
+module.exports.editCarriage = async function (req, res) {
+  const carr = await {
+    Name: req.query.Name,
+    TrainID: req.query.TrainID
+  }
+  let seat = await db.Seat.findOne({ where: { CarriageID: req.query.ID }, raw: true });
+  await db.Carriage.update(carr, { where: { ID: req.query.ID } }).then(a => res.send(a));
+  if (seat != null && seat.SeatTypeID != req.query.SeatTypeID) {
+    let allseat = await db.Seat.findAll({ where: { CarriageID: req.query.ID }, raw: true });
+    await allseat.forEach(s => {
+      db.Seat.destroy({ where: { ID: s.ID } });
+    })
+    let seatTypeID = await req.query.SeatTypeID;
+    let seatCount = "";
+    if (seatTypeID == 1)//khoang 4
+    {
+      seatCount = 28;
+    }
+    else if (seatTypeID == 2) //khoang 6
+    {
+      seatCount = 42;
+    }
+    else seatCount = 56;
+    for (let i = 1; i <= seatCount; i++) {
+      createSeat(carr.ID, seatTypeID, i);
+    }
+  }
+
+  // let seatTypeID = await req.query.SeatTypeID;
+  // let seatCount = "";
+  // if (seatTypeID == 1)//khoang 4
+  // {
+  //   seatCount = 28;
+  // }
+  // else if (seatTypeID == 2) //khoang 6
+  // {
+  //   seatCount = 42;
+  // }
+  // else seatCount = 56;
+  // for (let i = 1; i <= seatCount; i++) {
+  //   createSeat(carr.ID, seatTypeID, i);
+  // }
 }
 module.exports.delCarriage = async function (req, res) {
   let carrID = req.query.ID;
@@ -302,7 +368,7 @@ module.exports.getAllRepreBByID = function (req, res) {
     where: {
       ID: req.query.repreID
     },
-    group: ['Representative.ID', 'Representative.Name', 'Representative.Phone', 'Representative.Passport', 'Representative.TotalCost', 'Representative.Email', 'Representative.DateBooking'],
+    group: ['Customers.Name', 'Representative.ID', 'Representative.Name', 'Representative.Phone', 'Representative.Passport', 'Representative.TotalCost', 'Representative.Email', 'Representative.DateBooking'],
     attributes: [
       'ID', 'Name', 'Phone', 'Passport', 'TotalCost', 'Email', 'DateBooking',
       [
@@ -312,7 +378,7 @@ module.exports.getAllRepreBByID = function (req, res) {
     include: [
       {
         model: db.Customer,
-        attributes: []
+        attributes: ['Name']
       }
     ],
     raw: true,
