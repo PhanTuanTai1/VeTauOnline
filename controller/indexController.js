@@ -89,9 +89,6 @@ module.exports.search = function (req, res) {
 
         db.Schedule.findAll({
             attributes: ['ID', 'DateDeparture', 'TimeDeparture', 'TrainID'],
-            where: {
-                DateDeparture: date
-            },
             include: [{
                 model: db.ScheduleDetail,
                 attributes: ['ID', 'ScheduleID', 'DepartureStationID', 'ArrivalStationID', 'Time'],

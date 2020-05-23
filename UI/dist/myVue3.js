@@ -237,7 +237,7 @@ var vm = new Vue({
 
         selectSeat: function(element, number){
             if(this.seatTypeDisplay[0].ID == 1 || this.seatTypeDisplay[0].ID == 6) {
-                if($(element).attr('class') == 'train_bed_cell bed can_block hard_bed_left sold_out') return;
+                if($(element).attr('class') == 'train_bed_cell bed can_block hard_bed_left sold_out' || $(element).attr('class').search('reserved') != -1) return;
                 
                 if($(element).attr('class').search("available") != -1)
                 {
