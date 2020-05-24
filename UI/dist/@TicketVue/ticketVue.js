@@ -367,8 +367,22 @@ new Vue({
     },
     mounted: function () {
         $(document).on("click", "#cancelTick", function () {
-            // axios.put(window.origin + '/admin/ticket?cusID=' + this.value + '&request=cancel');
-            // this.prop('disabled', true);
+            let id = this.value;
+            // Swal.fire({
+            //     title: 'Cancel confirmation!',
+            //     text: 'Are you sure?',
+            //     icon: 'question',
+            //     showCancelButton: true,
+            //     confirmButtonColor: '#3085d6',
+            //     cancelButtonColor: '#d33',
+            //     confirmButtonText: 'Confirm',
+            //     cancelButtonText: 'Cancel'
+            // }).then((confirm) => {
+            //     if (confirm.value) {
+            //         Swal.fire('Cancel succesfull!')
+            //     }
+            // })
+            axios.put(window.origin + '/admin/ticket?cusID=' + id + '&request=cancel');
             $(this).attr("disabled", true);
         });
     }
