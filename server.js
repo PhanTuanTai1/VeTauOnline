@@ -144,6 +144,9 @@ app.get("/getAllTypeOfSeat", function (req, res) {
 app.get("/getAllCarriage", function (req, res) {
     managerCtrler.getAllCarriage(req, res);
 })
+app.get("/getAllSchedule", function (req, res) {
+    managerCtrler.getAllSchedule(req, res)
+})
 
 //render
 app.get("/admin/dashboard", function (req, res) {
@@ -217,14 +220,14 @@ app.get("/admin/carriage", function (req, res) {
     })
 })
 app.get("/admin/schedule", function (req, res) {
-    loginController.CheckLogin().then(check => {
-        if (check) {
-            res.render('scheduleadmin');
-        }
-        else {
-            res.render('login');
-        }
-    })
+    // loginController.CheckLogin().then(check => {
+    //     if (check) {
+    res.render('scheduleadmin');
+    //     }
+    //     else {
+    //         res.render('login');
+    //     }
+    // })
 })
 
 //action customer
@@ -233,6 +236,9 @@ app.delete("/admin/customer", function (req, res) {
 });
 app.post("/admin/customer", function (req, res) {
     managerCtrler.createCustomer(req, res);
+})
+app.put("/admin/customer", function (req, res) {
+    managerCtrler.updateCustomer(req, res)
 })
 
 //action train
@@ -285,9 +291,16 @@ app.put("/admin/ticket", function (req, res) {
 app.post("/admin/schedule", function (req, res) {
     managerCtrler.createSchedule(req, res);
 })
+app.get("/getAllScheduleDetail", function (req, res) {
+    managerCtrler.getAllScheduleDetail(req, res)
+})
 
-app.get("/testsche", function (req, res) {
+app.post("/admin/scheduledetail", function (req, res) {
     managerCtrler.createScheduleDetail(req, res)
+})
+
+app.get("/test", function (req, res) {
+    managerCtrler.createTableCost(req, res)
 })
 
 

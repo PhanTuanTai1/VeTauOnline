@@ -7,6 +7,7 @@ var uuid = require('uuidjs');
 //#region Customer
 module.exports.getAllCustomer = function (req, res) {
   db.Customer.findAll({
+    include: [db.Representative]
   }).then(cus => {
     res.end(JSON.stringify(cus));
   })
@@ -35,6 +36,25 @@ module.exports.delCustomerByID = function (req, res) {
   db.Customer.destroy({
     where: { ID: req.query.ID }
   })
+}
+module.exports.updateCustomer = function (req, res) {
+  const cus = {
+    Name: req.query.Name,
+    Passport: req.query.Passport
+  }
+  db.Customer.update(cus, {
+    where: {
+      ID: req.query.ID
+    }
+  }).then(data => {
+    res.send(data);
+  })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while creating the customer."
+      });
+    });
 }
 //#endregion
 
@@ -152,59 +172,63 @@ module.exports.editStatusTicket = (req, res) => {
 //#endregion
 
 //#region Schedule
+module.exports.getAllSchedule = function (req, res) {
+  db.Schedule.findAll({
+    include: { all: true },
+  }).then(sche => res.end(JSON.stringify(sche)))
+}
 module.exports.createSchedule = async function (req, res) {
-  const travel = await db.Station.findAll(
-    {
-      where: {
-        ID: {
-          [Op.between]: [req.query.from, req.query.to]
-        }
-      },
-      raw: true
-    }
-  );
+  // const travel = await db.Station.findAll(
+  //   {
+  //     where: {
+  //       ID: {
+  //         [Op.between]: [req.query.from, req.query.to]
+  //       }
+  //     },
+  //     raw: true
+  //   }
+  // );
 
 
-  var id = uuid.genV4().bitFields.clockSeqLow;
-  var ss = moment(req.query.DateDeparture).add(7, "h");
+  var id = parseInt(uuid.genV4().intFields.timeLow.toString().substring(0, 9));
   const schedule = {
     ID: id,
     TrainID: req.query.TrainID,
-    DateDeparture: ss,
+    DateDeparture: req.query.DateDeparture,
     TimeDeparture: req.query.TimeDeparture,
   };
-  db.Schedule.create(schedule);
-  var shortDistance = 0;
-  var timeStart = moment(req.query.DateDeparture + " " + req.query.TimeDeparture);
-  var i = 1;
-  let tong = 0;
-  let time = "";
-  count = (await db.ScheduleDetail.findAll({ raw: true })).length;
-  travel.forEach(async item => {
-    let arrival = item.ID;
-    if (arrival == req.query.from) {
-      shortDistance = 0;
-    }
-    else {
-      shortDistance = item.Distance - shortDistance;
-    }
-    tong = item.Distance;
-    count++;
-    const scheduleDetail = {
-      ID: count,
-      ScheduleID: id,
-      DepartureStationID: req.query.from,
-      ArrivalStationID: item.ID,
-      StartTime: timeStart.format("HH:mm"),
-      Length: tong,
-      Time: (shortDistance / 90).toFixed(2),
-    };
-    time = shortDistance / 90;
-    db.ScheduleDetail.create(scheduleDetail);
-    timeStart.add(time, "hours");
-    i++;
-    shortDistance = item.Distance;
-  });
+  db.Schedule.create(schedule).then(r => res.send(r));
+  // var shortDistance = 0;
+  // var timeStart = moment(req.query.DateDeparture + " " + req.query.TimeDeparture);
+  // var i = 1;
+  // let tong = 0;
+  // let time = "";
+  // count = (await db.ScheduleDetail.findAll({ raw: true })).length;
+  // travel.forEach(async item => {
+  //   let arrival = item.ID;
+  //   if (arrival == req.query.from) {
+  //     shortDistance = 0;
+  //   }
+  //   else {
+  //     shortDistance = item.Distance - shortDistance;
+  //   }
+  //   tong = item.Distance;
+  //   count++;
+  //   const scheduleDetail = {
+  //     ID: count,
+  //     ScheduleID: id,
+  //     DepartureStationID: req.query.from,
+  //     ArrivalStationID: item.ID,
+  //     StartTime: timeStart.format("HH:mm"),
+  //     Length: tong,
+  //     Time: (shortDistance / 90).toFixed(2),
+  //   };
+  //   time = shortDistance / 90;
+  //   db.ScheduleDetail.create(scheduleDetail);
+  //   timeStart.add(time, "hours");
+  //   i++;
+  //   shortDistance = item.Distance;
+  // });
 }
 module.exports.createScheduleDetail = async function (req, res) {
   let departID = await req.query.DepartureStationID;
@@ -227,7 +251,24 @@ module.exports.createScheduleDetail = async function (req, res) {
     Time: (distance / 60).toFixed(2),
     StartTime: time.format("HH:mm")
   }
-  console.log(distance);
+  db.ScheduleDetail.create(sche).then(r => res.send(r));
+}
+
+module.exports.createTableCost = async function (req, res) {
+  let train = await db.Schedule.findOne({
+    where: {
+      ID: req.query.ID,
+    },
+    raw: true
+  });
+  console.log(train.TrainID);
+  let carriagetype = await db.Carriage.findAll({ where: { TrainID: train.TrainID }, raw: true });
+  let a = [];
+  await carriagetype.forEach(e => {
+
+    let seattype = db.Seat.findAll({ where: { CarriageID: e.ID }, raw: true }).then(r => a.push[r]);
+  })
+  console.log(a);
 }
 //#endregion
 
@@ -383,4 +424,12 @@ module.exports.getAllRepreBByID = function (req, res) {
     ],
     raw: true,
   }).then(repre => res.end(JSON.stringify(repre)))
+}
+
+module.exports.getAllScheduleDetail = function (req, res) {
+  db.ScheduleDetail.findAll({
+    where: {
+      ScheduleID: req.query.ScheduleID
+    },
+  }).then(detail => res.end(JSON.stringify(detail)))
 }

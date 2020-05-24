@@ -209,6 +209,7 @@ Customer.init({
     });
 
 Train.hasMany(Carriage, { foreignKey: "TrainID" });
+Train.hasMany(Schedule, { foreignKey: "TrainID" })
 Carriage.belongsTo(Train, { foreignKey: "TrainID" });
 Carriage.hasMany(Seat, { foreignKey: "CarriageID" });
 Seat.hasMany(Ticket, { foreignKey: "SeatID" });
