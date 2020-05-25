@@ -17,10 +17,19 @@
             });
         }
     </script> -->
+    <style>
+        .swal2-container {
+            z-index: 0 !important;
+        }
+
+        .swal-detail {
+            width: 900px !important;
+        }
+    </style>
     <!-- vue-select -->
 </head>
 
-<body onload="load();" class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
     <div class="wrapper">
         <!-- Navbar -->
         <%- include('adminsidebar') %>
@@ -30,7 +39,10 @@
             <div class="card">
                 <div class="card-body pb-0">
                     <div id="app">
-                        <button @click="testdialog">ok</button>
+                        <div class="card-header">
+                            <button type="button" @click="createSchedule" class="btn btn-success"><i
+                                    class="fa fa-plus"></i> Create</button>
+                        </div>
                         <!-- <div class="form-group">
                             <label for="train">Train</label>
                             <select style="width: 100%; " id="train" class="js-example-basic-single" name="state"
@@ -54,9 +66,32 @@
                             <input id="time" type="time" style="width: 100%;">
                             <div>
                                 <button type="button" class="btn btn-success"><i class="fa fa-check"></i>
-                                    Edit</button>
+                                    Confirm</button>
                             </div>
                         </div> -->
+                        <table id="myTable" v-if="Schedules" class="table">
+                            <thead class="font-weight-bold table-info">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Departure time</th>
+                                    <th>Departure date</th>
+                                    <th>Train</th>
+                                    <th class="text-right">...</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(item,index) in Schedules" :key="index">
+                                    <td>{{item.ID}}</td>
+                                    <td>{{item.DateDeparture}}</td>
+                                    <td>{{item.TimeDeparture}}</td>
+                                    <td>{{item.Train.Name}}</td>
+                                    <td class="text-right"><button type="button" class="btn btn-warning"
+                                            @click="updateTrain(item.ID,index)"><i class="fa fa-edit"></i> Edit</button>
+                                        <button type="button" class="btn btn-info" @click="viewDetail(item.ID)"><i
+                                                class="fa fa-info"></i> View detail</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -83,6 +118,8 @@
     <script src="../dist/axios.js"></script>
     <script src="../dist/sweetalert2.all.min.js"></script>
     <script src="../dist/uuid.js"></script>
+    <script src="../dist/moment.js"></script>
+
     <script type="module" src="../dist/@ScheduleVue/scheduleVue.js"></script>
 </body>
 

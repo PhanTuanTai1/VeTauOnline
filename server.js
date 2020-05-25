@@ -107,16 +107,16 @@ app.get('/test', function(req,res){
 // app.get('/CheckLogin' , function(req,res){
 //     loginController.CheckLogin(req,res);
 // })
-app.get('/login', function(req,res){
+app.get('/login', function (req, res) {
     res.render("login");
 })
 
-app.post('/verifyLogin', function(req,res){
-    loginController.Login(req,res);
+app.post('/verifyLogin', function (req, res) {
+    loginController.Login(req, res);
 })
 
-app.get('/payment', function(req,res){
-    controller.payment(req,res);
+app.get('/payment', function (req, res) {
+    controller.payment(req, res);
 })
 
 app.get('/manageBooking', function (req, res) {
@@ -163,31 +163,90 @@ app.get("/getAllTypeOfSeat", function (req, res) {
 app.get("/getAllCarriage", function (req, res) {
     managerCtrler.getAllCarriage(req, res);
 })
+app.get("/getAllSchedule", function (req, res) {
+    managerCtrler.getAllSchedule(req, res)
+})
 
 //render
 app.get("/admin/dashboard", function (req, res) {
-    res.render('admin');
+    loginController.CheckLogin().then(check => {
+        if (check) {
+            res.render('admin');
+        }
+        else {
+            res.render('login');
+        }
+    })
 })
 app.get("/admin/customer", function (req, res) {
-    res.render('customerAdmin');
+    loginController.CheckLogin().then(check => {
+        if (check) {
+            res.render('customeradmin');
+        }
+        else {
+            res.render('login');
+        }
+    })
 })
 app.get("/admin/station", function (req, res) {
-    res.render('stationAdmin');
+    loginController.CheckLogin().then(check => {
+        if (check) {
+            res.render('stationadmin');
+        }
+        else {
+            res.render('login');
+        }
+    })
 })
 app.get("/admin/train", function (req, res) {
-    res.render('trainAdmin');
+    loginController.CheckLogin().then(check => {
+        if (check) {
+            res.render('trainadmin');
+        }
+        else {
+            res.render('login');
+        }
+    })
 })
 app.get("/admin/seat", function (req, res) {
-    res.render('seatAdmin');
+    loginController.CheckLogin().then(check => {
+        if (check) {
+            res.render('seatadmin');
+        }
+        else {
+            res.render('login');
+        }
+    })
 })
 app.get("/admin/seattype", function (req, res) {
-    res.render('seatTypeAdmin');
+    loginController.CheckLogin().then(check => {
+        if (check) {
+            res.render('seattypeadmin');
+        }
+        else {
+            res.render('login');
+        }
+    })
 })
 app.get("/admin/carriage", function (req, res) {
-    res.render('carriageadmin')
+    loginController.CheckLogin().then(check => {
+        if (check) {
+            res.render('carriageadmin');
+        }
+        else {
+            res.render('login');
+        }
+    })
 })
 app.get("/admin/schedule", function (req, res) {
-    res.render('scheduleadmin')
+    // loginController.CheckLogin().then(check => {
+    //     if (check) {
+    res.render('scheduleadmin');
+    //     }
+    //     else {
+    //         res.render('login');
+    //     }
+    // })
 })
 
 //action customer
@@ -196,6 +255,9 @@ app.delete("/admin/customer", function (req, res) {
 });
 app.post("/admin/customer", function (req, res) {
     managerCtrler.createCustomer(req, res);
+})
+app.put("/admin/customer", function (req, res) {
+    managerCtrler.updateCustomer(req, res)
 })
 
 //action train
@@ -219,10 +281,20 @@ app.post("/admin/carriage", function (req, res) {
 app.delete("/admin/carriage", function (req, res) {
     managerCtrler.delCarriage(req, res);
 })
+app.put("/admin/carriage", function (req, res) {
+    managerCtrler.editCarriage(req, res);
+})
 
 //test print
 app.get("/admin/ticket", function (req, res) {
-    res.render('ticketadmin');
+    loginController.CheckLogin().then(check => {
+        if (check) {
+            res.render('ticketadmin');
+        }
+        else {
+            res.render('login');
+        }
+    })
 })
 app.get("/printTicket", function (req, res) {
     managerCtrler.printTicketByRepresentativeId(req, res);
@@ -291,6 +363,17 @@ io.on('connection', (socket) => {
         }   
     })
 });
+app.get("/getAllScheduleDetail", function (req, res) {
+    managerCtrler.getAllScheduleDetail(req, res)
+})
+
+app.post("/admin/scheduledetail", function (req, res) {
+    managerCtrler.createScheduleDetail(req, res)
+})
+
+app.get("/test", function (req, res) {
+    managerCtrler.createTableCost(req, res)
+})
 
 http.listen(port, function () {
     console.log("Run on port " + port);
