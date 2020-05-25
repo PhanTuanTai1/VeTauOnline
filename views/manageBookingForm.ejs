@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<!-- saved from url=(0031)https://www.baolau.vn/en/manage -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, user-scalable=no"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <meta name="author" content="Baolau">
+    
+    <title>Manage your booking – Baolau</title>
+    <meta name="description" content="Manage your booking">
+    <meta name="keywords" content="flights, cheap flights, flights to hanoi, flights to bangkok, flights to saigon, book train ticket, book train ticket online, train to sapa, train to hanoi, train to saigon, train to bangkok, train to chiang mai, bus ticket, book bus ticket online, buy bus ticket online, bus ticket to hanoi, bus ticket to saigon">
+    
+    <!--<base target="_top">--><base href="." target="_top">
+
+    <!-- Canonical URL -->
+        <link rel="canonical" href="https://www.baolau.com/en/manage/">
+    
+    <!-- Other languages -->
+                        <link rel="alternate" hreflang="en" href="https://www.baolau.vn/en/manage/"> 
+            <link rel="alternate" hreflang="x-default" href="https://www.baolau.vn/en/manage/">       
+                    <link rel="alternate" hreflang="es" href="https://www.baolau.vn/es/manage/"> 
+                   
+                    <link rel="alternate" hreflang="fr" href="https://www.baolau.vn/fr/manage/"> 
+                   
+                    <link rel="alternate" hreflang="vi-vn" href="https://www.baolau.vn/vi/manage/"> 
+                   
+                    <link rel="alternate" hreflang="th" href="https://www.baolau.vn/th/manage/"> 
+
+	<!-- Libraries -->
+      <link rel="stylesheet" type="text/css" href="../vendor/bootstrap/bootstrap4562.css">
+      <link rel="stylesheet" type="text/css" href="../vendor/bootstrap-select/bootstrap-select.css">
+      <link rel="stylesheet" type="text/css" href="../vendor/bootstrap-switch/bootstrap-switch.css">
+      <link rel="stylesheet" type="text/css" href="../vendor/css/font-awesome/font-awesome.css">
+      <link rel="stylesheet" type="text/css" href="../vendor/css/normalize.css">
+      <link rel="stylesheet" type="text/css" href="../vendor/css/animate.css">
+      <link rel="stylesheet" type="text/css" href="../vendor/morris/morris.css">
+      <link rel="stylesheet" type="text/css" href="../vendor/owl-carousel2/owl.carousel.css">
+      <link rel="stylesheet" type="text/css" href="../vendor/owl-carousel2/owl.theme.default.css">
+      <link rel="stylesheet" type="text/css" href="../vendor/lightgallery/lightgallery.css">
+      <link rel="stylesheet" type="text/css" href="../dist/baolau.min6ffc.css">
+    <!-- jQuery -->
+    <script type="text/javascript" src="../vendor/js/jquery.min.js"></script>
+</head>
+
+<body class="" style="background-color: rgb(34, 34, 34); overflow: auto;">
+    <div id="errors" class="modal fade">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body text-center">
+                   <div class="gap gap-super-small"></div>
+                    <div style="letter-spacing: 3px; margin: -30px 0 35px;" class="refrigerator uppercase yellow-text super-big-text">
+                        Error                    </div>
+                    <div class="gap gap-small"></div>
+                    <div class="message" style="letter-spacing: 1px; color: #f5f5f5">
+                                            </div>
+                </div><!-- /.modal-content -->
+                <div class="gap gap-super-small"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="message" class="container-fluid" style="display:none">
+        <div class="close-message smaller-text" ><i class="fas fa-times"></i></div>
+        <div class="row">
+            <div class="col-xs-offset-1 col-xs-10 text-center">
+               <span class="message small-text"></span>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal_message" class="modal fade">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="gap gap-super-small"></div>                   
+                    <div id="modal_message_title" style="letter-spacing: 3px; margin: -30px 0 35px;" class="refrigerator uppercase yellow-text super-big-text">
+
+                    </div>
+                    <div class="gap gap-small"></div>
+                    <div id="modal_message_text" style="letter-spacing: 1px; color: #f5f5f5" class="message big-text italic">
+
+                    </div>
+                </div><!-- /.modal-content -->
+                <div class="gap gap-super-small"></div>
+            </div>
+        </div>
+    </div>
+
+<div id="login" class="main">
+    <div class="filter">
+        <div class="global-wrap">       
+            <div style="position: fixed; top: 20%; left: 50%; transform: translate(-53.5%, -20%);" class="modal-dialog special" role="document">
+	            <div class="row">
+                    <div style="margin-top: 0px;" class="modal-body text-center">
+                        <div class="modal-title">BOOKED WITH US?</div>
+                        <span class="popup-form-line">To access an existing booking, please enter your Booking Code and your Email address below.</span>
+                        <div class="gap gap-small"></div>
+                        
+                        <div id="login_form">
+                            <form action="/SearchBooking" method="post" accept-charset="utf-8">
+		                        <div class="form-group"> 
+		                        	<i class="fa fa-train form-icon" aria-hidden="true"></i>
+		                            <input name="booking_code" class="form-control form-text" placeholder="Booking Code" type="text">
+		                        </div>
+		                        <div class="form-group"> <i class="fas fa-envelope form-icon"></i>
+		                            <input name="email" class="form-control form-text" placeholder="Email Address" type="email">
+		                        </div>
+
+		                        <input type="submit" name="submit" class="btn btn-block yellow refrigerator" value="Retrieve booking">
+                                <div class="gap gap-small"></div>
+                            </form>                        </div>
+                                                  
+                                            </div>
+                    <div class="gap gap-small"></div>
+	                <!-- END container-popup -->
+	            </div>
+		    </div>  
+        </div>  
+    </div> <!-- END FILTER -->
+</div> <!-- END MAIN -->    
+    
+
+<script type="text/javascript" src="../dist/baolau.min6ffc.js"></script>
+    
+    <!-- Language dependant libraries -->
+<script type="text/javascript" src="../vendor/bootstrap-datepicker/locales/bootstrap-datepicker.en.min.js"></script>
+
+    
+<div id="ascrail2000" class="nicescroll-rails" style="width: 10px; z-index: 9999; cursor: default; position: fixed; top: 0px; height: 100%; right: 0px; display: none;"><div style="position: relative; top: 0px; float: right; width: 10px; height: 0px; background-color: rgb(0, 0, 0); border: 0px solid rgb(255, 255, 255); background-clip: padding-box; border-radius: 0px;"></div></div></body></html>

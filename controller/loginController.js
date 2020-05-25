@@ -44,6 +44,7 @@ module.exports.CheckLogin = function () {
         else resolve(true);
     })
 }
+
 module.exports.GetUserFromSession = () => {
     return new Promise(resolve => {
         resolve(req.session[firebaseUser.email]);

@@ -129,7 +129,7 @@
             </div><!-- END sub-header -->
 </header>
 
-<div id="confirmation" class="subpage" id="app">
+<div id="app" class="subpage">
     <div class="panel-dark">
         <div class="container">
             <div>
@@ -139,18 +139,26 @@
                         <div class="highlight-text">YOUR BOOKING</div>
                         <div class="row" style="padding: 10px;">
                             <div class="col-lg-3 col-md-3 col-sm-5 col-xs-5">
-                                <span class="bold">CODE BOOKING:</span>
+                                <span class="bold">BOOKING CODE:</span>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-7 col-xs-7">
-                                <span class="blue-text super-bold">123456</span>
+                                <span class="blue-text super-bold"><%=result.ID%></span>
                             </div>
                         </div>
                         <div class="row" style="padding: 10px;">
                             <div class="col-lg-3 col-md-3 col-sm-5 col-xs-5">
-                                <span class="bold">DATE BOOKING:</span>
+                                <span class="bold">EMAIL:</span>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-7 col-xs-7">
-                                <span>25-5-2020</span>
+                                <span class="bold"><%=result.Email%></span>
+                            </div>
+                        </div>
+                        <div class="row" style="padding: 10px;">
+                            <div class="col-lg-3 col-md-3 col-sm-5 col-xs-5">
+                                <span class="bold">BOOKING DATE:</span>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-7 col-xs-7">
+                                <span><%=result.DateBooking%></span>
                             </div>
                         </div>
                         <div class="row" style="padding: 10px;">
@@ -158,7 +166,7 @@
                                 <span class="bold">TOTAL COST:</span>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-7 col-xs-7">
-                                <span>14000000</span>
+                                <span><%=JSON.stringify(result.TotalCost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%> VND</span>
                             </div>
                         </div>
                         <div class="row" style="padding: 10px;">
@@ -166,7 +174,7 @@
                                 <span class="bold">PASSPORT:</span>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-7 col-xs-7">
-                                <span>123456789</span>
+                                <span><%=result.Passport%></span>
                             </div>
                         </div>
                         <div class="row" style="padding: 10px;">
@@ -211,26 +219,22 @@
                                     <th>PASSPORT</th>
                                     <th>DEPARTURE</th>
                                     <th>DESTINATION</th>
-                                    <th>Amount of money</th>
+                                    <th>AMOUNT OF MONEY</th>
+                                    <th>STATUS</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Fred</td>
-                                    <td>Adult</td>
-                                    <td>123456789</td>
-                                    <td>Hà Nội</td>
-                                    <td>Thường Tín</td>
-                                    <td>750000</td>
-                                </tr>
-                                <tr>
-                                    <td>Fred</td>
-                                    <td>Child</td>
-                                    <td>123456789</td>
-                                    <td>Hà Nội</td>
-                                    <td>Thường Tín</td>
-                                    <td>750000</td>
-                                </tr>
+                                <%result.Customers.forEach(customer =>{%>
+                                    <tr>
+                                        <td><%=customer.Name%></td>
+                                        <td name="TypeObjectID" data-id="<%=customer.TypeObjectID%>"><%=customer.TypeObjectID%></td>
+                                        <td><%=customer.Passport%></td>
+                                        <td name="DepartureStationID" data-id="<%=customer.Ticket.DepartureStationID%>"><%=customer.Ticket.DepartureStationID%></td>
+                                        <td name="ArrivalStationID" data-id="<%=customer.Ticket.ArrivalStationID%>"><%=customer.Ticket.ArrivalStationID%></td>
+                                        <td><%=JSON.stringify(customer.Ticket.Price).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%> VND%></td>
+                                        <td name="StatusTicket" data-status="<%=customer.Ticket.Status%>"><%=customer.Ticket.Status%></td>
+                                    </tr>
+                                <%})%>
                             </tbody>
                         </table>
                     </div>

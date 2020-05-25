@@ -7,7 +7,9 @@ var bodyParser = require("body-parser");
 var session = require('express-session');
 var cookieParser = require('cookie-parser')
 var port = process.env.PORT || 3000;
-var Cookies = require('cookies')
+
+var Cookies = require('cookies');
+//
 var keys = ['keyboard cat']
 // create application/json parser
 var jsonParser = bodyParser.json();
@@ -15,6 +17,8 @@ var jsonParser = bodyParser.json();
 // create application/x-www-form-urlencoded parser
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var app = express();
+var http = require('http').createServer(app);
+var io = require("socket.io")(http);
 app.use(express.static('./node_modules'));
 app.use(express.static('UI'));
 app.use(urlencodedParser);
@@ -38,8 +42,11 @@ app.get("/", function (req, res) {
 })
 
 app.get("/passenger", function (req, res) {
-
-    console.log(req.headers.cookie);
+    //console.log(req.headers.cookie.session_id);
+    if(typeof(req.headers.cookie) == "undefined"){
+        console.log("SessionID: " + req.session.id);
+        res.cookie('sesion_id', req.session.id);
+    }
 
     controller.passenger(req, res);
 })
@@ -94,6 +101,9 @@ app.post("/createInfomation", function (req, res) {
     controller.createSession(req, res);
 })
 
+app.get('/test', function(req,res){
+    res.render('test');
+})
 // app.get('/CheckLogin' , function(req,res){
 //     loginController.CheckLogin(req,res);
 // })
@@ -110,8 +120,17 @@ app.get('/payment', function (req, res) {
 })
 
 app.get('/manageBooking', function (req, res) {
+    res.render('manageBookingForm');
+})
+
+app.get('/manageBooking1', function (req, res) {
     res.render('managebooking');
 })
+
+app.post('/SearchBooking', function(req,res){
+    controller.ManageBooking(req,res);
+})
+
 app.get('/getSeatTypeBySeatID', function (req, res) {
     controller.getSeatTypeBySeatID(req, res);
 })
@@ -287,10 +306,63 @@ app.put("/admin/ticket", function (req, res) {
     managerCtrler.editStatusTicket(req, res);
 })
 
-
 app.post("/admin/schedule", function (req, res) {
     managerCtrler.createSchedule(req, res);
 })
+var listSeatBlock = [];
+
+io.on('connection', (socket) => {
+    console.log('a user connected');
+    socket.emit('response', listSeatBlock);
+    socket.on('changeStatus', (data) => {
+        var check = false;
+        listSeatBlock.forEach(seat => {
+            if(data.id == seat.id) {
+                if(data.class.search('soft_bed_left') != -1) {
+                    data.class = 'train_bed_cell bed can_block soft_bed_left reserved';
+                }
+                else if(data.class.search('soft_bed_right') != -1) {
+                    data.class = 'train_bed_cell bed can_block soft_bed_right reserved';
+                }
+                else if(data.class.search('soft_seat_left') != -1) {
+                    data.class = 'train_cell seat can_block soft_seat_left reserved';
+                }
+                check = true;
+            }
+        })
+
+        //console.log(socket);
+        if(typeof(data.class) != "undefined" && data.block == true){
+
+            if(data.class.search('soft_bed_left') != -1) {
+                data.class = 'train_bed_cell bed can_block soft_bed_left reserved';
+            }
+            else if(data.class.search('soft_bed_right') != -1) {
+                data.class = 'train_bed_cell bed can_block soft_bed_right reserved';
+            }
+            else if(data.class.search('soft_seat_left') != -1) {
+                data.class = 'train_cell seat can_block soft_seat_left reserved';
+            }
+
+            if(!check) {
+                listSeatBlock.push(data);
+                socket.broadcast.emit('response', listSeatBlock);      
+            }
+            else if(check){
+                console.log(socket.id);
+                socket.broadcast.to(socket.id).emit('response', listSeatBlock);
+            }
+        }
+        else if(typeof(data.class) != "undefined" && data.unblock == true){
+             var listUnblock = listSeatBlock.filter(seat => {
+                 return data.id != seat.id;
+             });
+
+             listSeatBlock = listUnblock;
+             socket.broadcast.emit('response_unblock', data);
+        }   
+    })
+});
 app.get("/getAllScheduleDetail", function (req, res) {
     managerCtrler.getAllScheduleDetail(req, res)
 })
@@ -303,7 +375,7 @@ app.get("/test", function (req, res) {
     managerCtrler.createTableCost(req, res)
 })
 
-
-var server = app.listen(port, function () {
+http.listen(port, function () {
     console.log("Run on port " + port);
 });
+
