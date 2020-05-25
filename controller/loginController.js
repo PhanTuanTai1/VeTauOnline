@@ -45,6 +45,11 @@ module.exports.CheckLogin = function(){
     })
 }
 
+module.exports.GetUserFromSession = () => {
+    return new Promise(resolve => {
+        resolve(req.session[firebaseUser.email]);
+    })
+}
 function GetDataFromCloudDB(Account){
     return new Promise(resolve => {
         var database = firebase.firestore();

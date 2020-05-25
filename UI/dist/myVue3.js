@@ -22,10 +22,7 @@ socket.on('response', (data)=> {
 
 socket.on('response_unblock', (data)=> {
     try {
-        
-            document.getElementById(data.id).setAttribute('class', data.class.replace("reserved", "available"));              
-         
-        
+            document.getElementById(data.id).setAttribute('class', data.class.replace("reserved", "available"));                   
     }
     catch(err) {
 

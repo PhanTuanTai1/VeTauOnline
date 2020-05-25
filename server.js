@@ -42,7 +42,7 @@ app.get("/", function (req, res) {
 })
 
 app.get("/passenger", function (req, res) {
-    console.log(req.headers.cookie.session_id);
+    //console.log(req.headers.cookie.session_id);
     if(typeof(req.headers.cookie) == "undefined"){
         console.log("SessionID: " + req.session.id);
         res.cookie('sesion_id', req.session.id);
@@ -243,6 +243,22 @@ io.on('connection', (socket) => {
     console.log('a user connected');
     socket.emit('response', listSeatBlock);
     socket.on('changeStatus', (data) => {
+        var check = false;
+        listSeatBlock.forEach(seat => {
+            if(data.id == seat.id) {
+                if(data.class.search('soft_bed_left') != -1) {
+                    data.class = 'train_bed_cell bed can_block soft_bed_left reserved';
+                }
+                else if(data.class.search('soft_bed_right') != -1) {
+                    data.class = 'train_bed_cell bed can_block soft_bed_right reserved';
+                }
+                else if(data.class.search('soft_seat_left') != -1) {
+                    data.class = 'train_cell seat can_block soft_seat_left reserved';
+                }
+                check = true;
+            }
+        })
+
         //console.log(socket);
         if(typeof(data.class) != "undefined" && data.block == true){
 
@@ -256,9 +272,14 @@ io.on('connection', (socket) => {
                 data.class = 'train_cell seat can_block soft_seat_left reserved';
             }
 
-            listSeatBlock.push(data);
-            console.log(data.session_id);
-            socket.broadcast.emit('response', listSeatBlock);
+            if(!check) {
+                listSeatBlock.push(data);
+                socket.broadcast.emit('response', listSeatBlock);      
+            }
+            else if(check){
+                console.log(socket.id);
+                socket.broadcast.to(socket.id).emit('response', listSeatBlock);
+            }
         }
         else if(typeof(data.class) != "undefined" && data.unblock == true){
              var listUnblock = listSeatBlock.filter(seat => {
