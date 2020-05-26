@@ -299,7 +299,7 @@ app.post("/admin/scheduledetail", function (req, res) {
     managerCtrler.createScheduleDetail(req, res)
 })
 
-app.get("/test", function (req, res) {
+app.post("/admin/cost", function (req, res) {
     managerCtrler.createTableCost(req, res)
 })
 

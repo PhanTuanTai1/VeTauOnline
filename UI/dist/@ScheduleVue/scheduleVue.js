@@ -128,8 +128,16 @@ new Vue({
         await detailList.push(schedule[1]);
         await detailList.push(schedule[2]);
         detailList.sort()
-        let abc = (await axios.post(window.origin + '/admin/schedule?TimeDeparture=' + schedule[4] + '&DateDeparture=' + schedule[3] + '&TrainID=' + schedule[0])).data;
+        let abc = await (await axios.post(window.origin + '/admin/schedule?TimeDeparture=' + schedule[4] + '&DateDeparture=' + schedule[3] + '&TrainID=' + schedule[0])).data;
         this.create(abc, detailList, schedule[3], schedule[4]);
+        this.Schedules.push({
+          "ID": abc.ID,
+          "TimeDeparture": abc.TimeDeparture,
+          "DateDeparture": abc.DateDeparture,
+          Train: {
+            "Name": this.Trains.find(x => x.ID == abc.TrainID).Name
+          }
+        })
         // axios.post('/admin/train?Name=' + train[0]).then(res => {
         //   this.Trains.push({
         //     "ID": res.data.ID,
@@ -145,18 +153,14 @@ new Vue({
     async create(abc, detailList, date, time) {
       for (let i = 0; i < (detailList.length - 1); i++) {
         for (let j = (i + 1); j < (detailList.length); j++) {
-          axios.post(window.origin + '/admin/scheduledetail?DepartureStationID=' + detailList[i] + '&ArrivalStationID=' + detailList[j] + '&DateDeparture=' + date + '&TimeDeparture=' + time + '&ScheduleID=' + abc.ID);
+          await axios.post(window.origin + '/admin/scheduledetail?DepartureStationID=' + detailList[i] + '&ArrivalStationID=' + detailList[j] + '&DateDeparture=' + date + '&TimeDeparture=' + time + '&ScheduleID=' + abc.ID).then(async r => {
+            this.createCost(abc.ID, r.data.ID)
+          });
         }
       }
-      // let scheid = await abc.ID;
-      // for (let i = 0; i < detailList.length - 1; i++) {
-      //   let id = detailList[i];
-      //   console.log(id);
-      //   // for (let j = 1; i < detailList.length; j++) {
-      //   //   let toID = detailList[j];
-      //   //   await axios.post(window.origin + '/admin/scheduledetail?DepartureStationID=' + id + '&ArrivalStationID=' + toID + '&DateDeparture=' + schedule[3] + '&TimeDeparture=' + schedule[4] + '&ScheduleID=' + scheid);
-      //   // }
-      // }
+    },
+    async createCost(scheID, DetailID) {
+      axios.post(window.origin + '/admin/cost?&ID=' + scheID + '&ScheduleDetailID=' + DetailID)
     }
   },
   computed: {
@@ -165,6 +169,9 @@ new Vue({
     },
     listTrain() {
       return this.Trains;
+    },
+    listSchedule() {
+      return this.Schedules;
     },
 
   },

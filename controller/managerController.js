@@ -236,10 +236,10 @@ module.exports.createScheduleDetail = async function (req, res) {
   let sta = await db.Station.findAll({ raw: true });
   let distance = 0;
   if (departID > arrivalID) {
-    distance = await (parseInt(sta.find(x => x.ID == departID).Distance) - parseInt(sta.find(x => x.ID == arrivalID).Distance));
+    distance = await Math.abs(parseInt(sta.find(x => x.ID == departID).Distance) - parseInt(sta.find(x => x.ID == arrivalID).Distance));
   }
   else {
-    distance = await (parseInt(sta.find(x => x.ID == arrivalID).Distance) - parseInt(sta.find(x => x.ID == departID).Distance));
+    distance = await Math.abs(parseInt(sta.find(x => x.ID == arrivalID).Distance) - parseInt(sta.find(x => x.ID == departID).Distance));
   }
   let time = moment(req.query.DateDeparture + " " + req.query.TimeDeparture).add(distance / 60, "hours");
   const sche = await {
@@ -255,21 +255,51 @@ module.exports.createScheduleDetail = async function (req, res) {
 }
 
 module.exports.createTableCost = async function (req, res) {
-  let train = await db.Schedule.findOne({
+  let train = await db.Schedule.findByPk(req.query.ID, { raw: true });
+  let list = [];
+  let carr = await db.Carriage.findAll({
+    attributes: ['ID'],
     where: {
-      ID: req.query.ID,
+      TrainID: train.TrainID
     },
     raw: true
   });
-  console.log(train.TrainID);
-  let carriagetype = await db.Carriage.findAll({ where: { TrainID: train.TrainID }, raw: true });
-  let a = [];
-  await carriagetype.forEach(e => {
+  console.log(carr.data);
+  for (let i = 0; i < carr.length; i++) {
+    await db.Seat.findOne({
+      where: {
+        CarriageID: carr[i].ID
+      },
+      raw: true
+    }).then(r => list.push(r.SeatTypeID))
+  };
+  let newList = await [...new Set(list)];
+  await newList.map(async e => {
+    // await calCost(e, req.query.ScheduleDetailID)
+    let cost = (await db.SeatType.findByPk(e)).CostPerKm;
+    let sche = (await db.ScheduleDetail.findByPk(req.query.ScheduleDetailID)).Length;
+    // db.TableCost.create({
+    //   ScheduleID: parseInt(req.query.ScheduleDetailID),
+    //   SeatTypeID: parseInt(e),
+    //   Cost: parseInt(cost * sche),
+    // }).then(r => res.send(r))
+    const a = {
+      ScheduleID: parseInt(req.query.ScheduleDetailID),
+      SeatTypeID: parseInt(e),
+      Cost: parseInt(parseInt(cost) * parseInt(sche)),
+    }
+    db.TableCost.create(a).then(abc => {
+      return res.send(abc);
 
-    let seattype = db.Seat.findAll({ where: { CarriageID: e.ID }, raw: true }).then(r => a.push[r]);
-  })
-  console.log(a);
+    });
+  });
+
 }
+// module.exports.delSchedule = async function (req, res) {
+//   db.Schedule.findByPk(req.query.ScheduleID, { raw: true }).then(sche=>{
+//     db.
+//   })
+// }
 //#endregion
 
 //#region Seat
