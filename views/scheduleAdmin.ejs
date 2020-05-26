@@ -26,6 +26,7 @@
             width: 900px !important;
         }
     </style>
+
     <!-- vue-select -->
 </head>
 
@@ -82,11 +83,12 @@
                             <tbody>
                                 <tr v-for="(item,index) in Schedules" :key="index">
                                     <td>{{item.ID}}</td>
-                                    <td>{{item.DateDeparture}}</td>
-                                    <td>{{item.TimeDeparture}}</td>
+                                    <td>{{new Date(item.DateDeparture).toDateString()}}</td>
+                                    <td>{{new Date(item.TimeDeparture).toLocaleTimeString()}}</td>
                                     <td>{{item.Train.Name}}</td>
-                                    <td class="text-right"><button type="button" class="btn btn-warning"
-                                            @click="updateTrain(item.ID,index)"><i class="fa fa-edit"></i> Edit</button>
+                                    <td class="text-right"><button type="button" class="btn btn-danger"
+                                            @click="delSchedule(item.ID,index)"><i class="fa fa-trash"></i>
+                                            Delete</button>
                                         <button type="button" class="btn btn-info" @click="viewDetail(item.ID)"><i
                                                 class="fa fa-info"></i> View detail</button></td>
                                 </tr>
