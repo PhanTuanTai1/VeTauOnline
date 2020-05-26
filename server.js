@@ -7,6 +7,7 @@ var bodyParser = require("body-parser");
 var session = require('express-session');
 var cookieParser = require('cookie-parser')
 var port = process.env.PORT || 3000;
+//var process = require('process');
 
 var Cookies = require('cookies');
 //
@@ -309,11 +310,16 @@ app.put("/admin/ticket", function (req, res) {
 app.post("/admin/schedule", function (req, res) {
     managerCtrler.createSchedule(req, res);
 })
+
 var listSeatBlock = [];
 
-io.on('connection', (socket) => {
+var io = io.on('connection', (socket) => {
     console.log('a user connected');
     socket.emit('response', listSeatBlock);
+    setInterval(() => {
+        //console.log(listSeatBlock.length)
+        io.emit('response_unblock', listSeatBlock.shift());
+    }, 900000)
     socket.on('changeStatus', (data) => {
         var check = false;
         listSeatBlock.forEach(seat => {
@@ -348,9 +354,9 @@ io.on('connection', (socket) => {
                 listSeatBlock.push(data);
                 socket.broadcast.emit('response', listSeatBlock);      
             }
-            else if(check){
-                console.log(socket.id);
-                socket.broadcast.to(socket.id).emit('response', listSeatBlock);
+            else{
+                //console.log(socket.id);
+                socket.emit('response', {data : {listSeatBlock: listSeatBlock, check: true, id: data.id}});
             }
         }
         else if(typeof(data.class) != "undefined" && data.unblock == true){
@@ -374,6 +380,14 @@ app.post("/admin/scheduledetail", function (req, res) {
 app.post("/admin/cost", function (req, res) {
     managerCtrler.createTableCost(req, res)
 })
+
+app.get('/listSchedule', (req,res) => {
+    res.render('listFare');
+})
+process.on("unhandledRejection", function(reason, p){
+    console.log("Unhandled Rejection:", reason.stack);
+    //process.exit(1);
+}); 
 
 http.listen(port, function () {
     console.log("Run on port " + port);

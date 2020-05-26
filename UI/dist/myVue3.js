@@ -4,19 +4,52 @@ function changeStatus(data) {
     socket.emit('changeStatus', data);
 }      
 
-socket.on('response', (data)=> {
+socket.on('response', data => {
     try {
-        listBlock = data;
-        var filter = data.filter(seat => {
-            return seat.session_id != document.cookie
-        })
-        filter.forEach(seat => {
-            document.getElementById(seat.id).setAttribute('class', seat.class);              
-        })   
+        //alert(typeof(data.data));
+        if(typeof(data.data) == "undefined"){
+            listBlock = data;
+            var filter = data.filter(seat => {
+                return seat.session_id != document.cookie
+            })
+            
+            filter.forEach(seat => {
+                document.getElementById(seat.id).setAttribute('class', seat.class);              
+            }) 
+        }
+        else if(data.data.check){
+            //alert(JSON.stringify(data.data.listSeatBlock));
+            listBlock = data.data.listSeatBlock;
+            var filter = data.data.listSeatBlock.filter(seat => {
+                return seat.session_id != document.cookie
+            })
+            
+            filter.forEach(seat => {
+                document.getElementById(seat.id).setAttribute('class', seat.class);              
+            })
+            //alert(data.data.id);
+            //alert(data.split('_')[3]);
+            
+            vm.listSelected.forEach(seat => {
+                //alert(data.split('_')[3]);
+                if(seat.split('_')[3]  == data.data.id) {
+                    vm.listSelected.pop();
+                    //break;
+                }
+            })
+            
+            vm.listSelected2.forEach(data => {
+                data.split('_')[3]
+                if(data.split('_')[3]  == data.data.id) {
+                    vm.listSelected2.pop();
+                    //break;
+                }
+            })
+        }
         
     }
     catch(err) {
-
+        //alert("Error");
     }
 })
 
