@@ -45,10 +45,10 @@ module.exports.search = function (req, res) {
             }],
         }).then(async Schedule => {
             console.log('Schedule: ' + JSON.stringify(Schedule));
-            // if (Schedule.length === 0) {
-            //     res.render('searchResultOneWay', { result: [], query: JSON.stringify(req.query), error: 1, arrivalID: req.query.TO, departureID: req.query.FROM });
-            //     res.end();
-            // }
+            if (Schedule.length === 0) {
+                res.render('searchResultOneWay', { result: [], query: JSON.stringify(req.query), error: 1, arrivalID: req.query.TO, departureID: req.query.FROM });
+                res.end();
+            }
             var ListSchedule = await getScheduleMatch(req.query.DEPART, parseInt(req.query.FROM), Schedule);
             if(ListSchedule.length == 0) {
                 res.render('searchResultOneWay', { result: [], query: JSON.stringify(req.query), error: 1, arrivalID: req.query.TO, departureID: req.query.FROM });
@@ -160,12 +160,15 @@ function getScheduleMatch(Date, DepartureID, ListSchedule) {
             var TimeScheduleDetails = parseInt(schedule.ScheduleDetails[0].Time * 60);
             var TimeDepartInt = parseInt(moment(schedule.TimeDeparture).format('hh'));
             var MinutesDepartInt = parseInt(moment(schedule.TimeDeparture).format('mm'));
-            var DateDepart = moment(schedule.DateDeparture).add(TimeDepartInt, 'hour').add(MinutesDepartInt + TimeScheduleDetails, 'minutes').format('DD-MM-YYYY');
-            var DateDepartFormat = (moment(Date).subtract(7, 'hour').format('DD-MM-YYYY'));
+            var DateDepart = moment(schedule.DateDeparture).add(TimeDepartInt, 'hour').add(MinutesDepartInt + TimeScheduleDetails, 'minutes').format('YYYY-MM-DD');
+            var DateDepartFormat = (moment(Date).subtract(7, 'hour').format('YYYY-MM-DD'));
             var parseDateDepart = moment(DateDepart);
             var parseDateDepartFormat = moment(DateDepartFormat);
-            console.log("Expected:" +  moment(Date).subtract(7, 'hour').format('DD-MM-YYYY'));
+            console.log("Expected:" +  DateDepartFormat);
             console.log("Actual:" +  DateDepart);
+            console.log("Schedule.DateDeparture: " + schedule.DateDeparture);
+            // console.log("parseDateDepartFormat: " + new Date(parseDateDepartFormat));
+            // console.log("parseDateDepart: " + new Date(parseDateDepart));
             if(DateDepartFormat === DateDepart) 
             {           
                 ListFilter.push(schedule)
@@ -180,7 +183,7 @@ function getScheduleMatch(Date, DepartureID, ListSchedule) {
                 //     }
                 // })         
             }       
-            else if(parseDateDepartFormat - parseDateDepart <= 129600000){
+            else if(moment(DateDepartFormat).add(129600000, 'milliseconds') === parseDateDepart){
                 ListFilter.push(schedule)
                 // await checkIsDepartureStationFirst(DepartureID, schedule).then(data => {
                 //     if(data){

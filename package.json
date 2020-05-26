@@ -963,11 +963,7 @@
       "resolved": "https://registry.npmjs.org/is-typedarray/-/is-typedarray-1.0.0.tgz",
       "version": "1.0.0"
     },
-    "isarray": {
-      "integrity": "sha1-u5NdSFgsuhaMBoNJV6VKPgcSTxE=",
-      "resolved": "https://registry.npmjs.org/isarray/-/isarray-1.0.0.tgz",
-      "version": "1.0.0"
-    },
+    "isarray": "^2.0.5",
     "isexe": {
       "integrity": "sha1-6PvzdNxVb/iUehDcsFctYz8s+hA=",
       "resolved": "https://registry.npmjs.org/isexe/-/isexe-2.0.0.tgz",
