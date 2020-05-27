@@ -291,6 +291,7 @@ app.get("/admin/ticket", function (req, res) {
     loginController.CheckLogin().then(check => {
         if (check) {
             res.render('ticketadmin');
+            loginController.GetUserFromSession(req, res);
         }
         else {
             res.render('login');
