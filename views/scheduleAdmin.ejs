@@ -86,7 +86,7 @@
                                 <tr v-for="(item,index) in Schedules" :key="index">
                                     <td>{{item.ID}}</td>
                                     <td>{{new Date(item.DateDeparture).toDateString()}}</td>
-                                    <td>{{item.TimeDeparture}}</td>
+                                    <td>{{formatTime(item.TimeDeparture)}}</td>
                                     <td>{{item.Train.Name}}</td>
                                     <td class="text-right"><button type="button" class="btn btn-danger"
                                             @click="delSchedule(item.ID,index)"><i class="fa fa-trash"></i>
