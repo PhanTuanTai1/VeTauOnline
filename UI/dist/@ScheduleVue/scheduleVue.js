@@ -26,6 +26,7 @@ new Vue({
     }
   },
   methods: {
+
     async viewDetail(IDinput) {
       let detail = (await axios.get(window.origin + '/getAllScheduleDetail?ScheduleID=' + IDinput)).data;
       let sch = this.Schedules.find(x => x.ID == IDinput);
@@ -132,7 +133,7 @@ new Vue({
         this.create(abc, detailList, schedule[3], schedule[4]);
         this.Schedules.push({
           "ID": abc.ID,
-          "TimeDeparture": abc.TimeDeparture,
+          "TimeDeparture": moment(abc.TimeDeparture).add(-8, "hours").format("HH:mm"),
           "DateDeparture": abc.DateDeparture,
           Train: {
             "Name": this.Trains.find(x => x.ID == abc.TrainID).Name
