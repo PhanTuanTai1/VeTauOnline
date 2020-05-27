@@ -153,23 +153,25 @@ module.exports.search = function (req, res) {
     }
 }
 
+
 function getScheduleMatch(Date, DepartureID, ListSchedule) {
     var ListFilter = [];
-    return new Promise(resolve => {
+    return new Promise(async resolve => {
         ListSchedule.forEach(async (schedule, index, array ) => {
             var TimeScheduleDetails = parseInt(schedule.ScheduleDetails[0].Time * 60);
-            var TimeDepartInt = parseInt(moment(schedule.TimeDeparture).format('hh'));
+            var TimeDepartInt = parseInt(moment(schedule.TimeDeparture).subtract(7,'hour').format('HH'));
             var MinutesDepartInt = parseInt(moment(schedule.TimeDeparture).format('mm'));
-            var DateDepart = moment(schedule.DateDeparture).add(TimeDepartInt, 'hour').add(MinutesDepartInt + TimeScheduleDetails, 'minutes').format('YYYY-MM-DD');
+            var DateDepart = moment(schedule.DateDeparture).add(TimeDepartInt, 'hour').subtract(7,'hour').add(MinutesDepartInt + TimeScheduleDetails, 'minutes').format('YYYY-MM-DD');
             var DateDepartFormat = (moment(Date).subtract(7, 'hour').format('YYYY-MM-DD'));
             var parseDateDepart = moment(DateDepart);
             var parseDateDepartFormat = moment(DateDepartFormat);
             console.log("Expected:" +  DateDepartFormat);
             console.log("Actual:" +  DateDepart);
             console.log("Schedule.DateDeparture: " + schedule.DateDeparture);
+            var check = await checkIsSameDepartureStationIDFirst(DepartureID, schedule.ID);
             // console.log("parseDateDepartFormat: " + new Date(parseDateDepartFormat));
             // console.log("parseDateDepart: " + new Date(parseDateDepart));
-            if(DateDepartFormat === DateDepart) 
+            if((DateDepartFormat === DateDepart && !check) || (check && moment(schedule.DateDeparture).format('DD-MM-YYYY') == moment(Date).subtract(7, 'hour').format('DD-MM-YYYY'))) 
             {           
                 ListFilter.push(schedule)
                 // await checkIsSameDepartureStationIDFirst(DepartureID, schedule.ID).then(data => {
@@ -183,7 +185,7 @@ function getScheduleMatch(Date, DepartureID, ListSchedule) {
                 //     }
                 // })         
             }       
-            else if(moment(DateDepartFormat).add(129600000, 'milliseconds') === parseDateDepart){
+            else if(moment(moment(DateDepartFormat).add(129600000, 'milliseconds')._d).format('YYYY-MM-DD') === parseDateDepart._d){
                 ListFilter.push(schedule)
                 // await checkIsDepartureStationFirst(DepartureID, schedule).then(data => {
                 //     if(data){
@@ -733,13 +735,13 @@ function CreateTicket(ListPassengerModel, TicketInfo, ListSeat) {
 function getListSeatSoldDetail(Schedule, isBreak){
     return new Promise(resolve => {
         db.Schedule.findOne({
-            attributes: ['ID', 'DateDeparture', 'TrainID'],
+            attributes: ['ID', 'DateDeparture', 'TrainID','TimeDeparture'],
             where: {
                 ID: Schedule.ID
             },
             include: {
                 model: db.ScheduleDetail,
-                attributes: ['ID', 'DepartureStationID', 'ArrivalStationID'],
+                attributes: ['ID', 'DepartureStationID', 'ArrivalStationID','Time'],
                 where: {
                     [Op.or]: [{Time:{[Op.gte]: Schedule.ScheduleDetails[0].Time}},{DepartureStationID: Schedule.ScheduleDetails[0].DepartureStationID}]
                 }
@@ -777,14 +779,21 @@ function getListTicketSold(Schedule) {
     return new Promise(async resolve => {
        await getTrainByID(Schedule.TrainID).then(data => {
             console.log("getTrainByID: " + JSON.stringify(data));
+            var hour = parseInt(moment(Schedule.TimeDeparture).subtract(7, 'hour').format('HH'))
+            var min = parseInt(moment(Schedule.TimeDeparture).format('mm'))
+            console.log("Hour: " + hour);
+            console.log("Min: " + min);
             if(Schedule.ScheduleDetails.length === 0) resolve(ListTicketFilter);
             Schedule.ScheduleDetails.forEach(async (detail, index, array) => {
+                var date = moment(moment(Schedule.DateDeparture).add(hour, 'hour').subtract(7, "hour").format("YYYY-MM-DD")).add((60 * detail.Time) + min, 'minutes');
+                console.log("Date: " + moment(new Date(date)));
                 await db.Ticket.findAll({
                     attributes: ['ID','SeatID'],
                     where: {
                         DepartureStationID: detail.DepartureStationID,
                         ArrivalStationID: detail.ArrivalStationID,
-                        TrainName: data.Name
+                        TrainName: data.Name,
+                        DepartureDate : date
                     }
                 }).then(result => {
                     
