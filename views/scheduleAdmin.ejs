@@ -86,7 +86,7 @@
                                 <tr v-for="(item,index) in Schedules" :key="index">
                                     <td>{{item.ID}}</td>
                                     <td>{{new Date(item.DateDeparture).toDateString()}}</td>
-                                    <td>{{item.TimeDeparture}}</td>
+                                    <td>{{formatTime(item.TimeDeparture)}}</td>
                                     <td>{{item.Train.Name}}</td>
                                     <td class="text-right"><button type="button" class="btn btn-danger"
                                             @click="delSchedule(item.ID,index)"><i class="fa fa-trash"></i>
@@ -115,7 +115,6 @@
             <%- include('adminFooter'); -%>
         </footer>
     </div>
-    <script src="../dist/moment.js"></script>
 
     <script src="../dist/js/pages/dashboard2.js"></script>
     <script src="../dist/vue.js"></script>
@@ -123,9 +122,9 @@
     <script src="../dist/axios.js"></script>
     <script src="../dist/sweetalert2.all.min.js"></script>
     <script src="../dist/uuid.js"></script>
-    <script src="../dist/moment.js"></script>
 
     <script type="module" src="../dist/@ScheduleVue/scheduleVue.js"></script>
+    <script src="../dist/moment.js"></script>
 </body>
 
 </html>

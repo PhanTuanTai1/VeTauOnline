@@ -26,7 +26,9 @@ new Vue({
     }
   },
   methods: {
-
+    formatTime(Time) {
+      return moment(Time).subtract(7, 'hour').format('HH:mm');
+    },
     async viewDetail(IDinput) {
       let detail = (await axios.get(window.origin + '/getAllScheduleDetail?ScheduleID=' + IDinput)).data;
       let sch = this.Schedules.find(x => x.ID == IDinput);
@@ -41,7 +43,7 @@ new Vue({
         <div>
         <h1>${sch.Train.Name}</h1>
             <p>Start date: <strong>${new Date(sch.DateDeparture).toLocaleDateString("vi-vn")}</strong></p>
-            <p>Time: <strong>${moment(sch.TimeDeparture).add(-8, "hours").format("HH:mm")}</strong></p>
+            <p>Time: <strong>${moment(sch.TimeDeparture).add(-7, "hours").format("HH:mm")}</strong></p>
             <table id="ticktab" border="1" style="width:100%;">
                 <thead>
                     <tr>
@@ -58,7 +60,7 @@ new Vue({
                             <td>${this.Stations.find(x => x.ID == e.ArrivalStationID).Name}</td>
                             <td>${e.Length}</td>
                             <td>${e.Time}</td>
-                            <td>${moment(e.StartTime).add(-8, "hours").format("HH:mm")}</td>
+                            <td>${moment(e.StartTime).add(-7, "hours").format("HH:mm")}</td>
                             </tr>` )}
                 </tbody>
             </table>
