@@ -7,6 +7,7 @@
     <%- include('adminheader') %>
     <link type="text/css" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css"
         rel="stylesheet" />
+
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 
     <!-- <script>
@@ -17,6 +18,7 @@
             });
         }
     </script> -->
+
     <style>
         .swal2-container {
             z-index: 0 !important;
@@ -74,8 +76,8 @@
                             <thead class="font-weight-bold table-info">
                                 <tr>
                                     <th>#</th>
-                                    <th>Departure time</th>
                                     <th>Departure date</th>
+                                    <th>Departure time</th>
                                     <th>Train</th>
                                     <th class="text-right">...</th>
                                 </tr>
@@ -84,7 +86,7 @@
                                 <tr v-for="(item,index) in Schedules" :key="index">
                                     <td>{{item.ID}}</td>
                                     <td>{{new Date(item.DateDeparture).toDateString()}}</td>
-                                    <td>{{new Date(item.TimeDeparture).toLocaleTimeString()}}</td>
+                                    <td>{{item.TimeDeparture}}</td>
                                     <td>{{item.Train.Name}}</td>
                                     <td class="text-right"><button type="button" class="btn btn-danger"
                                             @click="delSchedule(item.ID,index)"><i class="fa fa-trash"></i>
@@ -113,6 +115,7 @@
             <%- include('adminFooter'); -%>
         </footer>
     </div>
+    <script src="../dist/moment.js"></script>
 
     <script src="../dist/js/pages/dashboard2.js"></script>
     <script src="../dist/vue.js"></script>
