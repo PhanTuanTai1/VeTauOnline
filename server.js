@@ -150,14 +150,14 @@ app.get("/getAllSchedule", function (req, res) {
 
 //render
 app.get("/admin/dashboard", function (req, res) {
-    loginController.CheckLogin().then(check => {
-        if (check) {
-            res.render('admin');
-        }
-        else {
-            res.render('login');
-        }
-    })
+    // loginController.CheckLogin().then(check => {
+    //     if (check) {
+    res.render('admin');
+    //     }
+    //     else {
+    //         res.render('login');
+    //     }
+    // })
 })
 app.get("/admin/customer", function (req, res) {
     loginController.CheckLogin().then(check => {
@@ -220,14 +220,14 @@ app.get("/admin/carriage", function (req, res) {
     })
 })
 app.get("/admin/schedule", function (req, res) {
-    // loginController.CheckLogin().then(check => {
-    //     if (check) {
-    res.render('scheduleadmin');
-    //     }
-    //     else {
-    //         res.render('login');
-    //     }
-    // })
+    loginController.CheckLogin().then(check => {
+        if (check) {
+            res.render('scheduleadmin');
+        }
+        else {
+            res.render('login');
+        }
+    })
 })
 
 //action customer
@@ -302,6 +302,9 @@ app.post("/admin/scheduledetail", function (req, res) {
 
 app.post("/admin/cost", function (req, res) {
     managerCtrler.createTableCost(req, res)
+})
+app.delete("/admin/schedule", function (req, res) {
+    managerCtrler.delSchedule(req, res)
 })
 
 

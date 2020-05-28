@@ -198,50 +198,16 @@ module.exports.createSchedule = async function (req, res) {
     TimeDeparture: req.query.TimeDeparture,
   };
   db.Schedule.create(schedule).then(r => res.send(r));
-  // var shortDistance = 0;
-  // var timeStart = moment(req.query.DateDeparture + " " + req.query.TimeDeparture);
-  // var i = 1;
-  // let tong = 0;
-  // let time = "";
-  // count = (await db.ScheduleDetail.findAll({ raw: true })).length;
-  // travel.forEach(async item => {
-  //   let arrival = item.ID;
-  //   if (arrival == req.query.from) {
-  //     shortDistance = 0;
-  //   }
-  //   else {
-  //     shortDistance = item.Distance - shortDistance;
-  //   }
-  //   tong = item.Distance;
-  //   count++;
-  //   const scheduleDetail = {
-  //     ID: count,
-  //     ScheduleID: id,
-  //     DepartureStationID: req.query.from,
-  //     ArrivalStationID: item.ID,
-  //     StartTime: timeStart.format("HH:mm"),
-  //     Length: tong,
-  //     Time: (shortDistance / 90).toFixed(2),
-  //   };
-  //   time = shortDistance / 90;
-  //   db.ScheduleDetail.create(scheduleDetail);
-  //   timeStart.add(time, "hours");
-  //   i++;
-  //   shortDistance = item.Distance;
-  // });
+
 }
 module.exports.createScheduleDetail = async function (req, res) {
   let departID = await req.query.DepartureStationID;
   let arrivalID = await req.query.ArrivalStationID;
+  let startSta = await db.Station.findByPk(req.query.start);
   let sta = await db.Station.findAll({ raw: true });
-  let distance = 0;
-  if (departID > arrivalID) {
-    distance = await Math.abs(parseInt(sta.find(x => x.ID == departID).Distance) - parseInt(sta.find(x => x.ID == arrivalID).Distance));
-  }
-  else {
-    distance = await Math.abs(parseInt(sta.find(x => x.ID == arrivalID).Distance) - parseInt(sta.find(x => x.ID == departID).Distance));
-  }
-  let time = moment(req.query.DateDeparture + " " + req.query.TimeDeparture).add(distance / 60, "hours");
+  let distance = await Math.abs(parseInt(sta.find(x => x.ID == arrivalID).Distance) - parseInt(startSta.Distance));
+  let time = moment(req.query.DateDeparture + " " + req.query.TimeDeparture).add(Math.abs(parseInt(sta.find(x => x.ID == departID).Distance - startSta.Distance)) / 60, "hours");
+
   const sche = await {
     ID: parseInt(uuid.genV4().intFields.timeLow.toString().substring(0, 9)),
     ScheduleID: req.query.ScheduleID,
@@ -275,14 +241,8 @@ module.exports.createTableCost = async function (req, res) {
   };
   let newList = await [...new Set(list)];
   await newList.map(async e => {
-    // await calCost(e, req.query.ScheduleDetailID)
     let cost = (await db.SeatType.findByPk(e)).CostPerKm;
     let sche = (await db.ScheduleDetail.findByPk(req.query.ScheduleDetailID)).Length;
-    // db.TableCost.create({
-    //   ScheduleID: parseInt(req.query.ScheduleDetailID),
-    //   SeatTypeID: parseInt(e),
-    //   Cost: parseInt(cost * sche),
-    // }).then(r => res.send(r))
     const a = {
       ScheduleID: parseInt(req.query.ScheduleDetailID),
       SeatTypeID: parseInt(e),
@@ -295,11 +255,31 @@ module.exports.createTableCost = async function (req, res) {
   });
 
 }
-// module.exports.delSchedule = async function (req, res) {
-//   db.Schedule.findByPk(req.query.ScheduleID, { raw: true }).then(sche=>{
-//     db.
-//   })
-// }
+module.exports.delSchedule = async function (req, res) {
+  let listDetail = await db.ScheduleDetail.findAll({
+    where: {
+      ScheduleID: req.query.ScheduleID,
+    },
+    raw: true
+  })
+  listDetail.map(detail => {
+    db.TableCost.destroy({
+      where: {
+        ScheduleID: detail.ID
+      }
+    })
+  })
+  await db.ScheduleDetail.destroy({
+    where: {
+      ScheduleID: req.query.ScheduleID
+    }
+  })
+  db.Schedule.destroy({
+    where: {
+      ID: req.query.ScheduleID
+    }
+  })
+}
 //#endregion
 
 //#region Seat
