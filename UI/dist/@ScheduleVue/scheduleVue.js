@@ -55,7 +55,7 @@ new Vue({
                     </tr>
                 </thead>
                 <tbody>
-                    ${detail.sort((a, b) => ((a.Length > b.Length) ? 1 : -1)).map(e => `<tr>
+                    ${detail.sort((a, b) => (a.Length > b.Length) ? 1 : -1).map(e => `<tr>
                             <td>${this.Stations.find(x => x.ID == e.DepartureStationID).Name}</td>
                             <td>${this.Stations.find(x => x.ID == e.ArrivalStationID).Name}</td>
                             <td>${e.Length}</td>
@@ -75,6 +75,50 @@ new Vue({
         //     $("#ticktab").DataTable();
         // }
 
+      })
+    },
+    async delSchedule(IDinput, index) {
+      const swalWithBootstrapButtons = await Swal.mixin({
+        customClass: {
+          confirmButton: 'btn btn-success',
+          cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+      })
+      const Toast = await Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        onOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer)
+          toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+      })
+      swalWithBootstrapButtons.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+        reverseButtons: true
+      }).then((result) => {
+        if (result.value) {
+          axios.delete(window.origin + '/admin/schedule?ScheduleID=' + IDinput);
+          this.Schedules.splice(index, 1)
+          Toast.fire({
+            icon: 'success',
+            title: `Schedule #${IDinput} deleted`
+          });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          swalWithBootstrapButtons.fire(
+            'Cancelled',
+            'Your imaginary file is safe :)',
+            'error'
+          )
+        }
       })
     },
     async createSchedule() {
@@ -130,7 +174,11 @@ new Vue({
         let detailList = await $("#station").val();
         await detailList.push(schedule[1]);
         await detailList.push(schedule[2]);
-        detailList.sort()
+        if (schedule[1] > schedule[2])
+          detailList.sort(function (a, b) { return b - a })
+        else {
+          detailList.sort()
+        }
         let abc = await (await axios.post(window.origin + '/admin/schedule?TimeDeparture=' + schedule[4] + '&DateDeparture=' + schedule[3] + '&TrainID=' + schedule[0])).data;
         this.create(abc, detailList, schedule[3], schedule[4]);
         this.Schedules.push({
@@ -141,22 +189,12 @@ new Vue({
             "Name": this.Trains.find(x => x.ID == abc.TrainID).Name
           }
         })
-        // axios.post('/admin/train?Name=' + train[0]).then(res => {
-        //   this.Trains.push({
-        //     "ID": res.data.ID,
-        //     "Name": res.data.Name
-        //   });
-        //   Toast.fire({
-        //     icon: 'success',
-        //     title: 'New train comes'
-        //   })
-        // })
       }
     },
     async create(abc, detailList, date, time) {
       for (let i = 0; i < (detailList.length - 1); i++) {
         for (let j = (i + 1); j < (detailList.length); j++) {
-          await axios.post(window.origin + '/admin/scheduledetail?DepartureStationID=' + detailList[i] + '&ArrivalStationID=' + detailList[j] + '&DateDeparture=' + date + '&TimeDeparture=' + time + '&ScheduleID=' + abc.ID).then(async r => {
+          await axios.post(window.origin + '/admin/scheduledetail?DepartureStationID=' + detailList[i] + '&ArrivalStationID=' + detailList[j] + '&DateDeparture=' + date + '&TimeDeparture=' + time + '&ScheduleID=' + abc.ID + '&start=' + detailList[0] + '&end=' + detailList[detailList.length - 1]).then(async r => {
             this.createCost(abc.ID, r.data.ID)
           });
         }
@@ -183,7 +221,13 @@ new Vue({
       let fromID = $("#from").val();
       let toID = $("#to").val();
       let list = (await axios.get("/getAllSta")).data;
-      $("#station").find('option').remove().end().append(`${list.slice(fromID, (toID - 1)).map(sta => `<option value="${sta.ID}">${sta.Name}</option>`)}`)
+      if (fromID > toID) {
+        $("#station").find('option').remove().end().append(`${list.slice(toID, (fromID - 1)).map(sta => `<option value="${sta.ID}">${sta.Name}</option>`)}`)
+      }
+      else {
+        $("#station").find('option').remove().end().append(`${list.slice(fromID, (toID - 1)).map(sta => `<option value="${sta.ID}">${sta.Name}</option>`)}`)
+      }
+
     })
   },
   updated: function () {
