@@ -221,7 +221,13 @@ new Vue({
       let fromID = $("#from").val();
       let toID = $("#to").val();
       let list = (await axios.get("/getAllSta")).data;
-      $("#station").find('option').remove().end().append(`${list.slice(fromID, (toID - 1)).map(sta => `<option value="${sta.ID}">${sta.Name}</option>`)}`)
+      if (fromID > toID) {
+        $("#station").find('option').remove().end().append(`${list.slice(toID, (fromID - 1)).map(sta => `<option value="${sta.ID}">${sta.Name}</option>`)}`)
+      }
+      else {
+        $("#station").find('option').remove().end().append(`${list.slice(fromID, (toID - 1)).map(sta => `<option value="${sta.ID}">${sta.Name}</option>`)}`)
+      }
+
     })
   },
   updated: function () {
