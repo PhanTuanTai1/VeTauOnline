@@ -205,7 +205,7 @@ module.exports.createScheduleDetail = async function (req, res) {
   let arrivalID = await req.query.ArrivalStationID;
   let startSta = await db.Station.findByPk(req.query.start);
   let sta = await db.Station.findAll({ raw: true });
-  let distance = await Math.abs(parseInt(sta.find(x => x.ID == arrivalID).Distance) - parseInt(startSta.Distance));
+  let distance = await Math.abs(parseInt(sta.find(x => x.ID == arrivalID).Distance) - parseInt(sta.find(x => x.ID == departID).Distance));
   let time = moment(req.query.DateDeparture + " " + req.query.TimeDeparture).add(Math.abs(parseInt(sta.find(x => x.ID == departID).Distance - startSta.Distance)) / 60, "hours");
 
   const sche = await {
