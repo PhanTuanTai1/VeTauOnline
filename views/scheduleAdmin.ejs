@@ -5,10 +5,9 @@
     <title>Admin | Schedule</title>
 
     <%- include('adminheader') %>
-    <link type="text/css" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css"
-        rel="stylesheet" />
+    <link type="text/css" href="../dist/css/select2.min.css" rel="stylesheet" />
 
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+    <script src="../dist/js/select2.min.js"></script>
 
     <!-- <script>
         function load() {
@@ -46,32 +45,6 @@
                             <button type="button" @click="createSchedule" class="btn btn-success"><i
                                     class="fa fa-plus"></i> Create</button>
                         </div>
-                        <!-- <div class="form-group">
-                            <label for="train">Train</label>
-                            <select style="width: 100%; " id="train" class="js-example-basic-single" name="state"
-                                required>
-                                <option></option>
-                                <option v-for="item in Trains" v-bind:value="item.ID">{{item.Name}}</option>
-                            </select>
-                            <label for="from">From</label>
-                            <select style="width: 100%; " id="from" class="js-example-basic-single" name="state">
-                                <option></option>
-                                <option v-for="item in Stations" v-bind:value="item.ID">{{item.Name}}</option>
-                            </select>
-                            <label for="from">To</label>
-                            <select style="width: 100%; " id="to" class="js-example-basic-single" name="state">
-                                <option></option>
-                                <option v-for="item in Stations" v-bind:value="item.ID">{{item.Name}}</option>
-                            </select>
-                            <label for="date">Start date</label>
-                            <input id="date" type="date" style="width: 100%;">
-                            <label for="time">Start time</label>
-                            <input id="time" type="time" style="width: 100%;">
-                            <div>
-                                <button type="button" class="btn btn-success"><i class="fa fa-check"></i>
-                                    Confirm</button>
-                            </div>
-                        </div> -->
                         <table id="myTable" v-if="Schedules" class="table">
                             <thead class="font-weight-bold table-info">
                                 <tr>

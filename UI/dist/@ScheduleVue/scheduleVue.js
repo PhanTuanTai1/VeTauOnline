@@ -161,6 +161,26 @@ new Vue({
           $('.js-example-basic-multiple').select2();
         },
         preConfirm: () => {
+          if (document.getElementById('train').value == "") {
+            Swal.showValidationMessage('Train name can not be empty!');
+            return;
+          }
+          if (document.getElementById('from').value == "") {
+            Swal.showValidationMessage('Please select Departure station!');
+            return;
+          }
+          if (document.getElementById('to').value == "") {
+            Swal.showValidationMessage('Please select Arrival station!');
+            return;
+          }
+          if (document.getElementById('date').value == "") {
+            Swal.showValidationMessage('Date can not be empty!');
+            return;
+          }
+          if (document.getElementById('time').value == "") {
+            Swal.showValidationMessage('Time can not be empty!');
+            return;
+          }
           return [
             document.getElementById('train').value,
             document.getElementById('from').value,
@@ -217,6 +237,18 @@ new Vue({
 
   },
   mounted: function () {
+    $(document).on("change", "#from", async function () {
+      let fromID = $("#from").val();
+      let toID = $("#to").val();
+      let list = (await axios.get("/getAllSta")).data;
+      if (fromID > toID) {
+        $("#station").find('option').remove().end().append(`${list.slice(toID, (fromID - 1)).map(sta => `<option value="${sta.ID}">${sta.Name}</option>`)}`)
+      }
+      else {
+        $("#station").find('option').remove().end().append(`${list.slice(fromID, (toID - 1)).map(sta => `<option value="${sta.ID}">${sta.Name}</option>`)}`)
+      }
+
+    })
     $(document).on("change", "#to", async function () {
       let fromID = $("#from").val();
       let toID = $("#to").val();

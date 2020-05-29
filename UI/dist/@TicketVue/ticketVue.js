@@ -106,7 +106,7 @@ new Vue({
                             confirmButtonColor: '#3085d6',
                             cancelButtonColor: '#d33',
                             confirmButtonText: 'Print',
-                            cancelButtonText: 'Cancel ticket!',
+                            cancelButtonText: 'Cancel all ticket!',
                             customClass: 'swal-ticket',
 
                             // onOpen: function test() {
@@ -366,24 +366,19 @@ new Vue({
 
     },
     mounted: function () {
+        window.Vue.use(VuejsDialog.main.default)
         $(document).on("click", "#cancelTick", function () {
             let id = this.value;
-            // Swal.fire({
-            //     title: 'Cancel confirmation!',
-            //     text: 'Are you sure?',
-            //     icon: 'question',
-            //     showCancelButton: true,
-            //     confirmButtonColor: '#3085d6',
-            //     cancelButtonColor: '#d33',
-            //     confirmButtonText: 'Confirm',
-            //     cancelButtonText: 'Cancel'
-            // }).then((confirm) => {
-            //     if (confirm.value) {
-            //         Swal.fire('Cancel succesfull!')
-            //     }
-            // })
-            axios.put(window.origin + '/admin/ticket?cusID=' + id + '&request=cancel');
-            $(this).attr("disabled", true);
+            let btn = this;
+            Vue.dialog
+                .confirm('Are you sure?')
+                .then(function (dialog) {
+                    axios.put(window.origin + '/admin/ticket?cusID=' + id + '&request=cancel');
+                    $(btn).attr("disabled", true);
+                })
+                .catch(function () {
+                    console.log('not cancel');
+                });
         });
     }
 })
