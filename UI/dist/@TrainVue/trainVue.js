@@ -41,13 +41,19 @@ new Vue({
             </div>
           </form>`,
         focusConfirm: false,
+        inputValidator: (value) => {
+          return !value && 'You need to write something!'
+        },
         preConfirm: () => {
+          if (document.getElementById('Name').value == "") {
+            Swal.showValidationMessage('Train name can not be empty!');
+            return;
+          }
           return [
             document.getElementById('Name').value,
           ]
         }
       })
-
       if (train) {
         axios.post('/admin/train?Name=' + train[0]).then(res => {
           this.Trains.push({
@@ -86,6 +92,10 @@ new Vue({
               `<input type="text" value="${trainName}" id="Name""><br>`,
             focusConfirm: false,
             preConfirm: () => {
+              if (document.getElementById('Name').value == "") {
+                Swal.showValidationMessage('Train name can not be empty!');
+                return;
+              }
               return [
                 document.getElementById('ID').value,
                 document.getElementById('Name').value,
