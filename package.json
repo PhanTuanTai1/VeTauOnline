@@ -1956,6 +1956,7 @@
       "resolved": "https://registry.npmjs.org/vuejs-datepicker/-/vuejs-datepicker-1.6.2.tgz",
       "version": "1.6.2"
     },
+    "vuejs-dialog": "^1.4.1",
     "vuetify": {
       "integrity": "sha512-okz+Q7YfCkLLJsxdldlYWUHcbRX/G+fo/0zSS3rXU+Ir76sxZzIOkSsqox1exFWQJn1PqA0itiHR0QTWygv8VA==",
       "resolved": "https://registry.npmjs.org/vuetify/-/vuetify-2.2.15.tgz",
