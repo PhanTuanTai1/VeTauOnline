@@ -368,22 +368,22 @@ new Vue({
     mounted: function () {
         $(document).on("click", "#cancelTick", function () {
             let id = this.value;
-            // Swal.fire({
-            //     title: 'Cancel confirmation!',
-            //     text: 'Are you sure?',
-            //     icon: 'question',
-            //     showCancelButton: true,
-            //     confirmButtonColor: '#3085d6',
-            //     cancelButtonColor: '#d33',
-            //     confirmButtonText: 'Confirm',
-            //     cancelButtonText: 'Cancel'
-            // }).then((confirm) => {
-            //     if (confirm.value) {
-            //         Swal.fire('Cancel succesfull!')
-            //     }
-            // })
-            axios.put(window.origin + '/admin/ticket?cusID=' + id + '&request=cancel');
-            $(this).attr("disabled", true);
+            Swal.queue({
+                title: 'Cancel confirmation!',
+                text: 'Are you sure?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Confirm',
+                cancelButtonText: 'Cancel'
+            }).then((confirm) => {
+                if (confirm.value) {
+                    axios.put(window.origin + '/admin/ticket?cusID=' + id + '&request=cancel');
+                    $(this).attr("disabled", true);
+                    Swal.queue('Cancel succesfull!')
+                }
+            })
         });
     }
 })

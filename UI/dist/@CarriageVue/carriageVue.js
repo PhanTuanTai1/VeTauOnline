@@ -55,6 +55,18 @@ new Vue({
               </form>`,
         focusConfirm: false,
         preConfirm: () => {
+          if (document.getElementById('Name').value == "") {
+            Swal.showValidationMessage('Name can not be empty!');
+            return;
+          }
+          if (document.getElementById('Train').value == "") {
+            Swal.showValidationMessage('Train can not be empty!');
+            return;
+          }
+          if (document.getElementById('SeatType').value == "") {
+            Swal.showValidationMessage('Seat type can not be empty!');
+            return;
+          }
           return [
             document.getElementById('Name').value,
             document.getElementById('Train').value,
@@ -118,6 +130,18 @@ new Vue({
       </form>`,
         focusConfirm: false,
         preConfirm: () => {
+          if (document.getElementById('Name').value == "") {
+            Swal.showValidationMessage('Name can not be empty!');
+            return;
+          }
+          if (document.getElementById('Train').value == "") {
+            Swal.showValidationMessage('Train can not be empty!');
+            return;
+          }
+          if (document.getElementById('SeatType').value == "") {
+            Swal.showValidationMessage('Seat type can not be empty!');
+            return;
+          }
           return [
             document.getElementById('ID').value,
             document.getElementById('Name').value,

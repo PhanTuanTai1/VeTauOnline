@@ -65,6 +65,14 @@ new Vue({
           `<input type="number" value="${cusByID.Passport}" id="Passport""><br>`,
         focusConfirm: false,
         preConfirm: () => {
+          if (document.getElementById('Name').value == "") {
+            Swal.showValidationMessage('Name can not be empty!');
+            return;
+          }
+          if (document.getElementById('Passport').value == "") {
+            Swal.showValidationMessage('Passport can not be empty!');
+            return;
+          }
           return [
             document.getElementById('ID').value,
             document.getElementById('Name').value,

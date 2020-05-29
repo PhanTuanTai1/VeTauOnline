@@ -200,14 +200,14 @@ app.get("/admin/station", function (req, res) {
     })
 })
 app.get("/admin/train", function (req, res) {
-    loginController.CheckLogin().then(check => {
-        if (check) {
-            res.render('trainadmin');
-        }
-        else {
-            res.render('login');
-        }
-    })
+    // loginController.CheckLogin().then(check => {
+    //     if (check) {
+    res.render('trainadmin');
+    //     }
+    //     else {
+    //         res.render('login');
+    //     }
+    // })
 })
 app.get("/admin/seat", function (req, res) {
     loginController.CheckLogin().then(check => {
