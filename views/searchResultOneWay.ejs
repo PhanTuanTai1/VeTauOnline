@@ -439,7 +439,7 @@
                                 <div style="font-size: 13px;" v-text="train.Name"></div>
                             </td>
                             <td class="text-right" style="width: 187px;">
-                                <div class="super-bold">{{formatTime(getScheduleDetailByTrainID(train.ID)[0].TimeDeparture)}}</div>
+                                <div class="super-bold">{{formatTime(getScheduleDetailByTrainID(train.ID)[0].ScheduleDetails[0].StartTime)}}</div>
                                 <div>{{formatDate(getScheduleDetailByTrainID(train.ID)[0].DateDeparture)}}</div>
                             </td>
                             <!-- <td class="text-right" style="width: 154px;">

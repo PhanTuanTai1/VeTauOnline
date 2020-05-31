@@ -37,7 +37,7 @@ module.exports.search = function (req, res) {
             attributes: ['ID', 'DateDeparture', 'TimeDeparture', 'TrainID'],
             include: [{
                 model: db.ScheduleDetail,
-                attributes: ['ID', 'ScheduleID', 'DepartureStationID', 'ArrivalStationID', 'Time'],
+                attributes: ['ID', 'ScheduleID', 'DepartureStationID', 'ArrivalStationID', 'Time','StartTime'],
                 where: {
                     DepartureStationID: parseInt(req.query.FROM),
                     ArrivalStationID: parseInt(req.query.TO)
@@ -91,7 +91,7 @@ module.exports.search = function (req, res) {
             attributes: ['ID', 'DateDeparture', 'TimeDeparture', 'TrainID'],
             include: [{
                 model: db.ScheduleDetail,
-                attributes: ['ID', 'ScheduleID', 'DepartureStationID', 'ArrivalStationID', 'Time'],
+                attributes: ['ID', 'ScheduleID', 'DepartureStationID', 'ArrivalStationID', 'Time','StartTime'],
                 where: {
                     DepartureStationID: parseInt(from),
                     ArrivalStationID: parseInt(to)
@@ -158,6 +158,9 @@ function getScheduleMatch(Date, DepartureID, ListSchedule) {
     var ListFilter = [];
     return new Promise(async resolve => {
         ListSchedule.forEach(async (schedule, index, array ) => {
+            var ScheduleDetailBefore = ListSchedule.filter(schedule => {
+                return schedule.ArrivalStationID == schedule.DepartureStationID;
+            })
             var TimeScheduleDetails = parseInt(schedule.ScheduleDetails[0].Time * 60);
             var TimeDepartInt = parseInt(moment(schedule.TimeDeparture).subtract(7,'hour').format('HH'));
             var MinutesDepartInt = parseInt(moment(schedule.TimeDeparture).format('mm'));
@@ -196,7 +199,9 @@ function getScheduleMatch(Date, DepartureID, ListSchedule) {
                 // });                          
             }
 
-            if(index + 1 === array.length) resolve(ListFilter);
+            if(index + 1 === array.length) {
+                resolve(ListFilter);
+            }
         })
     });
 }
