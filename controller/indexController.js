@@ -153,50 +153,79 @@ module.exports.search = function (req, res) {
     }
 }
 
+function getAllScheduleDetailByID(ScheduleID)
+{
+    return new Promise(resolve => {
+        db.Schedule.findOne({
+            attributes: ['ID'],
+            where: {
+                ID: ScheduleID
+            },
+            include: {
+                model: db.ScheduleDetail,
+                attributes: ['ID','ScheduleID','DepartureStationID','ArrivalStationID','Length','Time','StartTime'],
+                order: ['Length','DESC']
+            }
+        }).then(data => {
+            resolve(data);
+        })
+    })
+}
 
 function getScheduleMatch(Date, DepartureID, ListSchedule) {
     var ListFilter = [];
     return new Promise(async resolve => {
         ListSchedule.forEach(async (schedule, index, array ) => {
-            var ScheduleDetailBefore = ListSchedule.filter(schedule => {
-                return schedule.ArrivalStationID == schedule.DepartureStationID;
-            })
-            var TimeScheduleDetails = parseInt(schedule.ScheduleDetails[0].Time * 60);
+            var Schedule = await getAllScheduleDetailByID(schedule.ID);
+            var firstScheduleDetail = Schedule.ScheduleDetails[0];
+            var getScheduleDetailBeforeThisScheduleDetail;
+            var TimeScheduleDetails;
+            if(firstScheduleDetail.DepartureStationID == schedule.ScheduleDetails[0].DepartureStationID 
+                && firstScheduleDetail.ArrivalStationID == schedule.ScheduleDetails[0].ArrivalStationID){
+
+                getScheduleDetailBeforeThisScheduleDetail = firstScheduleDetail;
+                TimeScheduleDetails = 0;   
+            }
+            else {
+                getScheduleDetailBeforeThisScheduleDetail = Schedule.ScheduleDetails.filter(scheduleDetail => {
+                    return scheduleDetail.DepartureStationID == firstScheduleDetail.DepartureStationID 
+                    && schedule.ScheduleDetails[0].DepartureStationID == scheduleDetail.ArrivalStationID
+                })              
+                TimeScheduleDetails = parseInt(getScheduleDetailBeforeThisScheduleDetail.Time * 60);
+            }
+
+            console.log("---------------------------getScheduleDetailBeforeThisScheduleDetail: " + JSON.stringify(getScheduleDetailBeforeThisScheduleDetail));
             var TimeDepartInt = parseInt(moment(schedule.TimeDeparture).subtract(7,'hour').format('HH'));
+            console.log("---------------------------TimeDepartInt: " + TimeDepartInt)
+            
             var MinutesDepartInt = parseInt(moment(schedule.TimeDeparture).format('mm'));
-            var DateDepart = moment(schedule.DateDeparture).add(TimeDepartInt, 'hour').subtract(7,'hour').add(MinutesDepartInt + TimeScheduleDetails, 'minutes').format('YYYY-MM-DD');
+
+            // Departure Date in Database
+            var DateDepart = moment(schedule.DateDeparture).add(TimeDepartInt, 'hour')
+                            .subtract(7,'hour').add(MinutesDepartInt + TimeScheduleDetails, 'minutes').format('YYYY-MM-DD');
+
+            // Departure Date in website
             var DateDepartFormat = (moment(Date).subtract(7, 'hour').format('YYYY-MM-DD'));
             var parseDateDepart = moment(DateDepart);
             var parseDateDepartFormat = moment(DateDepartFormat);
-            console.log("Expected:" +  DateDepartFormat);
-            console.log("Actual:" +  DateDepart);
+
+            console.log("----------Expected:" +  DateDepartFormat);
+            console.log("----------Actual:" +  DateDepart);
             console.log("Schedule.DateDeparture: " + schedule.DateDeparture);
+
             var check = await checkIsSameDepartureStationIDFirst(DepartureID, schedule.ID);
-            // console.log("parseDateDepartFormat: " + new Date(parseDateDepartFormat));
-            // console.log("parseDateDepart: " + new Date(parseDateDepart));
-            if((DateDepartFormat === DateDepart && !check) || (check && moment(schedule.DateDeparture).format('DD-MM-YYYY') == moment(Date).subtract(7, 'hour').format('DD-MM-YYYY'))) 
+
+            console.log("----------OR Expected:" +  moment(schedule.DateDeparture).format('DD-MM-YYYY'));
+            console.log("----------OR Actual:" +  moment(Date).subtract(7, 'hour').format('DD-MM-YYYY'));
+            console.log("---------------Check: " + check);
+
+            if((DateDepartFormat === DateDepart && !check) 
+                || (check && moment(schedule.DateDeparture).format('DD-MM-YYYY') == moment(Date).subtract(7, 'hour').format('DD-MM-YYYY'))) 
             {           
                 ListFilter.push(schedule)
-                // await checkIsSameDepartureStationIDFirst(DepartureID, schedule.ID).then(data => {
-                //     if(data) {
-                        
-                //     }
-                //     else {
-                //         schedule.DifDepartureID
-                //         console.log("schedule: " + JSON.stringify(schedule));
-                //         ListFilter.push(schedule)
-                //     }
-                // })         
             }       
             else if(moment(moment(DateDepartFormat).add(129600000, 'milliseconds')._d).format('YYYY-MM-DD') === parseDateDepart._d){
-                ListFilter.push(schedule)
-                // await checkIsDepartureStationFirst(DepartureID, schedule).then(data => {
-                //     if(data){
-                //         schedule.First = true;
-                //         console.log("First: " + JSON.stringify(schedule));
-                //         ListFilter.push(schedule);
-                //     }  
-                // });                          
+                ListFilter.push(schedule)                     
             }
 
             if(index + 1 === array.length) {
@@ -252,7 +281,7 @@ module.exports.scheduleDetail = function (req, res) {
         },
         include: [{
             model: db.ScheduleDetail,
-            attributes: ['ID', 'DepartureStationID', 'ArrivalStationID', 'Length', 'Time'],
+            attributes: ['ID', 'DepartureStationID', 'ArrivalStationID', 'Length', 'Time','StartTime'],
             where: {
                 DepartureStationID: parseInt(req.query.DepartID),
                 ArrivalStationID: parseInt(req.query.ArrivalID)
