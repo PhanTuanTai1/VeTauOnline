@@ -1,5 +1,4 @@
 var express = require("express");
-var config = require("./config/connectionString");
 var controller = require("./controller/indexController");
 var managerCtrler = require("./controller/managerController");
 var loginController = require("./controller/loginController");
@@ -107,7 +106,7 @@ app.get('/test', function(req,res){
 })
 // app.get('/CheckLogin' , function(req,res){
 //     loginController.CheckLogin(req,res);
-// })
+// }) 
 app.get('/login', function (req, res) {
     res.render("login");
 })
