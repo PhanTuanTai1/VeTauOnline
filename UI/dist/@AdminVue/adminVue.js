@@ -21,23 +21,284 @@ new Vue({
             return moment(time).add(-8, "hours").format("HH:mm");
         },
         from(from) {
-            return this.Station.find(x => x.ID == from).Name;
+            if (this.Station != null) {
+                return this.Station.find(x => x.ID == from).Name;
+            }
+
         },
         to(to) {
-            return this.Station.find(x => x.ID == to).Name;
+            if (this.Station != null) {
+                return this.Station.find(x => x.ID == to).Name;
+            }
+
         },
         formatStatus(status) {
             if (status == 1) {
-                $("#status").attr('color', "green");
-                return "Ready";
+                return `<p class="badge badge-warning">Pending</p>`;
             }
             if (status == 2) {
-                return "Printed";
+                return `<p class="badge badge-success">Printed</p>`;
             }
             if (status == 3) {
-                return "Cancel";
+                return `<p class="badge badge-danger">Canceled</p>`;
             }
         },
 
     },
+    computed: {
+        listSta() {
+            return this.Station;
+        },
+
+    },
+    updated: function () {
+        $("#TicketTable").DataTable();
+        $("#menudashboard").addClass("active");
+
+    },
+    mounted: async function () {
+        const countTickByMonth = [];
+        const countTickByStatus = [];
+        const priceMonth = [];
+        const priceYear = [];
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const statusNames = ['Pending', 'Printed', 'Canceled'];
+        let data = (await axios.get(window.origin + '/printTicket')).data;
+        let monthlist = [...new Set(data.map(x => new Date(x.DepartureDate).getMonth()))];
+        monthlist.map(x => {
+            const value = {
+                'x': monthNames[x],
+                'y': data.filter(c => (new Date(c.DepartureDate).getMonth()) == x).length
+            }
+            countTickByMonth.push(value);
+        })
+
+        let statuslist = [...new Set(data.map(x => x.Status))];
+        countTickByStatus.push(data.filter(x => x.Status == true).length,
+            data.filter(x => x.Status == 2).length,
+            data.filter(x => x.Status == 3).length);
+        console.log(countTickByStatus);
+        var lineTick = document.getElementById('lineChartTicket').getContext('2d');
+        var pieTick = document.getElementById('pieChartTicket').getContext('2d');
+
+        var chart = new Chart(lineTick, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+            data: {
+                labels: monthNames,
+                datasets: [{
+                    label: 'Sold tickets',
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: countTickByMonth,
+                    fontColor: 'white',
+                    pointBorderColor: 'white',
+
+
+                }]
+            },
+
+            // Configuration options go here
+            options: {
+                legend: {
+                    labels: {
+                        // This more specific font property overrides the global property
+                        fontColor: 'white'
+                    }
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            fontColor: 'white',
+                            color: 'white',
+                        },
+                        gridLines: {
+                            color: "rgba(255,255,255,0.5)",
+                            zeroLineColor: "rgba(255,255,255,0.5)"
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            fontColor: 'white',
+                            color: 'white'
+                        },
+                        gridLines: {
+                            color: "rgba(255,255,255,0.5)",
+                            zeroLineColor: "rgba(255,255,255,0.5)"
+                        }
+                    }]
+                },
+                title: {
+                    display: true,
+                    text: 'Sold ticket by month',
+                    fontColor: 'white'
+                }
+            }
+        });
+
+        var myPieChart = new Chart(pieTick, {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    label: 'Sold tickets',
+                    backgroundColor: [
+                        'rgba(255,193,7)',
+                        'green',
+                        'red'
+                    ],
+                    borderColor: [
+                        'white',
+                        'white',
+                        'white'
+                    ],
+                    data: countTickByStatus,
+                }],
+
+                // These labels appear in the legend and in the tooltips when hovering different arcs
+                labels: [
+                    'Pending',
+                    'Printed',
+                    'Canceled'
+                ]
+            },
+            options: {
+                legend: {
+                    labels: {
+                        // This more specific font property overrides the global property
+                        fontColor: 'white'
+                    }
+                },
+                title: {
+                    display: true,
+                    text: 'Sole ticket status',
+                    fontColor: 'white'
+                }
+            }
+        });
+
+        monthlist.map(x => {
+            let sum = 0;
+            data.filter(c => (new Date(c.DepartureDate).getMonth()) == x).map(x => {
+                sum += x.Price
+            })
+            const value = {
+                'x': monthNames[x],
+                'sum': sum,
+            }
+            priceMonth.push(value);
+        })
+        let a = [];
+        console.log(priceMonth);
+        monthNames.forEach(e => {
+            if (priceMonth.find(res => res.x == e) != null) {
+                a.push(priceMonth.find(res => res.x == e).sum)
+            }
+            else {
+                a.push(0);
+            }
+            // console.log(e)
+        })
+        console.log(a);
+        var barPriceMonth = document.getElementById('barPriceMonth').getContext('2d');
+        var myBarChart = new Chart(barPriceMonth, {
+            type: 'bar',
+            data: {
+                labels: monthNames,
+                datasets: [{
+                    label: 'Revenue',
+                    backgroundColor: 'rgb(255,255,0,0.5)',
+                    borderColor: 'rgb(255,255,0,0.5)',
+                    data: a,
+                }]
+            },
+            options: {
+                legend: {
+                    labels: {
+                        // This more specific font property overrides the global property
+                        fontColor: 'white'
+                    }
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            fontColor: 'white',
+                            color: 'white',
+                        },
+                        gridLines: {
+                            color: "rgba(255,255,255,0.5)",
+                            zeroLineColor: "rgba(255,255,255,0.5)"
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            fontColor: 'white',
+                            color: 'white'
+                        },
+                        gridLines: {
+                            color: "rgba(255,255,255,0.5)",
+                            zeroLineColor: "rgba(255,255,255,0.5)"
+                        }
+                    }]
+                },
+                title: {
+                    display: true,
+                    text: 'Revenue by month',
+                    fontColor: 'yellow'
+                }
+            }
+        });
+        var barPriceYear = document.getElementById('barPriceYear').getContext('2d');
+        var myBarChart = new Chart(barPriceYear, {
+            type: 'horizontalBar',
+            data: {
+                labels: ['2019', '2020', '2021'],
+                datasets: [{
+                    label: 'Revenue',
+                    backgroundColor: 'rgb(255,255,0,0.5)',
+                    borderColor: 'rgb(255,255,0,0.5)',
+                    data: [300000, 5000000, 89899],
+                }]
+            },
+            options: {
+                legend: {
+                    labels: {
+                        // This more specific font property overrides the global property
+                        fontColor: 'white'
+                    }
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            fontColor: 'white',
+                            color: 'white',
+                        },
+                        gridLines: {
+                            color: "rgba(255,255,255,0.5)",
+                            zeroLineColor: "rgba(255,255,255,0.5)"
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            fontColor: 'white',
+                            color: 'white'
+                        },
+                        gridLines: {
+                            color: "rgba(255,255,255,0.5)",
+                            zeroLineColor: "rgba(255,255,255,0.5)"
+                        }
+                    }]
+                },
+                title: {
+                    display: true,
+                    text: 'Revenue by year',
+                    fontColor: 'yellow'
+                }
+            }
+        });
+    }
 })

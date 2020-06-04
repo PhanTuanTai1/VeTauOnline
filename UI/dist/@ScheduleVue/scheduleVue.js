@@ -122,6 +122,7 @@ new Vue({
       })
     },
     async createSchedule() {
+      let detailList = (await axios('/getListDetail')).data;
       const { value: schedule } = await Swal.fire({
         title: 'Create schedule',
         html:
@@ -165,6 +166,18 @@ new Vue({
             Swal.showValidationMessage('Train name can not be empty!');
             return;
           }
+          // let lengthArr = [];
+          // let sch = this.Schedules.filter(x => x.TrainID == document.getElementById('train').value);
+          // sch.map(x => {
+          //   // detailList.filter(detail => detail.ScheduleID == x.ID).map(data => {
+          //   //   lengthArr.push(new Date(moment(x.DateDeparture).add((data.Length / 60), "hours")).getTime());
+          //   // })
+          //   lengthArr.push(Math.max(detailList.filter(de => de.SchduleID == x.ID).map(data => data)));
+
+          // });
+
+          // console.log(new Date(document.getElementById('date').value).getTime());
+          // console.log(lengthArr);
           if (document.getElementById('from').value == "") {
             Swal.showValidationMessage('Please select Departure station!');
             return;
@@ -177,10 +190,22 @@ new Vue({
             Swal.showValidationMessage('Date can not be empty!');
             return;
           }
+          if ((new Date(document.getElementById('date').value).toDateString()) == (new Date().toDateString())) {
+            Swal.showValidationMessage('Date can not be today!');
+            return;
+          }
+          if ((new Date(document.getElementById('date').value).getTime()) < (new Date().getTime())) {
+            Swal.showValidationMessage('Date can not be the past!');
+            return;
+          }
+          // if ((new Date(document.getElementById('date').value).getTime()) >= Math.max(lengthArr)) {
+          //   Swal.showValidationMessage('This train is busy on this date!')
+          // }
           if (document.getElementById('time').value == "") {
             Swal.showValidationMessage('Time can not be empty!');
             return;
           }
+
           return [
             document.getElementById('train').value,
             document.getElementById('from').value,
@@ -191,6 +216,8 @@ new Vue({
         }
       })
       if (schedule) {
+        console.log(new Date(schedule[3]))
+        console.log()
         let detailList = await $("#station").val();
         await detailList.push(schedule[1]);
         await detailList.push(schedule[2]);
@@ -203,7 +230,7 @@ new Vue({
         this.create(abc, detailList, schedule[3], schedule[4]);
         this.Schedules.push({
           "ID": abc.ID,
-          "TimeDeparture": moment(abc.TimeDeparture).add(-8, "hours").format("HH:mm"),
+          "TimeDeparture": moment(abc.TimeDeparture).add(-8, "hours").format("HH:mm").toString(),
           "DateDeparture": abc.DateDeparture,
           Train: {
             "Name": this.Trains.find(x => x.ID == abc.TrainID).Name

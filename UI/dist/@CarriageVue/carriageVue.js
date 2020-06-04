@@ -13,6 +13,7 @@ new Vue({
 
   updated: function () {
     $("#myTable").DataTable();
+    $("#menucarriage").addClass("active");
   },
   watch: {
     Carriages: {
