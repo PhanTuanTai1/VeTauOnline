@@ -104,31 +104,32 @@ new Vue({
     },
 
     validateData: function(){
-      if(document.getElementById('Depart').value == "" ){
-        this.errors = "Please enter departure station";
-        return false;
-      }
-      if(this.departureStationID == null) {
-        if(!this.setDataDepart()){
-          this.errors = "Departure station invalid";
-          return false;
-        }       
-      }
-      if(document.getElementById('Arrival').value == "" ){
-        this.errors = "Please enter arrival station";
-        return false;
-      } 
-      if(this.arrivalStationID == null) {
-        if(!this.setDataArrive()){
-          this.errors = "Arrival station invalid";
-          return false;
-        }
-      }
-      if(this.departureStationID == this.arrivalStationID) {
-        this.errors = "Departure and destination station aren't the same";
-        return false;
-      }
       return true;
+      // if(document.getElementById('Depart').value == "" ){
+      //   this.errors = "Please enter departure station";
+      //   return false;
+      // }
+      // if(this.departureStationID == null) {
+      //   if(!this.setDataDepart()){
+      //     this.errors = "Departure station invalid";
+      //     return false;
+      //   }       
+      // }
+      // if(document.getElementById('Arrival').value == "" ){
+      //   this.errors = "Please enter arrival station";
+      //   return false;
+      // } 
+      // if(this.arrivalStationID == null) {
+      //   if(!this.setDataArrive()){
+      //     this.errors = "Arrival station invalid";
+      //     return false;
+      //   }
+      // }
+      // if(this.departureStationID == this.arrivalStationID) {
+      //   this.errors = "Departure and destination station aren't the same";
+      //   return false;
+      // }
+      // return true;
     },
 
     Search: function(){    

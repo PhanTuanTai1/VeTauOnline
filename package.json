@@ -797,6 +797,7 @@
       "resolved": "https://registry.npmjs.org/has-flag/-/has-flag-3.0.0.tgz",
       "version": "3.0.0"
     },
+    "http": "0.0.1-security",
     "http-errors": {
       "integrity": "sha512-uUQBt3H/cSIVfch6i1EuPNy/YsRSOUBXTVfZ+yR7Zjez3qjBz6i9+i4zjNaoqcoFVI4lQJ5plg63TvGfRSDCRg==",
       "requires": {
@@ -962,11 +963,7 @@
       "resolved": "https://registry.npmjs.org/is-typedarray/-/is-typedarray-1.0.0.tgz",
       "version": "1.0.0"
     },
-    "isarray": {
-      "integrity": "sha1-u5NdSFgsuhaMBoNJV6VKPgcSTxE=",
-      "resolved": "https://registry.npmjs.org/isarray/-/isarray-1.0.0.tgz",
-      "version": "1.0.0"
-    },
+    "isarray": "^2.0.5",
     "isexe": {
       "integrity": "sha1-6PvzdNxVb/iUehDcsFctYz8s+hA=",
       "resolved": "https://registry.npmjs.org/isexe/-/isexe-2.0.0.tgz",

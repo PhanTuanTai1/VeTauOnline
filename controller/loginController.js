@@ -44,6 +44,7 @@ module.exports.CheckLogin = function () {
         else resolve(true);
     })
 }
+
 module.exports.GetUserFromSession = () => {
     // Cookies.set('acc', firebaseUser.email);
     return new Promise(resolve => {

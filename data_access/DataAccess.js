@@ -15,10 +15,10 @@ Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
 // })
 
 // database local
-var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '123456789', {
+var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '79495291', {
     dialect: 'mssql',
     host: 'localhost',
-    port: '1433',
+    //port: '1433',
     //port: '57031'
 })
 
@@ -139,7 +139,7 @@ Ticket.init({
     'DepartureDate': Sequelize.DATE,
     'DepartureTime': Sequelize.TIME,
     'TrainName': Sequelize.STRING,
-    'Status': Sequelize.BOOLEAN
+    'Status': Sequelize.INTEGER
 },
     {
         sequelize,
@@ -231,6 +231,7 @@ Ticket.belongsTo(Seat, { foreignKey: "SeatID" });
 ScheduleDetail.hasMany(TableCost, { foreignKey: "ScheduleID" })
 Ticket.belongsTo(Station, { foreignKey: 'DepartureStationID' })
 Ticket.belongsTo(Station, { foreignKey: 'ArrivalStationID' })
+Customer.hasOne(Ticket);
 
 module.exports.Train = Train;
 module.exports.Carriage = Carriage;
