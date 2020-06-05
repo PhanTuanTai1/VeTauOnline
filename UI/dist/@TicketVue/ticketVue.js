@@ -16,11 +16,15 @@ new Vue({
         await axios.get(window.origin + '/getAllSta').then(res => {
             this.Staions = res.data;
         })
+        await axios.get(window.origin + '/getAllCarriage').then(res => {
+            this.Carr = res.data;
+        })
 
     },
     data: {
         Tickets: null,
         Staions: null,
+        Carr: null
 
     },
     methods: {
@@ -148,9 +152,9 @@ new Vue({
         },
         async editStatus(ticketList, request) {
 
-            await ticketList.forEach(ticket => {
-                axios.put(window.origin + '/admin/ticket?cusID=' + ticket.CustomerID + '&request=' + request)
-            });
+            // await ticketList.forEach(ticket => {
+            //     axios.put(window.origin + '/admin/ticket?cusID=' + ticket.CustomerID + '&request=' + request)
+            // });
             if (request == "print")
                 this.printTicket(ticketList);
         },
@@ -338,12 +342,14 @@ new Vue({
                         <time>
                             <span>${new Date(t.DepartureDate).toDateString()}</span>
                             <span>${new Date(t.DepartureTime).toLocaleTimeString()}</span>
+                            <span>${t.Price.toFixed(2)} VND</span>
                         </time>
                     </div>
                     <div class="even-info">
                         <i class="fa fa-map-marker"></i>
                         <h3 style="color:red;">${t.TrainName}</h3>
-                        <p>${t.Price}</p>
+                        <h4 style="color:black;"> ${this.Carr.find(x => x.ID == t.Seat.CarriageID).Name}</h4>
+                        
                     </div>
                     <h1 class="seat" style="color:red;">${t.Seat.SeatNumber}</h1>
                     </section >
@@ -371,7 +377,7 @@ new Vue({
             let id = this.value;
             let btn = this;
             Vue.dialog
-                .confirm('Are you sure?')
+                .confirm('Are you sure?', { okText: 'Yes' })
                 .then(function (dialog) {
                     axios.put(window.origin + '/admin/ticket?cusID=' + id + '&request=cancel');
                     $(btn).attr("disabled", true);
