@@ -5,6 +5,7 @@ new Vue({
     created: async function(){
 
         this.result = JSON.parse(document.getElementById("myData").value);
+        //alert(JSON.stringify(this.result))
         document.getElementById("myData").replaceWith("");
         this.query = JSON.parse(document.getElementById("query").value);
 

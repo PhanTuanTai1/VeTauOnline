@@ -2,7 +2,7 @@ var { Sequelize, Model, DataTypes } = require('sequelize');
 var moment = require('moment');
 
 Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
-    date = this._applyTimezone(date, options);
+    //date = this._applyTimezone(date, options);
     return moment(date).format('YYYY-MM-DD');
 };
 

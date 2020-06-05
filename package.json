@@ -1237,6 +1237,7 @@
       "resolved": "https://registry.npmjs.org/neo-async/-/neo-async-2.6.1.tgz",
       "version": "2.6.1"
     },
+    "nodemailer": "^6.4.8",
     "nodemon": "^2.0.4",
     "nopt": {
       "integrity": "sha1-bd0hvSoxQXuScn3Vhfim83YI6+4=",
