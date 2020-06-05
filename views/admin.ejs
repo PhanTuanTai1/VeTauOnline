@@ -3,6 +3,7 @@
 
 <head>
   <%- include('adminheader') %>
+  <title>Admin Dashboard</title>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
@@ -14,23 +15,57 @@
 
     <!-- Content Wrapper. Contains page content -->
     <div id="app" class="content-wrapper">
-      <div class="card">
+      <img id="loading" style="width: 100%;height: 100%;position: fixed;z-index: 1;top: 0;left:5%"
+        src="../images/loading.gif" />
+      <div class="card" style="background-color: #001f3f;color: white;">
+        <div class="card-header ui-sortable-handle" style="cursor: move;">
+          <h3 class="card-title">
+            <i class="fas fa-truck-moving"></i>&nbsp;
+            Sold tickets report
+          </h3>
+        </div><!-- /.card-header -->
+        <div class="card-body">
+          <div class="tab-content p-0">
+            <!-- Morris chart - Sales -->
+            <div class="flex" style="width: 50%;display: flex;">
+              <canvas id="lineChartTicket"></canvas>
+              <canvas id="pieChartTicket"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="background-color: #001f3f;color: white;">
+        <div class="card-header ui-sortable-handle" style="cursor: move;">
+          <h3 class="card-title">
+            <i class="fas fa-dollar-sign"></i>&nbsp;
+            Revenue report
+          </h3>
+        </div><!-- /.card-header -->
+        <div class="card-body">
+          <div class="tab-content p-0">
+            <!-- Morris chart - Sales -->
+            <div class="flex" style="width: 50%;display: flex;">
+              <canvas id="barPriceMonth"></canvas>
+              <canvas id="barPriceYear"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="list">
         <div class="card-header border-transparent">
-          <h3 class="card-title">Latest Orders</h3>
+          <h3 class="card-title">Sold ticket detail</h3>
 
           <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse">
-              <i class="fas fa-minus"></i>
-            </button>
-            <button type="button" class="btn btn-tool" data-card-widget="remove">
-              <i class="fas fa-times"></i>
+              View detail <i class="fas fa-minus"></i>
             </button>
           </div>
         </div>
         <!-- /.card-header -->
         <div class="card-body p-0" style="display: block;">
           <div class="table-responsive">
-            <table class="table m-0">
+            <table id="TicketTable" class="table m-0">
               <thead>
                 <tr>
                   <th>#</th>
@@ -53,30 +88,17 @@
                   <td>{{item.Price}}</td>
                   <td>{{formatDate(item.DepartureDate)}}</td>
                   <td>{{formatTime(item.DepartureTime)}}</td>
-                  <td>
-                    <div id="status">{{formatStatus(item.Status)}}</div>
+                  <td v-html="formatStatus(item.Status)">
                   </td>
                   <td>{{item.TrainName}}</td>
                   <td>{{from(item.DepartureStationID)}}</td>
                   <td>{{to(item.ArrivalStationID)}}</td>
-                  <!-- <td><a href="pages/examples/invoice.html">OR9842</a></td>
-                  <td>Call of Duty IV</td>
-                  <td><span class="badge badge-success">Shipped</span></td>
-                  <td>
-                    <div class="sparkbar" data-color="#00a65a" data-height="20">90,80,90,-70,61,-83,63</div>
-                  </td> -->
                 </tr>
               </tbody>
             </table>
           </div>
           <!-- /.table-responsive -->
         </div>
-        <!-- /.card-body -->
-        <div class="card-footer clearfix" style="display: block;">
-          <a href="javascript:void(0)" class="btn btn-sm btn-info float-left">Place New Order</a>
-          <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right">View All Orders</a>
-        </div>
-        <!-- /.card-footer -->
       </div>
     </div>
     <!-- /.content-wrapper -->
@@ -92,18 +114,29 @@
       <%- include('adminFooter'); -%>
     </footer>
   </div>
-  <!-- ./wrapper -->
+
+  <div>
+
+  </div> <!-- ./wrapper -->
 
   <!-- REQUIRED SCRIPTS -->
   <!-- jQuery -->
   <script src="../dist/js/pages/dashboard2.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
   <script src="../dist/vue.js"></script>
   <script src="../dist/vue-router.js"></script>
   <script src="../dist/axios.js"></script>
   <script src="../dist/sweetalert2.all.min.js"></script>
   <script src="../dist/moment.js"></script>
   <script type="module" src="../dist/@AdminVue/adminVue.js"></script>
+
+  <script>
+
+    setTimeout(() => {
+      $('#list').CardWidget('toggle');
+    }, 50);
+  </script>
+
   <!-- Language dependant libraries -->
 </body>
 

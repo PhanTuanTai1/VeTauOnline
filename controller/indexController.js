@@ -6,6 +6,16 @@ var formidable = require('formidable');
 var UUID = require('uuidjs');
 var md5 = require('md5');
 var Duration = require("duration");
+var mail = require('nodemailer')
+var config = require('../config/common')
+var transporter = mail.createTransport({
+    service: 'gmail',
+    auth: {
+      user: config.UserName,
+      pass: config.Password
+    }
+  });
+
 var STATUS = {
     "NOTPRINT": "1",
     "PRINTED": "2",
@@ -37,7 +47,7 @@ module.exports.search = function (req, res) {
             attributes: ['ID', 'DateDeparture', 'TimeDeparture', 'TrainID'],
             include: [{
                 model: db.ScheduleDetail,
-                attributes: ['ID', 'ScheduleID', 'DepartureStationID', 'ArrivalStationID', 'Time'],
+                attributes: ['ID', 'ScheduleID', 'DepartureStationID', 'ArrivalStationID', 'Time','StartTime'],
                 where: {
                     DepartureStationID: parseInt(req.query.FROM),
                     ArrivalStationID: parseInt(req.query.TO)
@@ -57,23 +67,7 @@ module.exports.search = function (req, res) {
             else{
                 console.log("ListSchedule: " + JSON.stringify(ListSchedule));
                 res.render('searchResultOneWay', { result: JSON.stringify(ListSchedule), query: JSON.stringify(req.query), numberOfPassenger: req.query.PASSENGERS});
-            }
-            // ListSchedule.forEach((schedule, index, array ) => {     
-            //     res.render('searchResultOneWay',{result : JSON.stringify(Schedule), query: JSON.stringify(req.query)});
-            //     // checkSeat(schedule.TrainID,req.query.PASSENGERS, req.query.DEPART).then(check =>{
-            //     //     if(check){
-            //     //         result.push(schedule);                   
-            //     //     }           
-            //     //     if(index + 1 === array.length){
-            //     //         if(result.length === 0) {
-            //     //             res.render('searchResultOneWay',{result : JSON.stringify(result), query: JSON.stringify(req.query)});
-            //     //         }
-            //     //         else {
-            //     //             res.render('searchResultOneWay',{result : JSON.stringify(Schedule), query: JSON.stringify(req.query)});
-            //     //         }
-            //     //     }
-            //     // });                
-            // })          
+            }        
         })
     }
     else if (typeof (req.query.ROUND_TRIP) != "undefined" && req.query.ROUND_TRIP == "true") {
@@ -91,7 +85,7 @@ module.exports.search = function (req, res) {
             attributes: ['ID', 'DateDeparture', 'TimeDeparture', 'TrainID'],
             include: [{
                 model: db.ScheduleDetail,
-                attributes: ['ID', 'ScheduleID', 'DepartureStationID', 'ArrivalStationID', 'Time'],
+                attributes: ['ID', 'ScheduleID', 'DepartureStationID', 'ArrivalStationID', 'Time','StartTime'],
                 where: {
                     DepartureStationID: parseInt(from),
                     ArrivalStationID: parseInt(to)
@@ -118,83 +112,89 @@ module.exports.search = function (req, res) {
                 var data = { 'SCHEDULEID': req.query.SCHEDULEID, 'SCHEDULEDETAILID': req.query.SCHEDULEDETAILID, 'costID': req.query.costID }
                 res.cookie('step1', data)
                 res.render('searchResultRoundTrip', { result: JSON.stringify(ListSchedule), query: JSON.stringify(req.query), STEP: 2, DepartureQuery: req.query.DepartureQuery , numberOfPassenger: req.query.PASSENGERS});
-            }
-            // ListSchedule.forEach((schedule, index, array ) => {     
-
-            //     checkSeat(schedule.TrainID,req.query.PASSENGERS, req.query.DEPART).then(check =>{
-            //         if(check){
-            //             result.push(schedule);                   
-            //         }           
-            //         if(index + 1 === array.length){
-            //             if(result.length === 0) {
-            //                 if(typeof(req.query.STEP) == "undefined"){
-            //                     res.render('searchResultRoundTrip',{result : JSON.stringify(result), query: JSON.stringify(req.query),STEP: 1});
-            //                 }
-            //                 else {
-            //                     var data = {'SCHEDULEID': req.query.SCHEDULEID, 'SCHEDULEDETAILID': req.query.SCHEDULEDETAILID, 'costID': req.query.costID}
-            //                     res.cookie('step1', data)
-            //                     res.render('searchResultRoundTrip',{result : JSON.stringify(result), query: JSON.stringify(req.query),STEP: 2, DepartureQuery: req.query.DepartureQuery});
-            //                 }
-            //             }
-            //             else {
-            //                 if(typeof(req.query.STEP) == "undefined"){
-            //                     res.render('searchResultRoundTrip',{result : JSON.stringify(result), query: JSON.stringify(req.query),STEP: 1});
-            //                 }
-            //                 else {
-            //                     var data = {'SCHEDULEID': req.query.SCHEDULEID, 'SCHEDULEDETAILID': req.query.SCHEDULEDETAILID, 'costID': req.query.costID}
-            //                     res.cookie('step1', data)
-            //                     res.render('searchResultRoundTrip',{result : JSON.stringify(result), query: JSON.stringify(req.query),STEP: 2, DepartureQuery: req.query.DepartureQuery});
-            //                 }
-            //             }
-            //         }
-            //     });                
-            // })          
+            } 
         })
     }
 }
 
+function getAllScheduleDetailByID(ScheduleID)
+{
+    return new Promise(resolve => {
+        db.Schedule.findOne({
+            attributes: ['ID'],
+            where: {
+                ID: ScheduleID
+            },
+            include: {
+                model: db.ScheduleDetail,
+                attributes: ['ID','ScheduleID','DepartureStationID','ArrivalStationID','Length','Time','StartTime'],
+                order: ['Length','DESC']
+            }
+        }).then(data => {
+            resolve(data);
+        })
+    })
+}
+
 function getScheduleMatch(Date, DepartureID, ListSchedule) {
     var ListFilter = [];
-    return new Promise(resolve => {
+    return new Promise(async resolve => {
         ListSchedule.forEach(async (schedule, index, array ) => {
-            var TimeScheduleDetails = parseInt(schedule.ScheduleDetails[0].Time * 60);
-            var TimeDepartInt = parseInt(moment(schedule.TimeDeparture).format('hh'));
+            var Schedule = await getAllScheduleDetailByID(schedule.ID);
+            var firstScheduleDetail = Schedule.ScheduleDetails[0];
+            var getScheduleDetailBeforeThisScheduleDetail;
+            var TimeScheduleDetails;
+            if(firstScheduleDetail.DepartureStationID == schedule.ScheduleDetails[0].DepartureStationID 
+                && firstScheduleDetail.ArrivalStationID == schedule.ScheduleDetails[0].ArrivalStationID){
+
+                getScheduleDetailBeforeThisScheduleDetail = firstScheduleDetail;
+                TimeScheduleDetails = 0;   
+            }
+            else {
+                getScheduleDetailBeforeThisScheduleDetail = Schedule.ScheduleDetails.filter(scheduleDetail => {
+                    return scheduleDetail.DepartureStationID == firstScheduleDetail.DepartureStationID 
+                    && schedule.ScheduleDetails[0].DepartureStationID == scheduleDetail.ArrivalStationID
+                })              
+                TimeScheduleDetails = parseInt(getScheduleDetailBeforeThisScheduleDetail.Time * 60);
+            }
+
+            console.log("---------------------------getScheduleDetailBeforeThisScheduleDetail: " + JSON.stringify(getScheduleDetailBeforeThisScheduleDetail));
+            var TimeDepartInt = parseInt(moment(schedule.TimeDeparture).subtract(7,'hour').format('HH'));
+            console.log("---------------------------TimeDepartInt: " + TimeDepartInt)
+            
             var MinutesDepartInt = parseInt(moment(schedule.TimeDeparture).format('mm'));
-            var DateDepart = moment(schedule.DateDeparture).add(TimeDepartInt, 'hour').add(MinutesDepartInt + TimeScheduleDetails, 'minutes').format('YYYY-MM-DD');
+
+            // Departure Date in Database
+            var DateDepart = moment(schedule.DateDeparture).add(TimeDepartInt, 'hour')
+                            .subtract(7,'hour').add(MinutesDepartInt + TimeScheduleDetails, 'minutes').format('YYYY-MM-DD');
+
+            // Departure Date in website
             var DateDepartFormat = (moment(Date).subtract(7, 'hour').format('YYYY-MM-DD'));
             var parseDateDepart = moment(DateDepart);
             var parseDateDepartFormat = moment(DateDepartFormat);
-            console.log("Expected:" +  DateDepartFormat);
-            console.log("Actual:" +  DateDepart);
+
+            console.log("----------Expected:" +  DateDepartFormat);
+            console.log("----------Actual:" +  DateDepart);
             console.log("Schedule.DateDeparture: " + schedule.DateDeparture);
-            // console.log("parseDateDepartFormat: " + new Date(parseDateDepartFormat));
-            // console.log("parseDateDepart: " + new Date(parseDateDepart));
-            if(DateDepartFormat === DateDepart) 
+
+            var check = await checkIsSameDepartureStationIDFirst(DepartureID, schedule.ID);
+
+            console.log("----------OR Expected:" +  moment(schedule.DateDeparture).format('DD-MM-YYYY'));
+            console.log("----------OR Actual:" +  moment(Date).subtract(7, 'hour').format('DD-MM-YYYY'));
+            console.log("---------------Check: " + check);
+
+            if((DateDepartFormat === DateDepart && !check) 
+                || (check && moment(schedule.DateDeparture).format('DD-MM-YYYY') == moment(Date).subtract(7, 'hour').format('DD-MM-YYYY'))) 
             {           
                 ListFilter.push(schedule)
-                // await checkIsSameDepartureStationIDFirst(DepartureID, schedule.ID).then(data => {
-                //     if(data) {
-                        
-                //     }
-                //     else {
-                //         schedule.DifDepartureID
-                //         console.log("schedule: " + JSON.stringify(schedule));
-                //         ListFilter.push(schedule)
-                //     }
-                // })         
             }       
-            else if(moment(DateDepartFormat).add(129600000, 'milliseconds') === parseDateDepart){
-                ListFilter.push(schedule)
-                // await checkIsDepartureStationFirst(DepartureID, schedule).then(data => {
-                //     if(data){
-                //         schedule.First = true;
-                //         console.log("First: " + JSON.stringify(schedule));
-                //         ListFilter.push(schedule);
-                //     }  
-                // });                          
+            else if(moment(moment(DateDepartFormat).add(129600000, 'milliseconds')._d).format('YYYY-MM-DD') === parseDateDepart._d){
+                ListFilter.push(schedule)                     
             }
 
-            if(index + 1 === array.length) resolve(ListFilter);
+            if(index + 1 === array.length) {
+                resolve(ListFilter);
+            }
         })
     });
 }
@@ -218,24 +218,25 @@ function checkIsSameDepartureStationIDFirst(DepartureID, ScheduleID){
     });
 }
 
-function checkIsDepartureStationFirst(DepartureID, Schedule){
-    return new Promise(resolve => {
-        db.Schedule.findOne({
-            attributes: ['ID'],
-            where: {
-                ID: Schedule.ID
-            },
-            include: {
-                model: db.ScheduleDetail,
-                attributes: ['ID', 'DepartureStationID']
-            }
-        }).then(data => {
-            console.log(JSON.stringify(data));
-            if (data.ScheduleDetails[0].DepartureStationID == DepartureID) resolve(true);
-            else resolve(false);
-        })
-    });
-}
+// function checkIsDepartureStationFirst(DepartureID, Schedule){
+//     return new Promise(resolve => {
+//         db.Schedule.findOne({
+//             attributes: ['ID'],
+//             where: {
+//                 ID: Schedule.ID
+//             },
+//             include: {
+//                 model: db.ScheduleDetail,
+//                 attributes: ['ID', 'DepartureStationID']
+//             }
+//         }).then(data => {
+//             console.log(JSON.stringify(data));
+//             if (data.ScheduleDetails[0].DepartureStationID == DepartureID) resolve(true);
+//             else resolve(false);
+//         })
+//     });
+// }
+
 module.exports.scheduleDetail = function (req, res) {
     db.Schedule.findAll({
         attributes: ['ID', 'TrainID', 'TimeDeparture', 'DateDeparture'],
@@ -245,7 +246,7 @@ module.exports.scheduleDetail = function (req, res) {
         },
         include: [{
             model: db.ScheduleDetail,
-            attributes: ['ID', 'DepartureStationID', 'ArrivalStationID', 'Length', 'Time'],
+            attributes: ['ID', 'DepartureStationID', 'ArrivalStationID', 'Length', 'Time','StartTime'],
             where: {
                 DepartureStationID: parseInt(req.query.DepartID),
                 ArrivalStationID: parseInt(req.query.ArrivalID)
@@ -595,16 +596,41 @@ module.exports.RedirectToNganLuong = function (req, res) {
     res.redirect(url);
 }
 
-module.exports.InsertData = function (req, res) {
+function SendMail(html, option){
+    var mailOptions = {
+        from: 'trainticketonlinevn@gmail.com',
+        to: 'phantuantai1234@gmail.com',
+        subject: 'Thank you for booking at our website (' + option + ')',
+        html: html
+    };
+    transporter.sendMail(mailOptions, (error,info) => {
+        if(error) {
+            console.log(JSON.stringify(error))
+            transporter.sendMail(mailOptions)
+        }
+        else {
+            console.log('Email sent: ' + info.response);
+        }
+    })
+}
+module.exports.InsertData = async function (req, res) {
     //console.log(req.cookies);
     var Representative = req.cookies.data;
     var ListPassenger = req.cookies.data2;
     var ListTicket = req.cookies.data3;
     console.log("req.query:" + JSON.stringify(req.query));
     var ListTicket2;
+    var html2;
+    var option = "One Way";
     if (typeof (req.cookies.data5) != undefined) {
         ListTicket2 = req.cookies.data5;
+        html2 = await createTableListCustomer(Representative, ListPassenger, ListTicket2, req.query.payment_id);
+        option = "Round Trip";
+        SendMail(html2, option)
     }
+
+    var html = await createTableListCustomer(Representative, ListPassenger, ListTicket, req.query.payment_id);
+    SendMail(html, option)
 
     db.Representative.create(Representative).then(data => {
         InsertPassenger(ListPassenger).then(data => {
@@ -613,7 +639,7 @@ module.exports.InsertData = function (req, res) {
                     if (data1) {
                         if (typeof (req.cookies.data5) != "undefined") {
                             InsertTicket(ListTicket2).then(data2 => {
-                                if (data2) {
+                                if (data2) {                                  
                                     res.render('confirmation', { ROUND_TRIP: true, Representative: req.cookies.data, moment: moment });
                                 }
                                 else {
@@ -621,7 +647,7 @@ module.exports.InsertData = function (req, res) {
                                 }
                             })
                         }
-                        else {
+                        else {                           
                             res.render('confirmation', { Representative: req.cookies.data, moment: moment });
                         }
                     }
@@ -733,13 +759,13 @@ function CreateTicket(ListPassengerModel, TicketInfo, ListSeat) {
 function getListSeatSoldDetail(Schedule, isBreak){
     return new Promise(resolve => {
         db.Schedule.findOne({
-            attributes: ['ID', 'DateDeparture', 'TrainID'],
+            attributes: ['ID', 'DateDeparture', 'TrainID','TimeDeparture'],
             where: {
                 ID: Schedule.ID
             },
             include: {
                 model: db.ScheduleDetail,
-                attributes: ['ID', 'DepartureStationID', 'ArrivalStationID'],
+                attributes: ['ID', 'DepartureStationID', 'ArrivalStationID','Time'],
                 where: {
                     [Op.or]: [{Time:{[Op.gte]: Schedule.ScheduleDetails[0].Time}},{DepartureStationID: Schedule.ScheduleDetails[0].DepartureStationID}]
                 }
@@ -777,14 +803,25 @@ function getListTicketSold(Schedule) {
     return new Promise(async resolve => {
        await getTrainByID(Schedule.TrainID).then(data => {
             console.log("getTrainByID: " + JSON.stringify(data));
+            var hour = parseInt(moment(Schedule.TimeDeparture).subtract(7, 'hour').format('HH'))
+            var min = parseInt(moment(Schedule.TimeDeparture).format('mm'))
+            console.log("Hour: " + hour);
+            console.log("Min: " + min);
             if(Schedule.ScheduleDetails.length === 0) resolve(ListTicketFilter);
             Schedule.ScheduleDetails.forEach(async (detail, index, array) => {
+                var check = checkIsSameDepartureStationIDFirst(detail.DepartureStationID, Schedule.ID)
+                var date = moment(moment(Schedule.DateDeparture).add(hour, 'hour').subtract(7, "hour").format("YYYY-MM-DD")).add(min, 'minutes');
+                if(!check) {
+                    date = moment(moment(Schedule.DateDeparture).add(hour, 'hour').subtract(7, "hour").format("YYYY-MM-DD")).add((60 * detail.Time) + min, 'minutes');
+                }
+                console.log("Date: " + moment(new Date(date)._d));
                 await db.Ticket.findAll({
                     attributes: ['ID','SeatID'],
                     where: {
                         DepartureStationID: detail.DepartureStationID,
                         ArrivalStationID: detail.ArrivalStationID,
-                        TrainName: data.Name
+                        TrainName: data.Name,
+                        DepartureDate : date
                     }
                 }).then(result => {
                     
@@ -996,16 +1033,6 @@ function getAllSeatType(Train){
 
             })      
     })
-        // db.SeatType.findAll({
-        //     attributes: ['ID','TypeName'],
-        // }).then(seatType => {          
-        //     seatType.forEach((seat, index, array) =>{
-        //         dic.set(seat.ID, seat.TypeName);
-        //         if(index + 1 == array.length) {
-        //             resolve(dic);
-        //         }
-        //     })
-        // })
     })
     
 }
@@ -1018,6 +1045,36 @@ function convertTypeObjectToDictionary(object) {
 
             if (index + 1 == array.length) {
                 resolve(dic);
+            }
+        })
+    })
+}
+
+async function createTableListCustomer(Representative, ListPassenger, ListTicket, PaymentID){
+    return new Promise(async resolve => {
+        var html = "<!DOCTYPE html> <html> <head> <style> table { font-family: arial, sans-serif; border-collapse: collapse; width: 100%; } td, th { border: 1px solid #dddddd; text-align: left; padding: 8px; } tr:nth-child(even) { background-color: #dddddd; } </style> </head>";
+        var bookingInformation = "<body><h1>THANK YOU FOR BOOKING WITH US</h1><h2>Booking Information</h2><div>";
+        bookingInformation += "<div><p>Full Name: " + Representative.Name + "</p>" +
+        "<p>Booking Code: "  + Representative.ID + "</p>"
+        + "<p>Payment ID: " + PaymentID + "</p>"
+        + "<p>Passport: " + Representative.Passport + "</p>"
+        + "<p style='color:red;'>Note: <span style='font-weight:bold'>PAYMENT ID</span> used to refund money in case of error</p></div>";
+        var listCustomer = "<h2>List Customer</h2> <table> <tr> <th>Full Name</th> <th>Passport</th> <th>Departure Station</th> <th>Price (VND)</th></tr>";
+        var DepartureStation = await getStationByID(ListTicket[0].DepartureStationID);
+        ListPassenger.forEach((passenger,index,array) => {
+            var ticket = ListTicket.filter(ticket => {
+                return ticket.CustomerID == passenger.ID
+            })
+           
+            listCustomer += "<tr>" 
+                         +"<td>"+passenger.Name+"</td>"
+                         +"<td>"+passenger.Passport+"</td>"
+                         +"<td>"+DepartureStation[0].Name+"</td>"
+                         +"<td>"+JSON.stringify(ticket[0].Price).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")+"</td>"
+                         +"</tr>"           
+            if(index + 1 === array.length) {
+                listCustomer += "</table></body></html>";
+                resolve(html + bookingInformation + listCustomer);
             }
         })
     })

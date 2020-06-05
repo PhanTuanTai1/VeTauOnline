@@ -443,3 +443,9 @@ module.exports.getAllScheduleDetail = function (req, res) {
     },
   }).then(detail => res.end(JSON.stringify(detail)))
 }
+
+module.exports.getListDetail = function (req, res) {
+  db.ScheduleDetail.findAll({
+
+  }).then(detail => res.end(JSON.stringify(detail)))
+}

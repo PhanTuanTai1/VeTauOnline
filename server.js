@@ -1,5 +1,4 @@
 var express = require("express");
-var config = require("./config/connectionString");
 var controller = require("./controller/indexController");
 var managerCtrler = require("./controller/managerController");
 var loginController = require("./controller/loginController");
@@ -18,6 +17,8 @@ var jsonParser = bodyParser.json();
 // create application/x-www-form-urlencoded parser
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var app = express();
+
+
 var http = require('http').createServer(app);
 var io = require("socket.io")(http);
 app.use(express.static('./node_modules'));
@@ -37,6 +38,9 @@ app.use(session({
         maxAge: 600000
     }
 }))
+
+
+
 
 app.get("/", function (req, res) {
     res.render('index2');
@@ -107,7 +111,7 @@ app.get('/test', function(req,res){
 })
 // app.get('/CheckLogin' , function(req,res){
 //     loginController.CheckLogin(req,res);
-// })
+// }) 
 app.get('/login', function (req, res) {
     res.render("login");
 })
@@ -170,14 +174,15 @@ app.get("/getAllSchedule", function (req, res) {
 
 //render
 app.get("/admin/dashboard", function (req, res) {
-    loginController.CheckLogin().then(check => {
-        if (check) {
-            res.render('admin');
-        }
-        else {
-            res.render('login');
-        }
-    })
+    // loginController.CheckLogin().then(check => {
+    //     if (check) {
+    //         loginController.GetUserFromSession(req, res);
+    res.render('admin');
+    //     }
+    //     else {
+    //         res.render('login');
+    //     }
+    // })
 })
 app.get("/admin/customer", function (req, res) {
     loginController.CheckLogin().then(check => {
@@ -240,14 +245,14 @@ app.get("/admin/carriage", function (req, res) {
     })
 })
 app.get("/admin/schedule", function (req, res) {
-    loginController.CheckLogin().then(check => {
-        if (check) {
-            res.render('scheduleadmin');
-        }
-        else {
-            res.render('login');
-        }
-    })
+    // loginController.CheckLogin().then(check => {
+    //     if (check) {
+    res.render('scheduleadmin');
+    //     }
+    //     else {
+    //         res.render('login');
+    //     }
+    // })
 })
 
 //action customer
@@ -288,15 +293,14 @@ app.put("/admin/carriage", function (req, res) {
 
 //test print
 app.get("/admin/ticket", function (req, res) {
-    loginController.CheckLogin().then(check => {
-        if (check) {
-            res.render('ticketadmin');
-            loginController.GetUserFromSession(req, res);
-        }
-        else {
-            res.render('login');
-        }
-    })
+    // loginController.CheckLogin().then(check => {
+    //     if (check) {
+    res.render('ticketadmin');
+    //     }
+    //     else {
+    //         res.render('login');
+    //     }
+    // })
 })
 app.get("/printTicket", function (req, res) {
     managerCtrler.printTicketByRepresentativeId(req, res);
@@ -373,6 +377,9 @@ var io = io.on('connection', (socket) => {
 app.get("/getAllScheduleDetail", function (req, res) {
     managerCtrler.getAllScheduleDetail(req, res)
 })
+app.get("/getListDetail", function (req, res) {
+    managerCtrler.getListDetail(req, res);
+})
 
 app.post("/admin/scheduledetail", function (req, res) {
     managerCtrler.createScheduleDetail(req, res)
@@ -397,3 +404,68 @@ http.listen(port, function () {
     console.log("Run on port " + port);
 });
 
+
+
+// //TEST CHAT 
+// app.get("/chat", function (req, res) {
+//     res.render('chat');
+// })
+// var io = require('socket.io')(server);
+// var numUsers = 0;
+// io.on('connection', (socket) => {
+//     var addedUser = false;
+
+//     // when the client emits 'new message', this listens and executes
+//     socket.on('new message', (data) => {
+//         // we tell the client to execute 'new message'
+//         socket.broadcast.emit('new message', {
+//             username: socket.username,
+//             message: data
+//         });
+//     });
+
+//     // when the client emits 'add user', this listens and executes
+//     socket.on('add user', (username) => {
+//         if (addedUser) return;
+
+//         // we store the username in the socket session for this client
+//         socket.username = username;
+//         ++numUsers;
+//         addedUser = true;
+//         socket.emit('login', {
+//             numUsers: numUsers
+//         });
+//         // echo globally (all clients) that a person has connected
+//         socket.broadcast.emit('user joined', {
+//             username: socket.username,
+//             numUsers: numUsers
+//         });
+//     });
+
+//     // when the client emits 'typing', we broadcast it to others
+//     socket.on('typing', () => {
+//         socket.broadcast.emit('typing', {
+//             username: socket.username
+//         });
+//     });
+
+//     // when the client emits 'stop typing', we broadcast it to others
+//     socket.on('stop typing', () => {
+//         socket.broadcast.emit('stop typing', {
+//             username: socket.username
+//         });
+//     });
+
+//     // when the user disconnects.. perform this
+//     socket.on('disconnect', () => {
+//         if (addedUser) {
+//             --numUsers;
+
+//             // echo globally that this client has left
+//             socket.broadcast.emit('user left', {
+//                 username: socket.username,
+//                 numUsers: numUsers
+//             });
+//         }
+//     });
+// });
