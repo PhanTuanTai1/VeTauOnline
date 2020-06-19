@@ -172,6 +172,17 @@ app.get("/getAllSchedule", function (req, res) {
     managerCtrler.getAllSchedule(req, res)
 })
 
+app.get('/listFare',function(req,res){
+    res.render('listFare');
+})
+
+app.get('/getAllScheduleClient',function(req,res) {
+    controller.GetAllSchedule(req,res);
+})
+
+app.get('/getAllScheduleDetailClient',function(req,res) {
+    controller.GettAllScheduleDetailByID(req,res);
+})
 //render
 app.get("/admin/dashboard", function (req, res) {
     // loginController.CheckLogin().then(check => {

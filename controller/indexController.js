@@ -683,6 +683,46 @@ module.exports.ManageBooking = function (req, res) {
     })
 }
 
+module.exports.GetAllSchedule = function(req,res) {
+    db.Schedule.findAll({
+        attributes: ['ID', 'DateDeparture', 'TrainID','TimeDeparture'],
+        where: {
+            DateDeparture: {[Op.gte] : moment()._d}
+        }
+    }).then(data => {
+        console.log("GetAllSchedule: " + JSON.stringify(data));
+        res.end(JSON.stringify(data));
+    })
+}
+
+module.exports.GettAllScheduleDetailByID = function(req,res) {
+    db.ScheduleDetail.findAll({
+        attributes: ['ID','ScheduleID','DepartureStationID', 'ArrivalStationID','Length','StartTime','Time'],
+        order: ['DepartureStationID'],      
+        where: {
+            ScheduleID: req.query.ID
+        },
+        include: {
+            model: db.TableCost,
+            attributes: ['ScheduleID','SeatTypeID','Cost'],
+            include: {
+                model: db.SeatType,
+                attributes: ['ID','TypeName']
+            }
+        }
+    }).then(data => {
+        db.Schedule.findOne({
+            attributes: ['ID','DateDeparture','TimeDeparture'],
+            where : {
+                ID : req.query.ID
+            }
+        }).then(schedule => {
+            res.render('listScheduleDetail',{result:data, schedule: schedule});
+        })
+        
+    })
+}
+
 function InsertPassenger(ListPassenger) {
     return new Promise(resolve => {
         ListPassenger.forEach(passenger => {

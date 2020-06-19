@@ -221,6 +221,7 @@
                                     <th>DESTINATION</th>
                                     <th>AMOUNT OF MONEY</th>
                                     <th>STATUS</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -233,6 +234,7 @@
                                         <td name="ArrivalStationID" data-id="<%=customer.Ticket.ArrivalStationID%>"><%=customer.Ticket.ArrivalStationID%></td>
                                         <td><%=JSON.stringify(customer.Ticket.Price).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%> VND%></td>
                                         <td name="StatusTicket" data-status="<%=customer.Ticket.Status%>"><%=customer.Ticket.Status%></td>
+                                        <td style="text-align: center;"><input style="background-color: red;" type="button" value="Cancel" class="btn btn-danger" onclick="Cancel(this, '<%=customer.Ticket.ID%>')"/></td>
                                     </tr>
                                 <%})%>
                             </tbody>
