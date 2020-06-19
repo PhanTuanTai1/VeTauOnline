@@ -3,11 +3,61 @@ var db = require("../data_access/DataAccess");
 var moment = require('moment');
 var uuid = require('uuidjs');
 
+var mail = require('nodemailer')
+var config = require('../config/common');
+const { func } = require('assert-plus');
+var transporter = mail.createTransport({
+  service: 'gmail',
+  auth: {
+    user: config.UserName,
+    pass: config.Password
+  }
+});
+
+function SendMail(mail, id, from, to) {
+  console.log(mail);
+  console.log(from + " " + to);
+  var mailOptions = {
+    from: 'trainticketonlinevn@gmail.com',
+    to: mail,
+    subject: 'Cancel ticket confirmation',
+    html: `<p>Ticket <strong style="color:red;">${id}</strong> from <strong style="color:red;">${from}</strong> to <strong style="color:red;">${to}</strong> has canceled according to request from you.</p>`
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(JSON.stringify(error))
+      transporter.sendMail(mailOptions)
+    }
+    else {
+      console.log('Email sent: ' + info.response);
+    }
+  })
+}
+
+module.exports.cancelTicket = async function (req, res) {
+  SendMail(req.query.mail, req.query.id, req.query.from, req.query.to);
+  db.Ticket.update({
+    Status: 3
+  }, {
+    where: {
+      ID: req.query.id,
+    },
+
+  }).then(data => {
+    res.send(data);
+  })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while creating the customer."
+      });
+    });
+}
 
 //#region Customer
 module.exports.getAllCustomer = function (req, res) {
   db.Customer.findAll({
-    include: [db.Representative]
+    include: { all: true }
   }).then(cus => {
     res.end(JSON.stringify(cus));
   })
@@ -449,3 +499,4 @@ module.exports.getListDetail = function (req, res) {
 
   }).then(detail => res.end(JSON.stringify(detail)))
 }
+
