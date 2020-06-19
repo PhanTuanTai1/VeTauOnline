@@ -15,7 +15,7 @@ Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
 // })
 
 // database local
-var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '79495291', {
+var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '123456789', {
     dialect: 'mssql',
     host: 'localhost',
     //port: '1433',
@@ -224,7 +224,7 @@ ScheduleDetail.belongsTo(Schedule);
 TableCost.belongsTo(SeatType, { foreignKey: "ID" });
 TableCost.belongsTo(ScheduleDetail, { foreignKey: "ID" });
 Representative.hasMany(Customer, { foreignKey: "RepresentativeID" });
-Customer.belongsTo(Representative, { foreignKey: "ID" });
+Customer.belongsTo(Representative, { foreignKey: "RepresentativeID" });
 Customer.belongsTo(TypeObject, { foreignKey: "TypeObjectID" });
 Ticket.belongsTo(Customer, { foreignKey: "CustomerID" });
 Ticket.belongsTo(Seat, { foreignKey: "SeatID" });
