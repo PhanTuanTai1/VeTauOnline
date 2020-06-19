@@ -152,9 +152,9 @@ new Vue({
         },
         async editStatus(ticketList, request) {
 
-            // await ticketList.forEach(ticket => {
-            //     axios.put(window.origin + '/admin/ticket?cusID=' + ticket.CustomerID + '&request=' + request)
-            // });
+            await ticketList.forEach(ticket => {
+                axios.put(window.origin + '/admin/ticket?cusID=' + ticket.CustomerID + '&request=' + request)
+            });
             if (request == "print")
                 this.printTicket(ticketList);
         },

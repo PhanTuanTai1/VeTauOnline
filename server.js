@@ -48,7 +48,7 @@ app.get("/", function (req, res) {
 
 app.get("/passenger", function (req, res) {
     //console.log(req.headers.cookie.session_id);
-    if(typeof(req.headers.cookie) == "undefined"){
+    if (typeof (req.headers.cookie) == "undefined") {
         console.log("SessionID: " + req.session.id);
         res.cookie('sesion_id', req.session.id);
     }
@@ -106,7 +106,7 @@ app.post("/createInfomation", function (req, res) {
     controller.createSession(req, res);
 })
 
-app.get('/test', function(req,res){
+app.get('/test', function (req, res) {
     res.render('test');
 })
 // app.get('/CheckLogin' , function(req,res){
@@ -132,8 +132,8 @@ app.get('/manageBooking1', function (req, res) {
     res.render('managebooking');
 })
 
-app.post('/SearchBooking', function(req,res){
-    controller.ManageBooking(req,res);
+app.post('/SearchBooking', function (req, res) {
+    controller.ManageBooking(req, res);
 })
 
 app.get('/getSeatTypeBySeatID', function (req, res) {
@@ -313,6 +313,20 @@ app.get("/admin/ticket", function (req, res) {
     //     }
     // })
 })
+app.get("/admin/cancelticket", function (req, res) {
+    // loginController.CheckLogin().then(check => {
+    //     if (check) {
+    res.render('cancelticketadmin');
+    //     }
+    //     else {
+    //         res.render('login');
+    //     }
+    // })
+})
+app.put("/cancelTicketWithMail", function (req, res) {
+    managerCtrler.cancelTicket(req, res)
+})
+
 app.get("/printTicket", function (req, res) {
     managerCtrler.printTicketByRepresentativeId(req, res);
 })
@@ -339,14 +353,14 @@ var io = io.on('connection', (socket) => {
     socket.on('changeStatus', (data) => {
         var check = false;
         listSeatBlock.forEach(seat => {
-            if(data.id == seat.id) {
-                if(data.class.search('soft_bed_left') != -1) {
+            if (data.id == seat.id) {
+                if (data.class.search('soft_bed_left') != -1) {
                     data.class = 'train_bed_cell bed can_block soft_bed_left reserved';
                 }
-                else if(data.class.search('soft_bed_right') != -1) {
+                else if (data.class.search('soft_bed_right') != -1) {
                     data.class = 'train_bed_cell bed can_block soft_bed_right reserved';
                 }
-                else if(data.class.search('soft_seat_left') != -1) {
+                else if (data.class.search('soft_seat_left') != -1) {
                     data.class = 'train_cell seat can_block soft_seat_left reserved';
                 }
                 check = true;
@@ -354,35 +368,35 @@ var io = io.on('connection', (socket) => {
         })
 
         //console.log(socket);
-        if(typeof(data.class) != "undefined" && data.block == true){
+        if (typeof (data.class) != "undefined" && data.block == true) {
 
-            if(data.class.search('soft_bed_left') != -1) {
+            if (data.class.search('soft_bed_left') != -1) {
                 data.class = 'train_bed_cell bed can_block soft_bed_left reserved';
             }
-            else if(data.class.search('soft_bed_right') != -1) {
+            else if (data.class.search('soft_bed_right') != -1) {
                 data.class = 'train_bed_cell bed can_block soft_bed_right reserved';
             }
-            else if(data.class.search('soft_seat_left') != -1) {
+            else if (data.class.search('soft_seat_left') != -1) {
                 data.class = 'train_cell seat can_block soft_seat_left reserved';
             }
 
-            if(!check) {
+            if (!check) {
                 listSeatBlock.push(data);
-                socket.broadcast.emit('response', listSeatBlock);      
+                socket.broadcast.emit('response', listSeatBlock);
             }
-            else{
+            else {
                 //console.log(socket.id);
-                socket.emit('response', {data : {listSeatBlock: listSeatBlock, check: true, id: data.id}});
+                socket.emit('response', { data: { listSeatBlock: listSeatBlock, check: true, id: data.id } });
             }
         }
-        else if(typeof(data.class) != "undefined" && data.unblock == true){
-             var listUnblock = listSeatBlock.filter(seat => {
-                 return data.id != seat.id;
-             });
+        else if (typeof (data.class) != "undefined" && data.unblock == true) {
+            var listUnblock = listSeatBlock.filter(seat => {
+                return data.id != seat.id;
+            });
 
-             listSeatBlock = listUnblock;
-             socket.broadcast.emit('response_unblock', data);
-        }   
+            listSeatBlock = listUnblock;
+            socket.broadcast.emit('response_unblock', data);
+        }
     })
 });
 app.get("/getAllScheduleDetail", function (req, res) {
@@ -403,13 +417,13 @@ app.delete("/admin/schedule", function (req, res) {
     managerCtrler.delSchedule(req, res)
 })
 
-app.get('/listSchedule', (req,res) => {
+app.get('/listSchedule', (req, res) => {
     res.render('listFare');
 })
-process.on("unhandledRejection", function(reason, p){
+process.on("unhandledRejection", function (reason, p) {
     console.log("Unhandled Rejection:", reason.stack);
     //process.exit(1);
-}); 
+});
 
 http.listen(port, function () {
     console.log("Run on port " + port);
