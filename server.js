@@ -185,15 +185,18 @@ app.get("/admin/dashboard", function (req, res) {
     //     }
     // })
 })
+app.get("/abc", function (req, res) {
+    managerCtrler.getListCusBySchedule(req, res)
+})
 app.get("/admin/customer", function (req, res) {
-    loginController.CheckLogin().then(check => {
-        if (check) {
-            res.render('customeradmin');
-        }
-        else {
-            res.render('login');
-        }
-    })
+    // loginController.CheckLogin().then(check => {
+    //     if (check) {
+    res.render('customeradmin');
+    //     }
+    //     else {
+    //         res.render('login');
+    //     }
+    // })
 })
 app.get("/admin/station", function (req, res) {
     loginController.CheckLogin().then(check => {
@@ -204,6 +207,10 @@ app.get("/admin/station", function (req, res) {
             res.render('login');
         }
     })
+})
+
+app.get("/getAllScheNoCond", function (req, res) {
+    managerCtrler.getAllScheDetailWithNoCondition(req, res);
 })
 app.get("/admin/train", function (req, res) {
     loginController.CheckLogin().then(check => {

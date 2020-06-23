@@ -220,7 +220,7 @@ Schedule.belongsTo(Train, { foreignKey: "TrainID" });
 Schedule.hasMany(ScheduleDetail, { foreignKey: "ScheduleID" });
 ScheduleDetail.belongsTo(Station, { foreignKey: "DepartureStationID" });
 ScheduleDetail.belongsTo(Station, { foreignKey: "ArrivalStationID" });
-ScheduleDetail.belongsTo(Schedule);
+ScheduleDetail.belongsTo(Schedule, { foreignKey: "ScheduleID" });
 TableCost.belongsTo(SeatType, { foreignKey: "ID" });
 TableCost.belongsTo(ScheduleDetail, { foreignKey: "ID" });
 Representative.hasMany(Customer, { foreignKey: "RepresentativeID" });

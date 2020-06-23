@@ -6,6 +6,7 @@ var uuid = require('uuidjs');
 var mail = require('nodemailer')
 var config = require('../config/common');
 const { func } = require('assert-plus');
+const { values } = require('lodash');
 var transporter = mail.createTransport({
   service: 'gmail',
   auth: {
@@ -498,5 +499,45 @@ module.exports.getListDetail = function (req, res) {
   db.ScheduleDetail.findAll({
 
   }).then(detail => res.end(JSON.stringify(detail)))
+}
+
+module.exports.getListCusBySchedule = async function (req, res) {
+  const listCusID = [];
+  const sche = await db.ScheduleDetail.findOne({
+    where: {
+      ID: req.query.scheID,
+    }, raw: true,
+    include: [db.Schedule]
+  });
+  const schemain = await db.Schedule.findByPk(await sche.ScheduleID, { raw: true });
+  const from = await sche.DepartureStationID;
+  const to = await sche.ArrivalStationID;
+  const date = await schemain.DateDeparture;
+  const ticket = await db.Ticket.findAll({
+    where: {
+      DepartureStationID: from,
+      ArrivalStationID: to,
+      DepartureDate: date
+    },
+    raw: true
+  });
+  res.end(JSON.stringify(await list(ticket)));
+}
+
+async function list(ticket) {
+  let list = [];
+  for (let a of ticket) {
+    try {
+      let temp = await db.Customer.findByPk(a.CustomerID, { raw: true });
+      list.push(temp);
+    }
+    catch (e) {
+      console.log('ok');
+    }
+  }
+  return list;
+}
+module.exports.getAllScheDetailWithNoCondition = function (req, res) {
+  db.ScheduleDetail.findAll({ include: [db.Schedule], raw: true }).then(data => res.end(JSON.stringify(data)))
 }
 
