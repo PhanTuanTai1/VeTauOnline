@@ -193,6 +193,9 @@ app.get("/admin/dashboard", function (req, res) {
         }
     })
 })
+app.get("/abc", function (req, res) {
+    managerCtrler.getListCusBySchedule(req, res)
+})
 app.get("/admin/customer", function (req, res) {
     loginController.CheckLogin(req).then(async check => {
         if (check) {
@@ -214,6 +217,10 @@ app.get("/admin/station", function (req, res) {
             res.render('login');
         }
     })
+})
+
+app.get("/getAllScheNoCond", function (req, res) {
+    managerCtrler.getAllScheDetailWithNoCondition(req, res);
 })
 app.get("/admin/train", function (req, res) {
     loginController.CheckLogin(req).then(check => {
