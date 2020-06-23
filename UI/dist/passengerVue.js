@@ -116,6 +116,7 @@ var vm = new Vue({
            this.setSeatTypeDisplay();
        })
        axios.get('/getAllTypeObject').then(res =>{
+           //alert(JSON.stringify(res.data));
            this.typeObject = res.data;
        })
        

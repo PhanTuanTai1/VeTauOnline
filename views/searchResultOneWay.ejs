@@ -439,7 +439,7 @@
                                 <div style="font-size: 13px;" v-text="train.Name"></div>
                             </td>
                             <td class="text-right" style="width: 187px;">
-                                <div class="super-bold">{{formatTime(getScheduleDetailByTrainID(train.ID)[0].TimeDeparture)}}</div>
+                                <div class="super-bold">{{formatTime(getScheduleDetailByTrainID(train.ID)[0].ScheduleDetails[0].StartTime)}}</div>
                                 <div>{{formatDate(getScheduleDetailByTrainID(train.ID)[0].DateDeparture)}}</div>
                             </td>
                             <!-- <td class="text-right" style="width: 154px;">
@@ -447,7 +447,8 @@
                                 <div>Fr, 20/03</div>
                             </td> -->
                             <td class="text-center" style="width: 203px;">
-                                31h 25m </td>
+                                {{JSON.stringify(getScheduleDetailByTrainID(train.ID)[0].ScheduleDetails[0].Time).split('.')[0] + 'h ' + 
+                                parseInt(JSON.stringify(getScheduleDetailByTrainID(train.ID)[0].ScheduleDetails[0].Time).split('.')[1] * 0.6) + 'm'}} </td>
                             <td class="searchresult-itenerary hidden-sm hidden-xs" style="width: 366px;"><span style="display: inline-block;">{{departure}}<br><span style="font-size: 13px;">{{departure}}</span></span> 
                                 <i class="icon have-node-code icon-train inline"></i> <span style="display: inline-block;">{{arrival}}<br><span style="font-size: 13px;">{{arrival}}</span></span>
                             </td>

@@ -221,6 +221,7 @@
                                     <th>DESTINATION</th>
                                     <th>AMOUNT OF MONEY</th>
                                     <th>STATUS</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -233,6 +234,7 @@
                                         <td name="ArrivalStationID" data-id="<%=customer.Ticket.ArrivalStationID%>"><%=customer.Ticket.ArrivalStationID%></td>
                                         <td><%=JSON.stringify(customer.Ticket.Price).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%> VND%></td>
                                         <td name="StatusTicket" data-status="<%=customer.Ticket.Status%>"><%=customer.Ticket.Status%></td>
+                                        <td style="text-align: center;"><input style="background-color: red;" type="button" value="Cancel" class="btn btn-danger" onclick="Cancel(this, '<%=customer.Ticket.ID%>')"/></td>
                                     </tr>
                                 <%})%>
                             </tbody>
@@ -377,20 +379,7 @@
 
 <!-- END WINDOW POPUP -->
 
-    <script src="../dist/vue.js"></script>
-    <script src="../dist/axios.js"></script>
-    <script src="../dist/vuejs-datepickker.js"></script>
-    <script src="../dist/myVue5.js"></script>	
-    <script type="text/javascript" src="../dist/baolau.min6ffc.js"></script>
-    <script type="text/javascript" src="../dist/myJS.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-    <script>
-        $("#table_id").DataTable();
-    </script>
-    <!-- <script src="../dist/myVue2.js"></script> -->
-    <!-- <script src="../dist/moment.js"></script>             -->
-    <!-- Language dependant libraries -->
-    <script type="text/javascript" src="../vendor/bootstrap-datepicker/locales/bootstrap-datepicker.en.min.js"></script>
+    <%- include('scriptCommon', {page:5})%>
     
     
 </body>

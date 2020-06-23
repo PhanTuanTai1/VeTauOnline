@@ -149,28 +149,86 @@
                 <div class="gap gap-mini"></div>
             </div>
         </div>
-        
+        <input type="hidden" value="<%=JSON.stringify(result)%>" id="result">
+        <input type="hidden" value="<%=JSON.stringify(schedule)%>" id="scheduleParent">
         <div class="container hero-callout" >           
             <div class="dataTables_wrapper">
                 <div class="bs-callout bs-callout-info">
                     <div class="padded-content">
-                        <div class="highlight-text">LIST SCHEDULES</div>
+                        <div class="highlight-text">SEAT TYPE</div>
+                        <div class="btn-group bootstrap-select">
+                            <button type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown" title="&amp;nbsp;—&amp;nbsp;">
+                                <span class="filter-option pull-left" id="typeSelected">
+                                            {{seatType[0].TypeName}}
+                                </span>&nbsp;<i class="caret"></i></button>
+                                <input type="hidden" id="typeID" v-bind:value="seatType[0].ID">
+                            <div class="dropdown-menu open">
+                                <ul class="dropdown-menu inner" role="menu">
+                                    <li class="hidden is-hidden selected" data-original-index="0">
+                                        <a tabindex="0" data-tokens="null">
+                                            <div class="checkbox">
+                                                <label></label>
+                                            </div><span class="checkbox-label"><span class="text">
+                                            &nbsp;—&nbsp;                                                </span></span>
+                                        </a>
+                                    </li>
+                                    <li  v-for="(type,index) in seatType" v-bind:data-original-index="index + 1" v-bind:data-index="index + 1" v-on:click="SelectType(type.ID,type.TypeName)"> 
+                                        <a tabindex="0" data-tokens="null">
+                                            <div class="checkbox">
+                                                <label></label>
+                                            </div><span class="checkbox-label"><span class="text">
+                                                {{type.TypeName}}                                                 
+                                        </span></span>
+                                        </a>
+                                    </li>
+                                    <!-- <li> 
+                                        <a v-for="Type in seatType">
+                                            <div class="checkbox">
+                                                <label></label>
+                                            </div><span class="checkbox-label"><span class="text">
+                                                {{Type.TypeName}}                    
+                                        </span></span>
+                                        </a>
+                                    </li> -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+               </div>
+               <div class="gap gap-section"></div>
+        </div>
+        <div class="container hero-callout" >           
+            <div class="dataTables_wrapper">
+                <div class="bs-callout bs-callout-info">
+                    <div class="padded-content">
+                        <div class="highlight-text">LIST SCHEDULE DETAIL</div>
                         <table id="table_id">
                             <thead>
                                 <tr>
-                                    <th>Train Name</th>
+                                    <th>Departure Station</th>
+                                    <th>Destination Station</th>
+                                    <th>Length (Kilometer)</th>
                                     <th>Date Departure</th>
-                                    <th>Time Departure</th>
+                                    <th>Start Time</th>
+                                    <th>Price (VND)</th>
+                                    <th>Number of Passengers</th>
                                     <th></th>
                                 </tr>
                             </thead>
-                           <template v-if="listScheduleConverted">
+                           <template v-if="listScheduleDetail != null && listStation != null">
                             <tbody >                              
-                                <tr  v-for="schedule in listScheduleConverted">
-                                    <td>{{TrainName(schedule.TrainID)}}</td>
-                                    <td>{{schedule.DateDeparture}}</td>
-                                    <td>{{schedule.TimeDeparture}}</td>
-                                    <td><a v-bind:href="'/getAllScheduleDetailClient?ID='+schedule.ID" target="_blank">Schedule Detail</a></td>
+                                <tr v-for="(scheduleDetail,index) in listScheduleDetail">
+                                    <td>{{StationName(scheduleDetail.DepartureStationID)}}</td>
+                                    <td>{{StationName(scheduleDetail.ArrivalStationID)}}</td>
+                                    <td>{{scheduleDetail.Length}}</td>
+                                    <td>{{GetDateDeparture(scheduleDetail.StartTime, scheduleDetail.DepartureStationID)}}</td>
+                                    <td>{{FormatTime(scheduleDetail.StartTime)}}</td>
+                                    <td style="font-weight: bolder;">{{JSON.stringify(scheduleDetail.TableCosts[0].Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}}</td>
+                                    <td><input type="number" value="1" min="1" max="5" v-bind:id="'scheduleDetail' + (index + 1)" class="form-control" style="text-align: center;border-color: black;" v-on:click="increasePassager('scheduleDetail' + (index + 1))" @keyup="increasePassager('scheduleDetail' + (index + 1))"></td>
+                                    <td>
+                                        <a v-bind:href="'/searchSchedule?FROM=' + scheduleDetail.DepartureStationID + '&TO=' + scheduleDetail.ArrivalStationID + '&DEPART='+ GetDateDepartureQuery(scheduleDetail.StartTime, scheduleDetail.DepartureStationID) + '&ONE_WAY=true&PASSENGERS=1'"  v-bind:data-href="'/searchSchedule?FROM=' + scheduleDetail.DepartureStationID + '&TO=' + scheduleDetail.ArrivalStationID + '&DEPART='+ GetDateDepartureQuery(scheduleDetail.StartTime, scheduleDetail.DepartureStationID) + '&ONE_WAY=true&PASSENGERS='" class="form-control btn btn-primary" style="background-color: green;color: white;" id="bookingOnline">Booking Online</a></td>
                                 </tr>                                   
                             </tbody>
                            </template>
@@ -312,12 +370,13 @@
     <script src="../dist/axios.js"></script>
     <!-- <script src="../dist/myVue5.js"></script>	 -->
     <script type="text/javascript" src="../dist/baolau.min6ffc.js"></script>
-    <script type="text/javascript" src="../dist/listFareVue.js"></script>
+    <script type="text/javascript" src="../dist/listScheduleDetailVue.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>   
     <script>
         window.onunload = () => {
             $("#table_id").DataTable();
         }
     </script>
+    <script src="../dist/moment.js"></script>  
 </body>
 </html>

@@ -2,7 +2,7 @@ var { Sequelize, Model, DataTypes } = require('sequelize');
 var moment = require('moment');
 
 Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
-    date = this._applyTimezone(date, options);
+    //date = this._applyTimezone(date, options);
     return moment(date).format('YYYY-MM-DD');
 };
 
@@ -220,8 +220,9 @@ Schedule.belongsTo(Train, { foreignKey: "TrainID" });
 Schedule.hasMany(ScheduleDetail, { foreignKey: "ScheduleID" });
 ScheduleDetail.belongsTo(Station, { foreignKey: "DepartureStationID" });
 ScheduleDetail.belongsTo(Station, { foreignKey: "ArrivalStationID" });
+
 ScheduleDetail.belongsTo(Schedule, { foreignKey: "ScheduleID" });
-TableCost.belongsTo(SeatType, { foreignKey: "ID" });
+TableCost.belongsTo(SeatType, { foreignKey: "SeatTypeID" });
 TableCost.belongsTo(ScheduleDetail, { foreignKey: "ID" });
 Representative.hasMany(Customer, { foreignKey: "RepresentativeID" });
 Customer.belongsTo(Representative, { foreignKey: "RepresentativeID" });

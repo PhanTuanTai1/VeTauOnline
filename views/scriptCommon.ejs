@@ -1,13 +1,30 @@
-<%if(page == 1){%>
-    <script src="../dist/vue.js"></script>
-    <script src="../dist/axios.js"></script> 	
-    <script src="../dist/vuejs-datepickker.js"></script>
-    <script type="text/javascript" src="../dist/baolau.min6ffc.js"></script>
+<script src="../dist/vue.js"></script>
+<script src="../dist/axios.js"></script> 	
+<script src="../dist/vuejs-datepickker.js"></script>
+<script type="text/javascript" src="../dist/baolau.min6ffc.js"></script>
+<%if(page == 1){%>  
     <%if(typeof(error) == "undefined"){%>
-        <script src="../dist/myVue2.js"></script>
+        <script src="../dist/searchVue.js"></script>
     <%}%>
     <script src="../dist/myJS.js"></script>
-    <script src="../dist/moment.js"></script>            
-        <!-- Language dependant libraries -->
-    <script type="text/javascript" src="../vendor/bootstrap-datepicker/locales/bootstrap-datepicker.en.min.js"></script>
+    <script src="../dist/moment.js"></script>              
+<%}else if(page == 2){%>
+    <script src="../dist/searchVue.js"></script>
+    <script src="../dist/myJS.js"></script>
+    <script src="../dist/moment.js"></script>   
+<%}else if(page == 3){%>
+    <script src="../dist/passengerVue.js"></script>	
+    <script type="text/javascript" src="../dist/myJS.js"></script>
+<%}else if(page == 4){%>
+    <script src="../dist/paymentVue.js"></script>	
+    <script type="text/javascript" src="../dist/myJS.js"></script>
+<%}else if(page == 5){%>
+    <script src="../dist/confirmationVue.js"></script>	
+    <script type="text/javascript" src="../dist/myJS.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script>
+        $("#table_id").DataTable();
+    </script>
 <%}%>
+<!-- Language dependant libraries -->
+<script type="text/javascript" src="../vendor/bootstrap-datepicker/locales/bootstrap-datepicker.en.min.js"></script>
