@@ -5,6 +5,9 @@
     <title>Admin | Customer</title>
 
     <%- include('adminheader'); -%>
+    <link type="text/css" href="../dist/css/select2.min.css" rel="stylesheet" />
+
+    <script src="../dist/js/select2.min.js"></script>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
@@ -20,24 +23,33 @@
             <div class="card card-solid">
                 <div class="card-body pb-0">
                     <div id="app">
+                        <div class="card" style="padding: 15px;">
+                            <label>Select schedule:</label>
+                            <select id="select">
+                                <option v-for="item in Schedule" v-bind:value="item.ID">
+                                    {{from(item.DepartureStationID)}}
+                                    --> {{to(item.ArrivalStationID)}} Date: {{format(item.ScheduleID)}}
+                                </option>
+                            </select>
+                            <div style="text-align: right;">
+                                <button style="margin: 15px;" @click="abc" type="button" class="btn btn-info"><i
+                                        class="fa fa-search"></i>
+                                    Search</button>
+                            </div>
+                        </div>
                         <table id="myTable" v-if="Customers" class="table-light">
                             <thead class="font-weight-bold table-info">
                                 <tr>
                                     <th>#</th>
                                     <th>Name</th>
                                     <th>Passport</th>
-                                    <!-- <th>Representative</th> -->
-                                    <th class="text-right">...</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(item,index) in Customers">
+                                <tr v-for="(item,index) in listCus">
                                     <td v-text="item.ID"></td>
                                     <td v-text="item.Name"></td>
                                     <td>{{item.Passport}}</td>
-                                    <!-- <td>{{item.Representative.Name}}</td> -->
-                                    <td class="text-right"><button @click="updateCus(item.ID,index)" type="button"
-                                            class="btn btn-warning"><i class="fa fa-edit"></i> Edit</button> </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -60,9 +72,14 @@
     <script src="../dist/vue.js"></script>
     <script src="../dist/vue-router.js"></script>
     <script src="../dist/axios.js"></script>
-    <script type="module" src="../dist/@CustomerVue/cusVue.js"></script>
+    <script src="../dist/moment.js"></script>
     <script src="../dist/sweetalert2.all.min.js"></script>
+    <script type="module" src="../dist/@CustomerVue/cusVue.js"></script>
     <!-- Language dependant libraries -->
+    <script>
+        $(".js-example").on("change", function (e) { log("change"); });
+
+    </script>
 </body>
 
 </html>

@@ -85,7 +85,6 @@ new Vue({
                                             <th>Train</th>
                                             <th>From</th>
                                             <th>To</th>
-                                            <th>...</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -99,7 +98,6 @@ new Vue({
                                                 <td>${e.TrainName}</td>
                                                 <td>${this.Staions.find(x => x.ID == e.DepartureStationID).Name}</td>
                                                 <td>${this.Staions.find(x => x.ID == e.ArrivalStationID).Name}</td>
-                                                <td><button id="cancelTick" value="${e.CustomerID}" class="btn btn-danger" >Cancel</button></td>
                                                 </tr>` )}
                                     </tbody>
                                 </table>
@@ -110,7 +108,6 @@ new Vue({
                             confirmButtonColor: '#3085d6',
                             cancelButtonColor: '#d33',
                             confirmButtonText: 'Print',
-                            cancelButtonText: 'Cancel all ticket!',
                             customClass: 'swal-ticket',
 
                             // onOpen: function test() {
@@ -121,23 +118,23 @@ new Vue({
                             if (result.value) {
                                 this.editStatus(ticketList, "print");
                             }
-                            else {
-                                Swal.fire({
-                                    title: 'Cancel confirmation!',
-                                    text: 'Are you sure?',
-                                    icon: 'question',
-                                    showCancelButton: true,
-                                    confirmButtonColor: '#3085d6',
-                                    cancelButtonColor: '#d33',
-                                    confirmButtonText: 'Confirm',
-                                    cancelButtonText: 'Cancel'
-                                }).then((confirm) => {
-                                    if (confirm.value) {
-                                        this.editStatus(ticketList, "cancel");
-                                        Swal.fire('Cancel succesfull!')
-                                    }
-                                })
-                            }
+                            // else {
+                            //     Swal.fire({
+                            //         title: 'Cancel confirmation!',
+                            //         text: 'Are you sure?',
+                            //         icon: 'question',
+                            //         showCancelButton: true,
+                            //         confirmButtonColor: '#3085d6',
+                            //         cancelButtonColor: '#d33',
+                            //         confirmButtonText: 'Confirm',
+                            //         cancelButtonText: 'Cancel'
+                            //     }).then((confirm) => {
+                            //         if (confirm.value) {
+                            //             this.editStatus(ticketList, "cancel");
+                            //             Swal.fire('Cancel succesfull!')
+                            //         }
+                            //     })
+                            // }
                         })
 
                     }
@@ -371,20 +368,20 @@ new Vue({
         $("#myTable").DataTable();
 
     },
-    mounted: function () {
-        window.Vue.use(VuejsDialog.main.default)
-        $(document).on("click", "#cancelTick", function () {
-            let id = this.value;
-            let btn = this;
-            Vue.dialog
-                .confirm('Are you sure?', { okText: 'Yes' })
-                .then(function (dialog) {
-                    axios.put(window.origin + '/admin/ticket?cusID=' + id + '&request=cancel');
-                    $(btn).attr("disabled", true);
-                })
-                .catch(function () {
-                    console.log('not cancel');
-                });
-        });
-    }
+    // mounted: function () {
+    //     window.Vue.use(VuejsDialog.main.default)
+    //     $(document).on("click", "#cancelTick", function () {
+    //         let id = this.value;
+    //         let btn = this;
+    //         Vue.dialog
+    //             .confirm('Are you sure?', { okText: 'Yes' })
+    //             .then(function (dialog) {
+    //                 axios.put(window.origin + '/admin/ticket?cusID=' + id + '&request=cancel');
+    //                 $(btn).attr("disabled", true);
+    //             })
+    //             .catch(function () {
+    //                 console.log('not cancel');
+    //             });
+    //     });
+    // }
 })
