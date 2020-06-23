@@ -19,7 +19,8 @@ var transporter = mail.createTransport({
 var STATUS = {
     "NOTPRINT": "1",
     "PRINTED": "2",
-    "CANCEL": "3"
+    "CANCEL": "3",
+    "WAITING_CANCEL" : "4"
 }
 
 module.exports.index = function (req, res) {
@@ -1117,5 +1118,16 @@ async function createTableListCustomer(Representative, ListPassenger, ListTicket
                 resolve(html + bookingInformation + listCustomer);
             }
         })
+    })
+}
+
+
+module.exports.ChangeStatusTicket = function(req,res){
+    db.Ticket.update({
+        Status: STATUS["WAITING_CANCEL"],       
+    },
+    {where: {ID: req.query.TicketID},}).then(data => {
+        console.log("Ticket: " + JSON.stringify(data));
+        res.end(JSON.stringify({status: 200}))
     })
 }

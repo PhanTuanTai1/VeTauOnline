@@ -109,9 +109,7 @@ app.post("/createInfomation", function (req, res) {
 app.get('/test', function (req, res) {
     res.render('test');
 })
-// app.get('/CheckLogin' , function(req,res){
-//     loginController.CheckLogin(req,res);
-// }) 
+
 app.get('/login', function (req, res) {
     res.render("login");
 })
@@ -185,33 +183,35 @@ app.get('/getAllScheduleDetailClient',function(req,res) {
 })
 //render
 app.get("/admin/dashboard", function (req, res) {
-    // loginController.CheckLogin().then(check => {
-    //     if (check) {
-    //         loginController.GetUserFromSession(req, res);
-    res.render('admin');
-    //     }
-    //     else {
-    //         res.render('login');
-    //     }
-    // })
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            var staffData = await loginController.GetUser(req);
+            res.render('admin', {data: staffData});
+        }
+        else {
+            res.render('login');
+        }
+    })
 })
 app.get("/abc", function (req, res) {
     managerCtrler.getListCusBySchedule(req, res)
 })
 app.get("/admin/customer", function (req, res) {
-    // loginController.CheckLogin().then(check => {
-    //     if (check) {
-    res.render('customeradmin');
-    //     }
-    //     else {
-    //         res.render('login');
-    //     }
-    // })
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            var staffData = await loginController.GetUser(req);
+            res.render('customeradmin', {data: staffData});
+        }
+        else {
+            res.render('login');
+        }
+    })
 })
 app.get("/admin/station", function (req, res) {
-    loginController.CheckLogin().then(check => {
+    loginController.CheckLogin(req).then(async check => {
         if (check) {
-            res.render('stationadmin');
+            var staffData = await loginController.GetUser(req);
+            res.render('stationadmin', {data: staffData});
         }
         else {
             res.render('login');
@@ -223,9 +223,13 @@ app.get("/getAllScheNoCond", function (req, res) {
     managerCtrler.getAllScheDetailWithNoCondition(req, res);
 })
 app.get("/admin/train", function (req, res) {
-    loginController.CheckLogin().then(check => {
+    loginController.CheckLogin(req).then(check => {
         if (check) {
-            res.render('trainadmin');
+            console.log(req);
+            loginController.GetUser(req).then(staffData => {
+                res.render('trainadmin', {data: staffData});
+            });
+            
         }
         else {
             res.render('login');
@@ -233,9 +237,10 @@ app.get("/admin/train", function (req, res) {
     })
 })
 app.get("/admin/seat", function (req, res) {
-    loginController.CheckLogin().then(check => {
+    loginController.CheckLogin(req).then(async check => {
         if (check) {
-            res.render('seatadmin');
+            var staffData = await loginController.GetUser(req);
+            res.render('seatadmin', {data : staffData});
         }
         else {
             res.render('login');
@@ -243,9 +248,10 @@ app.get("/admin/seat", function (req, res) {
     })
 })
 app.get("/admin/seattype", function (req, res) {
-    loginController.CheckLogin().then(check => {
+    loginController.CheckLogin(req).then(async check => {
         if (check) {
-            res.render('seattypeadmin');
+            var staffData = await loginController.GetUser(req);
+            res.render('seattypeadmin', {data: staffData});
         }
         else {
             res.render('login');
@@ -253,9 +259,10 @@ app.get("/admin/seattype", function (req, res) {
     })
 })
 app.get("/admin/carriage", function (req, res) {
-    loginController.CheckLogin().then(check => {
+    loginController.CheckLogin(req).then(async check => {
         if (check) {
-            res.render('carriageadmin');
+            var staffData = await loginController.GetUser(req);
+            res.render('carriageadmin', {data: staffData});
         }
         else {
             res.render('login');
@@ -263,32 +270,72 @@ app.get("/admin/carriage", function (req, res) {
     })
 })
 app.get("/admin/schedule", function (req, res) {
-    // loginController.CheckLogin().then(check => {
-    //     if (check) {
-    res.render('scheduleadmin');
-    //     }
-    //     else {
-    //         res.render('login');
-    //     }
-    // })
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            var staffData = await loginController.GetUser(req);
+            res.render('scheduleadmin', {data: staffData});
+        }
+        else {
+            res.render('login');
+        }
+    })
 })
 
 //action customer
 app.delete("/admin/customer", function (req, res) {
-    managerCtrler.delCustomerByID(req, res)
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            managerCtrler.delCustomerByID(req, res)
+        }
+        else {
+            res.redirect('/admin/customer');
+        }
+    })
+    
 });
 app.post("/admin/customer", function (req, res) {
-    managerCtrler.createCustomer(req, res);
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            managerCtrler.createCustomer(req, res);
+        }
+        else {
+            
+            res.redirect('/admin/customer');
+        }
+    })
+    
 })
 app.put("/admin/customer", function (req, res) {
-    managerCtrler.updateCustomer(req, res)
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            managerCtrler.updateCustomer(req, res);
+        }
+        else {
+            res.redirect('/admin/customer');
+        }
+    })
 })
 
 //action train
 app.get("/getTrain", function (req, res) {
-    managerCtrler.getTrainByID(req, res);
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            managerCtrler.getTrainByID(req, res);
+        }
+        else {
+            res.redirect('/admin/train');
+        }
+    })
 })
 app.post("/admin/train", function (req, res) {
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            managerCtrler.getTrainByID(req, res);
+        }
+        else {
+            res.redirect('/admin/train');
+        }
+    })
     managerCtrler.createTrain(req, res);
 })
 app.delete("/admin/train", function (req, res) {
@@ -311,24 +358,26 @@ app.put("/admin/carriage", function (req, res) {
 
 //test print
 app.get("/admin/ticket", function (req, res) {
-    // loginController.CheckLogin().then(check => {
-    //     if (check) {
-    res.render('ticketadmin');
-    //     }
-    //     else {
-    //         res.render('login');
-    //     }
-    // })
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            var staffData = await loginController.GetUser(req);
+            res.render('ticketadmin', {data : staffData});
+        }
+        else {
+            res.render('login');
+        }
+    })
 })
 app.get("/admin/cancelticket", function (req, res) {
-    // loginController.CheckLogin().then(check => {
-    //     if (check) {
-    res.render('cancelticketadmin');
-    //     }
-    //     else {
-    //         res.render('login');
-    //     }
-    // })
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            var staffData = await loginController.GetUser(req);
+            res.render('cancelticketadmin', {data: staffData});
+        }
+        else {
+            res.render('login');
+        }
+    })
 })
 app.put("/cancelTicketWithMail", function (req, res) {
     managerCtrler.cancelTicket(req, res)
@@ -406,6 +455,7 @@ var io = io.on('connection', (socket) => {
         }
     })
 });
+
 app.get("/getAllScheduleDetail", function (req, res) {
     managerCtrler.getAllScheduleDetail(req, res)
 })
@@ -431,6 +481,10 @@ process.on("unhandledRejection", function (reason, p) {
     console.log("Unhandled Rejection:", reason.stack);
     //process.exit(1);
 });
+
+app.get('/changeStatus', (req,res) => {
+    controller.ChangeStatusTicket(req,res);
+})
 
 http.listen(port, function () {
     console.log("Run on port " + port);
