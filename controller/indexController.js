@@ -184,12 +184,12 @@ function getScheduleMatch(Date, DepartureID, ListSchedule) {
             console.log("----------OR Actual:" +  moment(Date).subtract(7, 'hour').format('DD-MM-YYYY'));
             console.log("---------------Check: " + check);
 
-            if((DateDepartFormat === DateDepart && !check) 
+            if((DateDepartFormat == DateDepart && !check) 
                 || (check && moment(schedule.DateDeparture).format('DD-MM-YYYY') == moment(Date).subtract(7, 'hour').format('DD-MM-YYYY'))) 
             {           
                 ListFilter.push(schedule)
             }       
-            else if(moment(moment(DateDepartFormat).add(129600000, 'milliseconds')._d).format('YYYY-MM-DD') === parseDateDepart._d){
+            else if(moment(moment(DateDepartFormat).add(129600000, 'milliseconds')._d).format('YYYY-MM-DD') == parseDateDepart._d){
                 ListFilter.push(schedule)                     
             }
 
