@@ -167,7 +167,7 @@ function getScheduleMatch(Date, DepartureID, ListSchedule) {
 
             // Departure Date in Database
             var DateDepart = moment(schedule.DateDeparture).add(TimeDepartInt, 'hour')
-                            .subtract(7,'hour').add(MinutesDepartInt + TimeScheduleDetails, 'minutes').format('YYYY-MM-DD');
+                            .add(MinutesDepartInt + TimeScheduleDetails, 'minutes').format('YYYY-MM-DD');
 
             // Departure Date in website
             var DateDepartFormat = (moment(Date).subtract(7, 'hour').format('YYYY-MM-DD'));
@@ -177,13 +177,12 @@ function getScheduleMatch(Date, DepartureID, ListSchedule) {
             console.log("----------Expected:" +  DateDepartFormat);
             console.log("----------Actual:" +  DateDepart);
             console.log("Schedule.DateDeparture: " + schedule.DateDeparture);
-
             var check = await checkIsSameDepartureStationIDFirst(DepartureID, schedule.ID);
 
             console.log("----------OR Expected:" +  moment(schedule.DateDeparture).format('DD-MM-YYYY'));
             console.log("----------OR Actual:" +  moment(Date).subtract(7, 'hour').format('DD-MM-YYYY'));
             console.log("---------------Check: " + check);
-
+            console.log("Date parameter: " + Date)
             if((DateDepartFormat == DateDepart && !check) 
                 || (check && moment(schedule.DateDeparture).format('DD-MM-YYYY') == moment(Date).subtract(7, 'hour').format('DD-MM-YYYY'))) 
             {           
