@@ -200,7 +200,7 @@ app.get("/admin/customer", function (req, res) {
     loginController.CheckLogin(req).then(async check => {
         if (check) {
             var staffData = await loginController.GetUser(req);
-            res.render('customeradmin', {data: staffData});
+            res.render('customerAdmin', {data: staffData});
         }
         else {
             res.render('login');
@@ -211,7 +211,7 @@ app.get("/admin/station", function (req, res) {
     loginController.CheckLogin(req).then(async check => {
         if (check) {
             var staffData = await loginController.GetUser(req);
-            res.render('stationadmin', {data: staffData});
+            res.render('stationAdmin', {data: staffData});
         }
         else {
             res.render('login');
@@ -240,7 +240,7 @@ app.get("/admin/seat", function (req, res) {
     loginController.CheckLogin(req).then(async check => {
         if (check) {
             var staffData = await loginController.GetUser(req);
-            res.render('seatadmin', {data : staffData});
+            res.render('seatAdmin', {data : staffData});
         }
         else {
             res.render('login');
@@ -251,7 +251,7 @@ app.get("/admin/seattype", function (req, res) {
     loginController.CheckLogin(req).then(async check => {
         if (check) {
             var staffData = await loginController.GetUser(req);
-            res.render('seattypeadmin', {data: staffData});
+            res.render('seatTypeAdmin', {data: staffData});
         }
         else {
             res.render('login');
@@ -262,7 +262,7 @@ app.get("/admin/carriage", function (req, res) {
     loginController.CheckLogin(req).then(async check => {
         if (check) {
             var staffData = await loginController.GetUser(req);
-            res.render('carriageadmin', {data: staffData});
+            res.render('carriageAdmin', {data: staffData});
         }
         else {
             res.render('login');
@@ -273,7 +273,7 @@ app.get("/admin/schedule", function (req, res) {
     loginController.CheckLogin(req).then(async check => {
         if (check) {
             var staffData = await loginController.GetUser(req);
-            res.render('scheduleadmin', {data: staffData});
+            res.render('scheduleAdmin', {data: staffData});
         }
         else {
             res.render('login');
@@ -361,7 +361,7 @@ app.get("/admin/ticket", function (req, res) {
     loginController.CheckLogin(req).then(async check => {
         if (check) {
             var staffData = await loginController.GetUser(req);
-            res.render('ticketadmin', {data : staffData});
+            res.render('ticketAdmin', {data : staffData});
         }
         else {
             res.render('login');
@@ -372,7 +372,7 @@ app.get("/admin/cancelticket", function (req, res) {
     loginController.CheckLogin(req).then(async check => {
         if (check) {
             var staffData = await loginController.GetUser(req);
-            res.render('cancelticketadmin', {data: staffData});
+            res.render('cancelTicketAdmin', {data: staffData});
         }
         else {
             res.render('login');
