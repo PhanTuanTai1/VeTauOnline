@@ -227,7 +227,7 @@ app.get("/admin/train", function (req, res) {
         if (check) {
             console.log(req);
             loginController.GetUser(req).then(staffData => {
-                res.render('trainadmin', {data: staffData});
+                res.render('trainAdmin', {data: staffData});
             });
             
         }
