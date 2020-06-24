@@ -591,7 +591,7 @@ module.exports.RedirectToNganLuong = function (req, res) {
     url += 'order_description=1&';
     url += 'buyer_info=1&';
     url += 'affiliate_code=1&';
-    var secure_code = md5(48847 + ' ' + return_url + ' ' + 'phantuantai1234@gmail.com' + ' ' + 'thanhtoantienvetau' + ' '
+    var secure_code = md5(48847 + ' ' + 'https://trainticketonlinevn.herokuapp.com/paymentSuccess' + ' ' + 'phantuantai1234@gmail.com' + ' ' + 'thanhtoantienvetau' + ' '
         + req.cookies.data.ID + ' ' + req.cookies.data.TotalCost + ' ' + 'vnd' + ' ' + 1 + ' ' + 0 + ' ' + 0 + ' ' + 0 + ' '
         + 0 + ' ' + 1 + ' ' + 1 + ' ' + 1 + ' ' + '3fb19dfe9df59a63b23ca36069c3aea5')
     url += 'secure_code=' + secure_code;
