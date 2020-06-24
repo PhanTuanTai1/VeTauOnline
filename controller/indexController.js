@@ -574,7 +574,7 @@ module.exports.getSeatTypeBySeatID = function (req, res) {
 
 module.exports.RedirectToNganLuong = function (req, res) {
     let return_url = "https://trainticketonlinevn.herokuapp.com/paymentSuccess";
-    //var return_url = "http://localhost:3000/paymentSuccess&";
+    //let return_url = "http://localhost:3000/paymentSuccess";
     let url = 'https://sandbox.nganluong.vn:8088/nl35/checkout.php?';
     url += 'merchant_site_code=48847&';
     url += 'return_url=' + return_url + '&';
@@ -624,7 +624,7 @@ module.exports.InsertData = async function (req, res) {
     var ListTicket2;
     var html2;
     var option = "One Way";
-    if (typeof (req.cookies.data5) != undefined) {
+    if (typeof(req.cookies.data5) != "undefined") {
         ListTicket2 = req.cookies.data5;
         html2 = await createTableListCustomer(Representative, ListPassenger, ListTicket2, req.query.payment_id);
         option = "Round Trip";
