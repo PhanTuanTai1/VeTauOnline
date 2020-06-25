@@ -17,6 +17,8 @@ var jsonParser = bodyParser.json();
 // create application/x-www-form-urlencoded parser
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var app = express();
+
+
 var http = require('http').createServer(app);
 var io = require("socket.io")(http);
 app.use(express.static('./node_modules'));
@@ -38,14 +40,28 @@ app.use(session({
 }))
 
 app.get("/", function (req, res) {
+    var session_id = req.cookies.session_id;
+
+    if(session_id != "undefined"){
+        let data =  listSeatBlock.filter(x => {
+            return x.session_id != session_id;
+        })
+        let data2 = listSeatBlock.filter(x => {
+            return x.session_id == session_id;
+        })
+    
+        listSeatBlock = data;
+        res.cookie('session_id', req.session.id);
+    }
+
     res.render('index2');
 })
 
 app.get("/passenger", function (req, res) {
     //console.log(req.headers.cookie.session_id);
-    if(typeof(req.headers.cookie) == "undefined"){
+    if (typeof (req.headers.cookie) == "undefined") {
         console.log("SessionID: " + req.session.id);
-        res.cookie('sesion_id', req.session.id);
+        
     }
 
     controller.passenger(req, res);
@@ -93,7 +109,7 @@ app.get("/getListSeatSold", function (req, res) {
 
 app.post("/createInfomation", function (req, res) {
     console.log("Type of: " + typeof (req.headers.cookie))
-    if (typeof (req.headers.cookie == "undefined")) {
+    if (typeof(req.headers.cookie) == "undefined") {
         console.log(req.headers.cookie);
         console.log("req.session.id: " + req.session.id);
         res.cookie('session_id', req.session.id)
@@ -101,12 +117,10 @@ app.post("/createInfomation", function (req, res) {
     controller.createSession(req, res);
 })
 
-app.get('/test', function(req,res){
+app.get('/test', function (req, res) {
     res.render('test');
 })
-// app.get('/CheckLogin' , function(req,res){
-//     loginController.CheckLogin(req,res);
-// }) 
+
 app.get('/login', function (req, res) {
     res.render("login");
 })
@@ -127,8 +141,8 @@ app.get('/manageBooking1', function (req, res) {
     res.render('managebooking');
 })
 
-app.post('/SearchBooking', function(req,res){
-    controller.ManageBooking(req,res);
+app.post('/SearchBooking', function (req, res) {
+    controller.ManageBooking(req, res);
 })
 
 app.get('/getSeatTypeBySeatID', function (req, res) {
@@ -167,21 +181,37 @@ app.get("/getAllSchedule", function (req, res) {
     managerCtrler.getAllSchedule(req, res)
 })
 
+app.get('/listFare',function(req,res){
+    res.render('listFare');
+})
+
+app.get('/getAllScheduleClient',function(req,res) {
+    controller.GetAllSchedule(req,res);
+})
+
+app.get('/getAllScheduleDetailClient',function(req,res) {
+    controller.GettAllScheduleDetailByID(req,res);
+})
 //render
 app.get("/admin/dashboard", function (req, res) {
-    loginController.CheckLogin().then(check => {
+    loginController.CheckLogin(req).then(async check => {
         if (check) {
-            res.render('admin');
+            var staffData = await loginController.GetUser(req);
+            res.render('admin', {data: staffData});
         }
         else {
             res.render('login');
         }
     })
 })
+app.get("/abc", function (req, res) {
+    managerCtrler.getListCusBySchedule(req, res)
+})
 app.get("/admin/customer", function (req, res) {
-    loginController.CheckLogin().then(check => {
+    loginController.CheckLogin(req).then(async check => {
         if (check) {
-            res.render('customeradmin');
+            var staffData = await loginController.GetUser(req);
+            res.render('customerAdmin', {data: staffData});
         }
         else {
             res.render('login');
@@ -189,19 +219,28 @@ app.get("/admin/customer", function (req, res) {
     })
 })
 app.get("/admin/station", function (req, res) {
-    loginController.CheckLogin().then(check => {
+    loginController.CheckLogin(req).then(async check => {
         if (check) {
-            res.render('stationadmin');
+            var staffData = await loginController.GetUser(req);
+            res.render('stationAdmin', {data: staffData});
         }
         else {
             res.render('login');
         }
     })
 })
+
+app.get("/getAllScheNoCond", function (req, res) {
+    managerCtrler.getAllScheDetailWithNoCondition(req, res);
+})
 app.get("/admin/train", function (req, res) {
-    loginController.CheckLogin().then(check => {
+    loginController.CheckLogin(req).then(check => {
         if (check) {
-            res.render('trainadmin');
+            console.log(req);
+            loginController.GetUser(req).then(staffData => {
+                res.render('trainAdmin', {data: staffData});
+            });
+            
         }
         else {
             res.render('login');
@@ -209,9 +248,10 @@ app.get("/admin/train", function (req, res) {
     })
 })
 app.get("/admin/seat", function (req, res) {
-    loginController.CheckLogin().then(check => {
+    loginController.CheckLogin(req).then(async check => {
         if (check) {
-            res.render('seatadmin');
+            var staffData = await loginController.GetUser(req);
+            res.render('seatAdmin', {data : staffData});
         }
         else {
             res.render('login');
@@ -219,9 +259,10 @@ app.get("/admin/seat", function (req, res) {
     })
 })
 app.get("/admin/seattype", function (req, res) {
-    loginController.CheckLogin().then(check => {
+    loginController.CheckLogin(req).then(async check => {
         if (check) {
-            res.render('seattypeadmin');
+            var staffData = await loginController.GetUser(req);
+            res.render('seatTypeAdmin', {data: staffData});
         }
         else {
             res.render('login');
@@ -229,9 +270,10 @@ app.get("/admin/seattype", function (req, res) {
     })
 })
 app.get("/admin/carriage", function (req, res) {
-    loginController.CheckLogin().then(check => {
+    loginController.CheckLogin(req).then(async check => {
         if (check) {
-            res.render('carriageadmin');
+            var staffData = await loginController.GetUser(req);
+            res.render('carriageAdmin', {data: staffData});
         }
         else {
             res.render('login');
@@ -239,9 +281,10 @@ app.get("/admin/carriage", function (req, res) {
     })
 })
 app.get("/admin/schedule", function (req, res) {
-    loginController.CheckLogin().then(check => {
+    loginController.CheckLogin(req).then(async check => {
         if (check) {
-            res.render('scheduleadmin');
+            var staffData = await loginController.GetUser(req);
+            res.render('scheduleAdmin', {data: staffData});
         }
         else {
             res.render('login');
@@ -251,20 +294,59 @@ app.get("/admin/schedule", function (req, res) {
 
 //action customer
 app.delete("/admin/customer", function (req, res) {
-    managerCtrler.delCustomerByID(req, res)
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            managerCtrler.delCustomerByID(req, res)
+        }
+        else {
+            res.redirect('/admin/customer');
+        }
+    })
+    
 });
 app.post("/admin/customer", function (req, res) {
-    managerCtrler.createCustomer(req, res);
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            managerCtrler.createCustomer(req, res);
+        }
+        else {
+            
+            res.redirect('/admin/customer');
+        }
+    })
+    
 })
 app.put("/admin/customer", function (req, res) {
-    managerCtrler.updateCustomer(req, res)
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            managerCtrler.updateCustomer(req, res);
+        }
+        else {
+            res.redirect('/admin/customer');
+        }
+    })
 })
 
 //action train
 app.get("/getTrain", function (req, res) {
-    managerCtrler.getTrainByID(req, res);
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            managerCtrler.getTrainByID(req, res);
+        }
+        else {
+            res.redirect('/admin/train');
+        }
+    })
 })
 app.post("/admin/train", function (req, res) {
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            managerCtrler.getTrainByID(req, res);
+        }
+        else {
+            res.redirect('/admin/train');
+        }
+    })
     managerCtrler.createTrain(req, res);
 })
 app.delete("/admin/train", function (req, res) {
@@ -287,16 +369,31 @@ app.put("/admin/carriage", function (req, res) {
 
 //test print
 app.get("/admin/ticket", function (req, res) {
-    loginController.CheckLogin().then(check => {
+    loginController.CheckLogin(req).then(async check => {
         if (check) {
-            res.render('ticketadmin');
-            loginController.GetUserFromSession(req, res);
+            var staffData = await loginController.GetUser(req);
+            res.render('ticketAdmin', {data : staffData});
         }
         else {
             res.render('login');
         }
     })
 })
+app.get("/admin/cancelticket", function (req, res) {
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            var staffData = await loginController.GetUser(req);
+            res.render('cancelTicketAdmin', {data: staffData});
+        }
+        else {
+            res.render('login');
+        }
+    })
+})
+app.put("/cancelTicketWithMail", function (req, res) {
+    managerCtrler.cancelTicket(req, res)
+})
+
 app.get("/printTicket", function (req, res) {
     managerCtrler.printTicketByRepresentativeId(req, res);
 })
@@ -320,17 +417,18 @@ var io = io.on('connection', (socket) => {
         //console.log(listSeatBlock.length)
         io.emit('response_unblock', listSeatBlock.shift());
     }, 900000)
+
     socket.on('changeStatus', (data) => {
         var check = false;
         listSeatBlock.forEach(seat => {
-            if(data.id == seat.id) {
-                if(data.class.search('soft_bed_left') != -1) {
+            if (data.id == seat.id) {
+                if (data.class.search('soft_bed_left') != -1) {
                     data.class = 'train_bed_cell bed can_block soft_bed_left reserved';
                 }
-                else if(data.class.search('soft_bed_right') != -1) {
+                else if (data.class.search('soft_bed_right') != -1) {
                     data.class = 'train_bed_cell bed can_block soft_bed_right reserved';
                 }
-                else if(data.class.search('soft_seat_left') != -1) {
+                else if (data.class.search('soft_seat_left') != -1) {
                     data.class = 'train_cell seat can_block soft_seat_left reserved';
                 }
                 check = true;
@@ -338,39 +436,43 @@ var io = io.on('connection', (socket) => {
         })
 
         //console.log(socket);
-        if(typeof(data.class) != "undefined" && data.block == true){
+        if (typeof (data.class) != "undefined" && data.block == true) {
 
-            if(data.class.search('soft_bed_left') != -1) {
+            if (data.class.search('soft_bed_left') != -1) {
                 data.class = 'train_bed_cell bed can_block soft_bed_left reserved';
             }
-            else if(data.class.search('soft_bed_right') != -1) {
+            else if (data.class.search('soft_bed_right') != -1) {
                 data.class = 'train_bed_cell bed can_block soft_bed_right reserved';
             }
-            else if(data.class.search('soft_seat_left') != -1) {
+            else if (data.class.search('soft_seat_left') != -1) {
                 data.class = 'train_cell seat can_block soft_seat_left reserved';
             }
 
-            if(!check) {
+            if (!check) {
                 listSeatBlock.push(data);
-                socket.broadcast.emit('response', listSeatBlock);      
+                socket.broadcast.emit('response', listSeatBlock);
             }
-            else{
+            else {
                 //console.log(socket.id);
-                socket.emit('response', {data : {listSeatBlock: listSeatBlock, check: true, id: data.id}});
+                socket.emit('response', { data: { listSeatBlock: listSeatBlock, check: true, id: data.id } });
             }
         }
-        else if(typeof(data.class) != "undefined" && data.unblock == true){
-             var listUnblock = listSeatBlock.filter(seat => {
-                 return data.id != seat.id;
-             });
+        else if (typeof (data.class) != "undefined" && data.unblock == true) {
+            var listUnblock = listSeatBlock.filter(seat => {
+                return data.id != seat.id;
+            });
 
-             listSeatBlock = listUnblock;
-             socket.broadcast.emit('response_unblock', data);
-        }   
+            listSeatBlock = listUnblock;
+            socket.broadcast.emit('response_unblock', data);
+        }
     })
 });
+
 app.get("/getAllScheduleDetail", function (req, res) {
     managerCtrler.getAllScheduleDetail(req, res)
+})
+app.get("/getListDetail", function (req, res) {
+    managerCtrler.getListDetail(req, res);
 })
 
 app.post("/admin/scheduledetail", function (req, res) {
@@ -384,15 +486,84 @@ app.delete("/admin/schedule", function (req, res) {
     managerCtrler.delSchedule(req, res)
 })
 
-app.get('/listSchedule', (req,res) => {
+app.get('/listSchedule', (req, res) => {
     res.render('listFare');
 })
-process.on("unhandledRejection", function(reason, p){
+process.on("unhandledRejection", function (reason, p) {
     console.log("Unhandled Rejection:", reason.stack);
     //process.exit(1);
-}); 
+});
+
+app.get('/changeStatus', (req,res) => {
+    controller.ChangeStatusTicket(req,res);
+})
 
 http.listen(port, function () {
     console.log("Run on port " + port);
 });
 
+
+
+// //TEST CHAT 
+// app.get("/chat", function (req, res) {
+//     res.render('chat');
+// })
+// var io = require('socket.io')(server);
+// var numUsers = 0;
+// io.on('connection', (socket) => {
+//     var addedUser = false;
+
+//     // when the client emits 'new message', this listens and executes
+//     socket.on('new message', (data) => {
+//         // we tell the client to execute 'new message'
+//         socket.broadcast.emit('new message', {
+//             username: socket.username,
+//             message: data
+//         });
+//     });
+
+//     // when the client emits 'add user', this listens and executes
+//     socket.on('add user', (username) => {
+//         if (addedUser) return;
+
+//         // we store the username in the socket session for this client
+//         socket.username = username;
+//         ++numUsers;
+//         addedUser = true;
+//         socket.emit('login', {
+//             numUsers: numUsers
+//         });
+//         // echo globally (all clients) that a person has connected
+//         socket.broadcast.emit('user joined', {
+//             username: socket.username,
+//             numUsers: numUsers
+//         });
+//     });
+
+//     // when the client emits 'typing', we broadcast it to others
+//     socket.on('typing', () => {
+//         socket.broadcast.emit('typing', {
+//             username: socket.username
+//         });
+//     });
+
+//     // when the client emits 'stop typing', we broadcast it to others
+//     socket.on('stop typing', () => {
+//         socket.broadcast.emit('stop typing', {
+//             username: socket.username
+//         });
+//     });
+
+//     // when the user disconnects.. perform this
+//     socket.on('disconnect', () => {
+//         if (addedUser) {
+//             --numUsers;
+
+//             // echo globally that this client has left
+//             socket.broadcast.emit('user left', {
+//                 username: socket.username,
+//                 numUsers: numUsers
+//             });
+//         }
+//     });
+// });

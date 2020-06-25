@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Admin | Canceled pending ticket</title>
+
+    <%- include('adminHeader'); -%>
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <div id="sidebar">
+            <%- include('adminSidebar', {Staff : data}); -%>
+        </div>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper p-4">
+            <h3>Canceled pending ticket List</h3>
+            <div class="card">
+                <div class="card-body pb-0">
+                    <div id="app">
+                        <table id="myTable" v-if="Ticket" class="table">
+                            <thead class="font-weight-bold table-info">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Customer</th>
+                                    <th>Seat</th>
+                                    <th>Price</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Status</th>
+                                    <th>Train</th>
+                                    <th>From</th>
+                                    <th>To</th>
+                                    <th class="text-right">...</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(item,index) in listTicket" :key="index">
+                                    <td>{{item.ID}}</td>
+                                    <td>{{item.Customer.Name}}</td>
+                                    <td>{{item.Seat.SeatNumber}}</td>
+                                    <td>{{item.Price}}</td>
+                                    <td>{{formatDate(item.DepartureDate)}}</td>
+                                    <td>{{formatTime(item.DepartureTime)}}</td>
+                                    <td>
+                                        <p class="badge badge-warning">Cancel request</p>
+                                    </td>
+                                    <td>{{item.TrainName}}</td>
+                                    <td>{{from(item.DepartureStationID)}}</td>
+                                    <td>{{to(item.ArrivalStationID)}}</td>
+                                    <td class="text-right">
+                                        <button type="button" class="btn btn-danger "
+                                            @click="cancelOneTicket(item.ID,index)"><i class="fa fa-trash"></i>
+                                            Cancel</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div>
+                            <button style="width:100%;margin-bottom:15px;margin-top:15px;" type="button"
+                                class="btn btn-danger " @click="cancelAllTicket()"><i class="fa fa-trash"></i>
+                                Cancel all pending ticket</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- /.content-wrapper -->
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
+
+        <!-- Main Footer -->
+        <footer class="main-footer">
+            <%- include('adminFooter'); -%>
+        </footer>
+    </div>
+    <!-- <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script> -->
+
+    <!-- ./wrapper -->
+    <!-- AdminLTE App -->
+
+    <!-- PAGE SCRIPTS -->
+    <script src="../dist/js/pages/dashboard2.js"></script>
+    <script src="../dist/vue.js"></script>
+    <script src="../dist/vue-router.js"></script>
+    <script src="../dist/axios.js"></script>
+    <script src="../dist/sweetalert2.all.min.js"></script>
+    <script src="../dist/moment.js"></script>
+    <script type="module" src="../dist/@TicketVue/cancelVue.js"></script>
+</body>
+
+</html>

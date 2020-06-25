@@ -1,16 +1,14 @@
 var firebase = require('firebase');
-
-var firebaseConfig = {
-    apiKey: "AIzaSyAji9PEi6sRHVql6v-SkDDMtx-QJ3_U_6k",
-    authDomain: "myauthen-c3e5a.firebaseapp.com",
-    databaseURL: "https://myauthen-c3e5a.firebaseio.com",
-    projectId: "myauthen-c3e5a",
-    storageBucket: "myauthen-c3e5a.appspot.com",
-    messagingSenderId: "94604538850",
-    appId: "1:94604538850:web:c14218cff021f81b30bfbb"
-};
-
+var config = require('../config/common');
+var firebaseConfig = config.firebaseConfig;
 var Role = { 1: "Staff", 2: "Management_Staff", 3: "Admin" }
+var admin = require("firebase-admin");
+var serviceAccount = require("../config/serviceAccountKey.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://myauthen-c3e5a.firebaseio.com"
+});
 
 firebase.initializeApp(firebaseConfig);
 
@@ -21,13 +19,15 @@ module.exports.Login = async function (req, res) {
             auth.onAuthStateChanged(async firebaseUser => {
                 if (firebaseUser) {
                     var data = await GetDataFromCloudDB(firebaseUser.email);
-                    console.log("Current User: " + firebaseUser);
-                    req.session[firebaseUser.email] = data;
-                    var data = req.session[firebaseUser.email]
-                    console.log('Login success');
-                    console.log("req.session[firebaseUser.email]: " + JSON.stringify(req.session[firebaseUser.email]));
-                    console.log("Role: " + Role[data.Role]);
-                    res.redirect('/admin/dashboard');
+                    res.cookie('uid', firebaseUser.uid);
+                    
+                    if(data.Role == 2 || data.Role == 3)
+                    {
+                        res.redirect('/admin/dashboard');
+                    }
+                    else {
+                        res.redirect('/admin/ticket');
+                    }
                 }
             });
         })
@@ -37,19 +37,27 @@ module.exports.Login = async function (req, res) {
         })
 }
 
-module.exports.CheckLogin = function () {
-    return new Promise(resolve => {
-        var currentUser = firebase.auth().currentUser;
-        if (currentUser == null) resolve(false);
-        else resolve(true);
+module.exports.CheckLogin = function (req) {
+    return new Promise(async resolve => {
+        try {
+            var currentUser = await admin.auth().getUser(req.cookies.uid);
+            resolve(true);
+        }
+        catch{
+            resolve(false);
+        }
     })
 }
 
-module.exports.GetUserFromSession = () => {
-    return new Promise(resolve => {
-        resolve(req.session[firebaseUser.email]);
+module.exports.GetUser = async (req) => {
+    // Cookies.set('acc', firebaseUser.email);
+    var currentUser = await admin.auth().getUser(req.cookies.uid);
+    return new Promise(async resolve => {
+        var data = await GetDataFromCloudDB(currentUser.email);
+        resolve(data);
     })
 }
+
 function GetDataFromCloudDB(Account) {
     return new Promise(resolve => {
         var database = firebase.firestore();

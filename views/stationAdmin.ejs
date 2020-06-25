@@ -4,14 +4,14 @@
 <head>
     <title>Admin | Station</title>
 
-    <%- include('adminheader'); -%>
+    <%- include('adminHeader'); -%>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
     <div class="wrapper">
         <!-- Navbar -->
         <div id="sidebar">
-            <%- include('adminsidebar'); -%>
+            <%- include('adminSidebar', {Staff : data}); -%>
         </div>
 
         <!-- Content Wrapper. Contains page content -->
@@ -19,18 +19,18 @@
             <h3>Station List</h3>
             <div class="card">
                 <div class="card-body pb-0">
-                    <div id="app" class="card">
+                    <div id="app">
                         <div class="card-header">
                             <button type="button" class="btn btn-success"><i class="fa fa-plus"></i> Create</button>
                         </div>
 
-                        <table id="myTable" v-if="Stations" class="table">
+                        <table id="myTable" v-if="Stations" class="table-light">
                             <thead class="font-weight-bold table-info">
                                 <tr>
                                     <th>#</th>
                                     <th>Name</th>
                                     <th>Distance</th>
-                                    <th class="text-right">...</th>
+                                    <!-- <th class="text-right">...</th> -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -38,9 +38,9 @@
                                     <td v-text="item.ID"></td>
                                     <td v-text="item.Name"></td>
                                     <td v-text="item.Distance"></td>
-                                    <td class="text-right"><button type="button" class="btn btn-warning"><i
+                                    <!-- <td class="text-right"><button type="button" class="btn btn-warning"><i
                                                 class="fa fa-edit"></i> Edit</button> <button type="button"
-                                            class="btn btn-info"><i class="fa fa-trash"></i> Delete</button></td>
+                                            class="btn btn-info"><i class="fa fa-trash"></i> Delete</button></td> -->
                                 </tr>
                             </tbody>
                         </table>
@@ -61,7 +61,7 @@
 
         <!-- Main Footer -->
         <footer>
-            <%- include('adminfooter'); -%>
+            <%- include('adminFooter'); -%>
         </footer>
     </div>
 

@@ -4,7 +4,7 @@
 <head>
     <title>Admin | Ticket</title>
 
-    <%- include('adminheader'); -%>
+    <%- include('adminHeader'); -%>
     <link href="../dist/vuejs-dialog.min.css" rel="stylesheet">
     <script type="text/javascript" src="../dist/vuejs-dialog.min.js"></script>
     <script type="text/javascript" src="../dist/vuejs-dialog-mixin.min.js"></script>
@@ -32,7 +32,7 @@
     <div class="wrapper">
         <!-- Navbar -->
         <div id="sidebar">
-            <%- include('adminsidebar'); -%>
+            <%- include('adminSidebar', {Staff : data}); -%>
         </div>
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper p-4">
@@ -84,7 +84,7 @@
     <script src="../dist/vue-router.js"></script>
     <script src="../dist/axios.js"></script>
 
-    <script type="module" src="../dist/@TicketVue/ticketvue.js"></script>
+    <script type="module" src="../dist/@TicketVue/ticketVue.js"></script>
     <script src="../dist/sweetalert2.all.min.js"></script>
     <script src="../dist/uuid.js"></script>
     <script>

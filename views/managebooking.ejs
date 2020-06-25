@@ -88,7 +88,35 @@
     </div>
 </div>
 <div id="menu_overlay"></div>
-
+<div id="confirm" class="modal fade">
+        
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+           <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body text-center">
+               <div class="gap gap-super-small"></div>
+                <div style="letter-spacing: 3px; margin: -30px 0 35px;" class="refrigerator uppercase yellow-text super-big-text">
+                    Confirm                    </div>
+                <div class="gap gap-small"></div>
+                <div class="message" style="letter-spacing: 1px; color: #f5f5f5" class="message big-text italic">
+                    Are you sure you want to cancel this ticket ?
+                </div>
+                <div style="margin-top: 10px;">
+                    <button class="btn btn-default" style="background-color: red;" onclick="CancelTicket()">Yes</button>
+                    <button class="btn btn-default" onclick="ClearData()">No</button>
+                </div>
+            </div><!-- /.modal-content -->
+            
+            <div class="gap gap-super-small"></div>
+            <div>
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
 <div id="main_container" >
 <div class="filter">
 <div class="global-wrap">
@@ -221,20 +249,32 @@
                                     <th>DESTINATION</th>
                                     <th>AMOUNT OF MONEY</th>
                                     <th>STATUS</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <%result.Customers.forEach(customer =>{%>
-                                    <tr>
-                                        <td><%=customer.Name%></td>
-                                        <td name="TypeObjectID" data-id="<%=customer.TypeObjectID%>"><%=customer.TypeObjectID%></td>
-                                        <td><%=customer.Passport%></td>
-                                        <td name="DepartureStationID" data-id="<%=customer.Ticket.DepartureStationID%>"><%=customer.Ticket.DepartureStationID%></td>
-                                        <td name="ArrivalStationID" data-id="<%=customer.Ticket.ArrivalStationID%>"><%=customer.Ticket.ArrivalStationID%></td>
-                                        <td><%=JSON.stringify(customer.Ticket.Price).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%> VND%></td>
-                                        <td name="StatusTicket" data-status="<%=customer.Ticket.Status%>"><%=customer.Ticket.Status%></td>
-                                    </tr>
-                                <%})%>
+                                <%var index = 0%>
+                                <%for(var i = 0; i < result.Customers.length; i++){%>
+                                    <%for(var j = 0; j < result.Customers[i].Tickets.length;j++){%>
+                                        <tr>
+                                            <td><%=result.Customers[i].Name%></td>
+                                            <td name="TypeObjectID" data-id="<%=result.Customers[i].TypeObjectID%>"><%=result.Customers[i].TypeObjectID%></td>
+                                            <td><%=result.Customers[i].Passport%></td>
+                                            <td name="DepartureStationID" data-id="<%=result.Customers[i].Tickets[j].DepartureStationID%>"><%=result.Customers[i].Tickets[j].DepartureStationID%></td>
+                                            <td name="ArrivalStationID" data-id="<%=result.Customers[i].Tickets[j].ArrivalStationID%>"><%=result.Customers[i].Tickets[j].ArrivalStationID%></td>
+                                            <td><%=JSON.stringify(result.Customers[i].Tickets[j].Price).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%> VND%></td>
+                                            <td name="StatusTicket" data-status="<%=result.Customers[i].Tickets[j].Status%>"><%=result.Customers[i].Tickets[j].Status%></td>
+                                            <%if(result.Customers[i].Tickets[j].Status == 1 ){%>
+                                            <td id="parent<%=index%>" style="text-align: center;"><input style="background-color: red;" type="button" value="Cancel" class="btn btn-danger" name="btnCancel" onclick="Cancel(this, '<%=result.Customers[i].Tickets[j].ID%>', '<%=index%>')"/></td>
+                                            <%index++%>
+                                            <%}else{%>
+                                                <td></td>
+                                            <%}%>
+                                        </tr>
+                                        
+                                    <%}%>
+                                <%}%>
+                                
                             </tbody>
                         </table>
                     </div>

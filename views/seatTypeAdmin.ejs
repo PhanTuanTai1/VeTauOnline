@@ -4,22 +4,22 @@
 <head>
     <title>Admin | Seat Type</title>
 
-    <%- include('adminheader'); -%>
+    <%- include('adminHeader'); -%>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
     <div class="wrapper">
         <!-- Navbar -->
         <div id="sidebar">
-            <%- include('adminsidebar'); -%>
+            <%- include('adminSidebar', {Staff : data}); -%>
         </div>
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper p-4">
             <h3>Seat type List</h3>
             <div class="card">
                 <div class="card-body pb-0">
-                    <div id="app" class="card">
-                        <table id="myTable" v-if="SeatTypes" class="table">
+                    <div id="app">
+                        <table id="myTable" v-if="SeatTypes" class="table-light">
                             <thead class="font-weight-bold table-info">
                                 <tr>
                                     <th>#</th>
@@ -68,7 +68,7 @@
     <script src="../dist/vue.js"></script>
     <script src="../dist/vue-router.js"></script>
     <script src="../dist/axios.js"></script>
-    <script type="module" src="../dist/@SeatTypeVue/seattypevue.js"></script>
+    <script type="module" src="../dist/@SeatTypeVue/seatTypeVue.js"></script>
     <script src="../dist/sweetalert2.all.min.js"></script>
     <script src="../dist/uuid.js"></script>
     <script>
