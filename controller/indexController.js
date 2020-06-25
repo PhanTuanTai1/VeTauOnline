@@ -573,8 +573,8 @@ module.exports.getSeatTypeBySeatID = function (req, res) {
 }
 
 module.exports.RedirectToNganLuong = function (req, res) {
-    //let return_url = "https://trainticketonlinevn.herokuapp.com/paymentSuccess";
-    let return_url = "http://localhost:3000/paymentSuccess";
+    let return_url = "https://trainticketonlinevn.herokuapp.com/paymentSuccess";
+    //let return_url = "http://localhost:3000/paymentSuccess";
     let url = 'https://sandbox.nganluong.vn:8088/nl35/checkout.php?';
     url += 'merchant_site_code=48847&';
     url += 'return_url=' + return_url + '&';
