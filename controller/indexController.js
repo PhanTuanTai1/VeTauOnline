@@ -873,7 +873,8 @@ function getListTicketSold(Schedule) {
                         DepartureStationID: detail.DepartureStationID,
                         ArrivalStationID: detail.ArrivalStationID,
                         TrainName: data.Name,
-                        DepartureDate : date
+                        DepartureDate : date,
+                        Status: 1
                     }
                 }).then(result => {
                     
