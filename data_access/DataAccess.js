@@ -230,7 +230,7 @@ Ticket.belongsTo(Seat, { foreignKey: "SeatID" });
 ScheduleDetail.hasMany(TableCost, { foreignKey: "ScheduleID" })
 Ticket.belongsTo(Station, { foreignKey: 'DepartureStationID' })
 Ticket.belongsTo(Station, { foreignKey: 'ArrivalStationID' })
-Customer.hasOne(Ticket);
+Customer.hasMany(Ticket);
 
 module.exports.Train = Train;
 module.exports.Carriage = Carriage;

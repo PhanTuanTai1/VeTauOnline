@@ -598,10 +598,10 @@ module.exports.RedirectToNganLuong = function (req, res) {
     res.redirect(url);
 }
 
-function SendMail(html, option){
+function SendMail(email ,html, option){
     var mailOptions = {
         from: 'trainticketonlinevn@gmail.com',
-        to: 'phantuantai1234@gmail.com',
+        to: email,
         subject: 'Thank you for booking at our website (' + option + ')',
         html: html
     };
@@ -628,11 +628,11 @@ module.exports.InsertData = async function (req, res) {
         ListTicket2 = req.cookies.data5;
         html2 = await createTableListCustomer(Representative, ListPassenger, ListTicket2, req.query.payment_id);
         option = "Round Trip";
-        SendMail(html2, option)
+        SendMail(Representative.Email, html2, option)
     }
 
     var html = await createTableListCustomer(Representative, ListPassenger, ListTicket, req.query.payment_id);
-    SendMail(html, option)
+    SendMail(Representative.Email, html, option)
 
     db.Representative.create(Representative).then(data => {
         InsertPassenger(ListPassenger).then(data => {
@@ -681,6 +681,7 @@ module.exports.ManageBooking = function (req, res) {
             }
         }
     }).then(data => {
+        let ticket = data.Customers[0].Ticket;
         res.render('managebooking', {result: data});
     })
 }
@@ -1110,7 +1111,7 @@ async function createTableListCustomer(Representative, ListPassenger, ListTicket
         + "<p>Payment ID: " + PaymentID + "</p>"
         + "<p>Passport: " + Representative.Passport + "</p>"
         + "<p style='color:red;'>Note: <span style='font-weight:bold'>PAYMENT ID</span> used to refund money in case of error</p></div>";
-        var listCustomer = "<h2>List Customer</h2> <table> <tr> <th>Full Name</th> <th>Passport</th> <th>Departure Station</th> <th>Price (VND)</th></tr>";
+        var listCustomer = "<h2>List Customer</h2> <table> <tr><th>Ticket ID</th> <th>Full Name</th> <th>Passport</th> <th>Departure Station</th> <th>Price (VND)</th></tr>";
         var DepartureStation = await getStationByID(ListTicket[0].DepartureStationID);
         ListPassenger.forEach((passenger,index,array) => {
             var ticket = ListTicket.filter(ticket => {
@@ -1118,10 +1119,11 @@ async function createTableListCustomer(Representative, ListPassenger, ListTicket
             })
            
             listCustomer += "<tr>" 
-                         +"<td>"+passenger.Name+"</td>"
-                         +"<td>"+passenger.Passport+"</td>"
-                         +"<td>"+DepartureStation[0].Name+"</td>"
-                         +"<td>"+JSON.stringify(ticket[0].Price).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")+"</td>"
+                         +"<td>"+ ticket[0].ID +"</td>"   
+                         +"<td>"+ passenger.Name+"</td>"
+                         +"<td>"+ passenger.Passport+"</td>"
+                         +"<td>"+ DepartureStation[0].Name+"</td>"
+                         +"<td>"+ JSON.stringify(ticket[0].Price).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")+"</td>"
                          +"</tr>"           
             if(index + 1 === array.length) {
                 listCustomer += "</table></body></html>";
