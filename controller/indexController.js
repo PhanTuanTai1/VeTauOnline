@@ -573,8 +573,8 @@ module.exports.getSeatTypeBySeatID = function (req, res) {
 }
 
 module.exports.RedirectToNganLuong = function (req, res) {
-    let return_url = "https://trainticketonlinevn.herokuapp.com/paymentSuccess";
-    //let return_url = "http://localhost:3000/paymentSuccess";
+    //let return_url = "https://trainticketonlinevn.herokuapp.com/paymentSuccess";
+    let return_url = "http://localhost:3000/paymentSuccess";
     let url = 'https://sandbox.nganluong.vn:8088/nl35/checkout.php?';
     url += 'merchant_site_code=48847&';
     url += 'return_url=' + return_url + '&';
@@ -814,11 +814,20 @@ function getListSeatSoldDetail(Schedule, isBreak){
             }
         }).then(async data => {
             console.log("getListSeatSoldDetail: " + JSON.stringify(data));
+            let listScheduleDetail = [];
             data.ScheduleDetails.forEach((detail,index,array) => {
                 if(detail.DepartureStationID >= Schedule.ScheduleDetails[0].ArrivalStationID){
-                    array.splice(index,1)
+                    //array.splice(index,1)
+                    listScheduleDetail = array.filter(x => {
+                        return x.ID != detail.ID;
+                    })
+                }
+                else {
+                    listScheduleDetail = array;
                 }
             })
+
+            data.ScheduleDetails = listScheduleDetail;
             console.log("getListSeatSoldDetail After: " + JSON.stringify(data));
             var ListTicket = await getListTicketSold(data);
             if(isBreak) {

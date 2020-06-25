@@ -43,6 +43,12 @@ app.use(session({
 
 
 app.get("/", function (req, res) {
+    var session_id = req.cookies.session_id;
+    let data =  listSeatBlock.filter(x => {
+        return x.session_id != req.cookies.session_id;
+    })
+    io.emit('response_unblock', data);
+
     res.render('index2');
 })
 
@@ -50,7 +56,7 @@ app.get("/passenger", function (req, res) {
     //console.log(req.headers.cookie.session_id);
     if (typeof (req.headers.cookie) == "undefined") {
         console.log("SessionID: " + req.session.id);
-        res.cookie('sesion_id', req.session.id);
+        
     }
 
     controller.passenger(req, res);
@@ -429,7 +435,7 @@ var io = io.on('connection', (socket) => {
             if (data.class.search('soft_bed_left') != -1) {
                 data.class = 'train_bed_cell bed can_block soft_bed_left reserved';
             }
-            else if (data.class.search('soft_bed_right') != -1) {
+            else if (data.class.search('soft_bed_right') != -1) {y
                 data.class = 'train_bed_cell bed can_block soft_bed_right reserved';
             }
             else if (data.class.search('soft_seat_left') != -1) {
