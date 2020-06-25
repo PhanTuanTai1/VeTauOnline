@@ -39,15 +39,20 @@ app.use(session({
     }
 }))
 
-
-
-
 app.get("/", function (req, res) {
     var session_id = req.cookies.session_id;
-    let data =  listSeatBlock.filter(x => {
-        return x.session_id != req.cookies.session_id;
-    })
-    io.emit('response_unblock', data);
+
+    if(session_id != "undefined"){
+        let data =  listSeatBlock.filter(x => {
+            return x.session_id != session_id;
+        })
+        let data2 = listSeatBlock.filter(x => {
+            return x.session_id == session_id;
+        })
+    
+        listSeatBlock = data;
+        res.cookie('session_id', req.session.id);
+    }
 
     res.render('index2');
 })
@@ -104,7 +109,7 @@ app.get("/getListSeatSold", function (req, res) {
 
 app.post("/createInfomation", function (req, res) {
     console.log("Type of: " + typeof (req.headers.cookie))
-    if (typeof (req.headers.cookie == "undefined")) {
+    if (typeof(req.headers.cookie) == "undefined") {
         console.log(req.headers.cookie);
         console.log("req.session.id: " + req.session.id);
         res.cookie('session_id', req.session.id)
@@ -412,6 +417,7 @@ var io = io.on('connection', (socket) => {
         //console.log(listSeatBlock.length)
         io.emit('response_unblock', listSeatBlock.shift());
     }, 900000)
+
     socket.on('changeStatus', (data) => {
         var check = false;
         listSeatBlock.forEach(seat => {
@@ -435,7 +441,7 @@ var io = io.on('connection', (socket) => {
             if (data.class.search('soft_bed_left') != -1) {
                 data.class = 'train_bed_cell bed can_block soft_bed_left reserved';
             }
-            else if (data.class.search('soft_bed_right') != -1) {y
+            else if (data.class.search('soft_bed_right') != -1) {
                 data.class = 'train_bed_cell bed can_block soft_bed_right reserved';
             }
             else if (data.class.search('soft_seat_left') != -1) {

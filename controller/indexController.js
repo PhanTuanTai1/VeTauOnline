@@ -167,7 +167,7 @@ function getScheduleMatch(Date, DepartureID, ListSchedule) {
 
             // Departure Date in Database
             var DateDepart = moment(schedule.DateDeparture).add(TimeDepartInt, 'hour')
-                            .add(MinutesDepartInt + TimeScheduleDetails, 'minutes').format('YYYY-MM-DD');
+                            .subtract(7,'hour').add(MinutesDepartInt + TimeScheduleDetails, 'minutes').format('YYYY-MM-DD');
 
             // Departure Date in website
             var DateDepartFormat = (moment(Date).subtract(7, 'hour').format('YYYY-MM-DD'));
