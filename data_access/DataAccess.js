@@ -15,11 +15,11 @@ Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
 // })
 
 // database local
-var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '79495291', {
+var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '123456', {
     dialect: 'mssql',
     host: 'localhost',
     //port: '1433',
-    //port: '57031'
+    port: '57031'
 })
 
 //  database cloud sql5059.site4now.net
