@@ -39,10 +39,21 @@ app.use(session({
     }
 }))
 
-
-
-
 app.get("/", function (req, res) {
+    var session_id = req.cookies.session_id;
+
+    if(session_id != "undefined"){
+        let data =  listSeatBlock.filter(x => {
+            return x.session_id != session_id;
+        })
+        let data2 = listSeatBlock.filter(x => {
+            return x.session_id == session_id;
+        })
+    
+        listSeatBlock = data;
+        res.cookie('session_id', req.session.id);
+    }
+
     res.render('index2');
 })
 
@@ -50,7 +61,7 @@ app.get("/passenger", function (req, res) {
     //console.log(req.headers.cookie.session_id);
     if (typeof (req.headers.cookie) == "undefined") {
         console.log("SessionID: " + req.session.id);
-        res.cookie('sesion_id', req.session.id);
+        
     }
 
     controller.passenger(req, res);
@@ -98,7 +109,7 @@ app.get("/getListSeatSold", function (req, res) {
 
 app.post("/createInfomation", function (req, res) {
     console.log("Type of: " + typeof (req.headers.cookie))
-    if (typeof (req.headers.cookie == "undefined")) {
+    if (typeof(req.headers.cookie) == "undefined") {
         console.log(req.headers.cookie);
         console.log("req.session.id: " + req.session.id);
         res.cookie('session_id', req.session.id)
@@ -200,7 +211,7 @@ app.get("/admin/customer", function (req, res) {
     loginController.CheckLogin(req).then(async check => {
         if (check) {
             var staffData = await loginController.GetUser(req);
-            res.render('customeradmin', {data: staffData});
+            res.render('customerAdmin', {data: staffData});
         }
         else {
             res.render('login');
@@ -211,7 +222,7 @@ app.get("/admin/station", function (req, res) {
     loginController.CheckLogin(req).then(async check => {
         if (check) {
             var staffData = await loginController.GetUser(req);
-            res.render('stationadmin', {data: staffData});
+            res.render('stationAdmin', {data: staffData});
         }
         else {
             res.render('login');
@@ -227,7 +238,7 @@ app.get("/admin/train", function (req, res) {
         if (check) {
             console.log(req);
             loginController.GetUser(req).then(staffData => {
-                res.render('trainadmin', {data: staffData});
+                res.render('trainAdmin', {data: staffData});
             });
             
         }
@@ -240,7 +251,7 @@ app.get("/admin/seat", function (req, res) {
     loginController.CheckLogin(req).then(async check => {
         if (check) {
             var staffData = await loginController.GetUser(req);
-            res.render('seatadmin', {data : staffData});
+            res.render('seatAdmin', {data : staffData});
         }
         else {
             res.render('login');
@@ -251,7 +262,7 @@ app.get("/admin/seattype", function (req, res) {
     loginController.CheckLogin(req).then(async check => {
         if (check) {
             var staffData = await loginController.GetUser(req);
-            res.render('seattypeadmin', {data: staffData});
+            res.render('seatTypeAdmin', {data: staffData});
         }
         else {
             res.render('login');
@@ -262,7 +273,7 @@ app.get("/admin/carriage", function (req, res) {
     loginController.CheckLogin(req).then(async check => {
         if (check) {
             var staffData = await loginController.GetUser(req);
-            res.render('carriageadmin', {data: staffData});
+            res.render('carriageAdmin', {data: staffData});
         }
         else {
             res.render('login');
@@ -273,7 +284,7 @@ app.get("/admin/schedule", function (req, res) {
     loginController.CheckLogin(req).then(async check => {
         if (check) {
             var staffData = await loginController.GetUser(req);
-            res.render('scheduleadmin', {data: staffData});
+            res.render('scheduleAdmin', {data: staffData});
         }
         else {
             res.render('login');
@@ -361,7 +372,7 @@ app.get("/admin/ticket", function (req, res) {
     loginController.CheckLogin(req).then(async check => {
         if (check) {
             var staffData = await loginController.GetUser(req);
-            res.render('ticketadmin', {data : staffData});
+            res.render('ticketAdmin', {data : staffData});
         }
         else {
             res.render('login');
@@ -372,7 +383,7 @@ app.get("/admin/cancelticket", function (req, res) {
     loginController.CheckLogin(req).then(async check => {
         if (check) {
             var staffData = await loginController.GetUser(req);
-            res.render('cancelticketadmin', {data: staffData});
+            res.render('cancelTicketAdmin', {data: staffData});
         }
         else {
             res.render('login');
@@ -406,6 +417,7 @@ var io = io.on('connection', (socket) => {
         //console.log(listSeatBlock.length)
         io.emit('response_unblock', listSeatBlock.shift());
     }, 900000)
+
     socket.on('changeStatus', (data) => {
         var check = false;
         listSeatBlock.forEach(seat => {

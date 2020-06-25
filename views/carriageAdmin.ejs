@@ -4,14 +4,14 @@
 <head>
     <title>Admin | Carriage</title>
 
-    <%- include('adminheader'); -%>
+    <%- include('adminHeader'); -%>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
     <div class="wrapper">
         <!-- Navbar -->
         <div id="sidebar">
-            <%- include('adminsidebar', {Staff : data}); -%>
+            <%- include('adminSidebar', {Staff : data}); -%>
         </div>
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper p-4">
@@ -79,7 +79,7 @@
     <script src="../dist/vue.js"></script>
     <script src="../dist/vue-router.js"></script>
     <script src="../dist/axios.js"></script>
-    <script type="module" src="../dist/@CarriageVUe/carriagevue.js"></script>
+    <script type="module" src="../dist/@CarriageVue/carriageVue.js"></script>
     <script src="../dist/sweetalert2.all.min.js"></script>
     <script src="../dist/uuid.js"></script>
     <script>

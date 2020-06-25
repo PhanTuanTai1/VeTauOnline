@@ -254,23 +254,27 @@
                             </thead>
                             <tbody>
                                 <%var index = 0%>
-                                <%result.Customers.forEach(customer =>{%>
-                                    <tr>
-                                        <td><%=customer.Name%></td>
-                                        <td name="TypeObjectID" data-id="<%=customer.TypeObjectID%>"><%=customer.TypeObjectID%></td>
-                                        <td><%=customer.Passport%></td>
-                                        <td name="DepartureStationID" data-id="<%=customer.Ticket.DepartureStationID%>"><%=customer.Ticket.DepartureStationID%></td>
-                                        <td name="ArrivalStationID" data-id="<%=customer.Ticket.ArrivalStationID%>"><%=customer.Ticket.ArrivalStationID%></td>
-                                        <td><%=JSON.stringify(customer.Ticket.Price).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%> VND%></td>
-                                        <td name="StatusTicket" data-status="<%=customer.Ticket.Status%>"><%=customer.Ticket.Status%></td>
-                                        <%if(customer.Ticket.Status != 4){%>
-                                        <td id="parent<%=index%>" style="text-align: center;"><input style="background-color: red;" type="button" value="Cancel" class="btn btn-danger" name="btnCancel" onclick="Cancel(this, '<%=customer.Ticket.ID%>', '<%=index%>')"/></td>
-                                        <%}else{%>
-                                            <td></td>
-                                        <%}%>
-                                    </tr>
-                                    <%index++%>
-                                <%})%>
+                                <%for(var i = 0; i < result.Customers.length; i++){%>
+                                    <%for(var j = 0; j < result.Customers[i].Tickets.length;j++){%>
+                                        <tr>
+                                            <td><%=result.Customers[i].Name%></td>
+                                            <td name="TypeObjectID" data-id="<%=result.Customers[i].TypeObjectID%>"><%=result.Customers[i].TypeObjectID%></td>
+                                            <td><%=result.Customers[i].Passport%></td>
+                                            <td name="DepartureStationID" data-id="<%=result.Customers[i].Tickets[j].DepartureStationID%>"><%=result.Customers[i].Tickets[j].DepartureStationID%></td>
+                                            <td name="ArrivalStationID" data-id="<%=result.Customers[i].Tickets[j].ArrivalStationID%>"><%=result.Customers[i].Tickets[j].ArrivalStationID%></td>
+                                            <td><%=JSON.stringify(result.Customers[i].Tickets[j].Price).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%> VND%></td>
+                                            <td name="StatusTicket" data-status="<%=result.Customers[i].Tickets[j].Status%>"><%=result.Customers[i].Tickets[j].Status%></td>
+                                            <%if(result.Customers[i].Tickets[j].Status == 1 ){%>
+                                            <td id="parent<%=index%>" style="text-align: center;"><input style="background-color: red;" type="button" value="Cancel" class="btn btn-danger" name="btnCancel" onclick="Cancel(this, '<%=result.Customers[i].Tickets[j].ID%>', '<%=index%>')"/></td>
+                                            <%index++%>
+                                            <%}else{%>
+                                                <td></td>
+                                            <%}%>
+                                        </tr>
+                                        
+                                    <%}%>
+                                <%}%>
+                                
                             </tbody>
                         </table>
                     </div>
