@@ -681,7 +681,6 @@ module.exports.ManageBooking = function (req, res) {
             }
         }
     }).then(data => {
-        let ticket = data.Customers[0].Ticket;
         res.render('managebooking', {result: data});
     })
 }
@@ -691,7 +690,15 @@ module.exports.GetAllSchedule = function(req,res) {
         attributes: ['ID', 'DateDeparture', 'TrainID','TimeDeparture'],
         where: {
             DateDeparture: {[Op.gte] : moment()._d}
-        }
+        },
+        include: {
+            model: db.ScheduleDetail,
+            attributes: ['ID', 'DepartureStationID', 'ArrivalStationID', 'Length'],
+            limit: 1,
+            order:  [
+                ['Length', 'DESC']
+            ]
+        },
     }).then(data => {
         console.log("GetAllSchedule: " + JSON.stringify(data));
         res.end(JSON.stringify(data));

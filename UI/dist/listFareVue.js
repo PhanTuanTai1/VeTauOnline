@@ -16,9 +16,16 @@ new Vue({
             this.Train = res.data;
         })
         this.Convert();
+
     },
     updated: function() {
-        if(!this.listScheduleConverted) $("#table_id").DataTable();
+        if(!this.listScheduleConverted){
+            $("#table_id").DataTable();
+            
+        } 
+        if(this.listSchedule != null) {
+            document.getElementById('waiting_overlay').style['display'] = "none";
+        }
     },
     data: {
         listSchedule: [],
@@ -39,6 +46,21 @@ new Vue({
                 data.TrainName = this.TrainName(data.TrainID)
             })    
             $("#table_id").DataTable();
+        },
+        ScheduleName: function(StationID) {
+            var station = this.Station.filter(x => {
+                return StationID == x.ID;
+            })
+
+            return station[0].Name; 
+        },
+
+        FormatDate: function(Date){
+            return moment(Date).format('DD-MM-YYYY');
+        },
+
+        FormatTime: function(Time){
+            return moment(Time).format('LT');
         }
     },
     computed: {
