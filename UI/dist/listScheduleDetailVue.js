@@ -20,6 +20,7 @@ new Vue({
             //alert(JSON.stringify(this.listStation))
             $("#table_id").DataTable();
         }
+        document.getElementById('waiting_overlay').style['display'] = "none";
     },
     data: {
         seatType: [],
