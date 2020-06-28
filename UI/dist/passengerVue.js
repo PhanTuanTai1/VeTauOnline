@@ -66,7 +66,16 @@ socket.on('response', data => {
 
 socket.on('response_unblock', (data)=> {
     try {
-        document.getElementById(data.id).setAttribute('class', data.class.replace("reserved", "available"));                      
+        document.getElementById(data.id).setAttribute('class', data.class.replace("reserved", "available"));           
+        socket.emit('deleteSeat',data);
+        var temp = vm.listSelected.filter(x => {
+            return x.split("_")[3] != data.id;
+        })
+        vm.listSelected = temp;
+        var temp2 = vm.listSelected2.filter(x => {
+            return x.split("_")[3] != data.id;
+        })
+        vm.listSelected2 = temp2;
     }
     catch(err) {
         
@@ -75,7 +84,6 @@ socket.on('response_unblock', (data)=> {
 
 function select(element, number){
     vm.selectSeat(element, number);
-    
 }
 
 function change(element, number){
