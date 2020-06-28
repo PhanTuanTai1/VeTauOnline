@@ -874,7 +874,7 @@ function getListTicketSold(Schedule) {
                         ArrivalStationID: detail.ArrivalStationID,
                         TrainName: data.Name,
                         DepartureDate : date,
-                        Status: 1
+                        [Op.or]: [{Status: 1},{Status: 2}]
                     }
                 }).then(result => {
                     
