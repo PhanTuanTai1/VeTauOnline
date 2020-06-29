@@ -258,7 +258,7 @@
                                                         <div class="form-group">
                                                             <label>DEPARTURE DAY</label>
                                                             <vuejs-datepicker class="form-control" name="departure_date"
-                                                                id="dateTimePicker_1" v-model="depart_date">
+                                                                id="dateTimePicker_1" v-model="depart_date" v-bind:disabled-dates="disabledDates_To">
                                                             </vuejs-datepicker>
                                                             <!-- <input id="departure_date" name="departure_date" tabindex="3" class="form-control" type="text" value="24/02/2020" readonly /> -->
                                                             <button type="button"
@@ -274,7 +274,7 @@
                                                         <div id="return_group" class="form-group ">
                                                             <label>RETURN DAY</label>
                                                             <vuejs-datepicker class="form-control" name="return_date"
-                                                                id="dateTimePicker_2" v-model="return_date">
+                                                                id="dateTimePicker_2" v-model="return_date" v-bind:disabled-dates="disabledDates_From">
                                                             </vuejs-datepicker>
                                                             <!-- <input id="return_date" name="return_date" tabindex="4" class="form-control" type="text" value="29/02/2020" readonly /> -->
                                                             <button type="button"
@@ -646,7 +646,7 @@
     <script src="../dist/indexVue.js"></script>
     <script src="../dist/khong-dau/lib/khongdau.js"></script>
     <script src="../dist/myDate.js"></script>
-    
+    <script src="../dist/moment.js"></script>
     <!-- Language dependant libraries -->
     <script type="text/javascript" src="../vendor/bootstrap-datepicker/locales/bootstrap-datepicker.en.min.js"></script>
 
