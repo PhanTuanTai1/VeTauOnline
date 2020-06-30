@@ -39,16 +39,23 @@
             <h3>Ticket</h3>
             <div class="card-body pb-0">
                 <div id="app" class="card" style="padding: 15px;">
-                    <div class="row col-sm-12" style="align-items:  center;">
-                        <div style="text-align: right;" class="col">
-                            <label for="repreID">Input representative ID</label>
-                        </div>
-                        <div class="col">
-                            <input id="repreID" type="number" class="form-control" placeholder="Input here...">
-                        </div>
-                        <div class="col">
-                            <button @click="SearchForTicket" class="btn btn-info"><i class="fa fa-search"></i>
-                                Search</button>
+                    <div class="row col-sm-12" style="padding-left: 38%;">
+                        <div class="d-flex flex-column">
+                            <div class="col">
+                                <label for="repreID">Input representative ID</label>
+                            </div>
+                            <div class="col">
+                                <div class="d-flex flex-column">
+                                    <input id="repreID" type="number" class="form-control" placeholder="Input here...">
+                                    <small id="emailHelp" style="color:steelblue;" class="form-text">(Please input
+                                        the code sent to
+                                        the representative email)</small>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <button @click="SearchForTicket" class="btn btn-info"><i class="fa fa-search"></i>
+                                    Search</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -79,7 +86,7 @@
     <script type="text/javascript" src="../dist/vuejs-dialog.min.js"></script>
     <script type="text/javascript" src="../dist/vuejs-dialog-mixin.min.js"></script>
     <script src="../dist/js/pages/dashboard2.js"></script>
-
+    <!-- Lastly add this package -->
     <script src="../dist/vue.js"></script>
     <script src="../dist/vue-router.js"></script>
     <script src="../dist/axios.js"></script>

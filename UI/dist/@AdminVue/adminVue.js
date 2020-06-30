@@ -1,3 +1,4 @@
+Vue.use(VueLoading);
 new Vue({
     el: "#app",
     created: function () {
@@ -57,6 +58,10 @@ new Vue({
 
     },
     mounted: async function () {
+        let loader = this.$loading.show({
+            loader: 'dots'
+        });
+        setTimeout(() => loader.hide(), 1.5 * 1000)
         const countTickByMonth = [];
         const countTickByStatus = [];
         const priceMonth = [];
@@ -77,7 +82,6 @@ new Vue({
         countTickByStatus.push(data.filter(x => x.Status == true).length,
             data.filter(x => x.Status == 2).length,
             data.filter(x => x.Status == 3).length);
-        console.log(countTickByStatus);
         var lineTick = document.getElementById('lineChartTicket').getContext('2d');
         var pieTick = document.getElementById('pieChartTicket').getContext('2d');
 
@@ -191,7 +195,6 @@ new Vue({
             priceMonth.push(value);
         })
         let a = [];
-        console.log(priceMonth);
         monthNames.forEach(e => {
             if (priceMonth.find(res => res.x == e) != null) {
                 a.push(priceMonth.find(res => res.x == e).sum)
@@ -199,9 +202,7 @@ new Vue({
             else {
                 a.push(0);
             }
-            // console.log(e)
         })
-        console.log(a);
         var barPriceMonth = document.getElementById('barPriceMonth').getContext('2d');
         var myBarChart = new Chart(barPriceMonth, {
             type: 'bar',
@@ -252,15 +253,29 @@ new Vue({
             }
         });
         var barPriceYear = document.getElementById('barPriceYear').getContext('2d');
+        var currYear = (new Date()).getFullYear();
+        var listPrice = await this.Tickets;
+        var sumCurr2 = 0;
+        listPrice.filter(x => (new Date(x.DepartureDate).getFullYear()) == (currYear - 2)).map(x => {
+            sumCurr2 += x.Price;
+        });
+        var sumCurr1 = 0;
+        listPrice.filter(x => (new Date(x.DepartureDate).getFullYear()) == (currYear - 1)).map(x => {
+            sumCurr1 += x.Price;
+        });
+        var sumCurr = 0;
+        listPrice.filter(x => (new Date(x.DepartureDate).getFullYear()) == currYear).map(x => {
+            sumCurr += x.Price;
+        });
         var myBarChart = new Chart(barPriceYear, {
             type: 'horizontalBar',
             data: {
-                labels: ['2019', '2020', '2021'],
+                labels: [currYear - 2, currYear - 1, currYear],
                 datasets: [{
                     label: 'Revenue',
                     backgroundColor: 'rgb(255,255,0,0.5)',
                     borderColor: 'rgb(255,255,0,0.5)',
-                    data: [300000, 5000000, 89899],
+                    data: [sumCurr2, sumCurr1, sumCurr]
                 }]
             },
             options: {

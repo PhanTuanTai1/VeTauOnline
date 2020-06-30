@@ -13,6 +13,8 @@
 <!-- Google Font: Source Sans Pro -->
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 <link href="../dist/css/fontawesome-free/css/all.css" rel="stylesheet">
+<link href="../dist/vue-loading.css" rel="stylesheet">
+
 <!-- <script type="text/javascript">
     function dataTable() {
         $("#myTable").DataTable();
@@ -21,7 +23,45 @@
 <style>
     .sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active,
     .sidebar-light-primary .nav-sidebar>.nav-item>.nav-link.active {
-        background-color: #ffc107;
-        color: #1f2d3d;
+        background-color: slategray;
+        color: white;
+    }
+
+    .sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active i {
+        color: white;
+    }
+
+    .sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active p {
+        color: white;
+    }
+
+    [class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link.active,
+    [class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link.active:focus,
+    [class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link.active:hover {
+        background-color: slategray;
+    }
+
+    [class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link.active,
+    [class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link.active:focus,
+    [class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link.active p,
+    [class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link.active i {
+        color: white;
+    }
+
+    body {
+        font-family: Poppins-Medium !important;
+    }
+
+    body::-webkit-scrollbar {
+        width: 1em;
+    }
+
+    body::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    }
+
+    body::-webkit-scrollbar-thumb {
+        background-color: #4a578c;
+        outline: 1px solid slategrey;
     }
 </style>

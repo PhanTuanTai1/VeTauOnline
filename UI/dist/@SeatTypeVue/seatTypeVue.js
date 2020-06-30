@@ -1,3 +1,4 @@
+Vue.use(VueLoading);
 new Vue({
     el: "#app",
     created: function () {
@@ -13,5 +14,12 @@ new Vue({
     },
     updated: function () {
         $("#myTable").DataTable();
+    },
+    mounted: function () {
+        let loader = this.$loading.show({
+            loader: 'dots'
+        });
+        setTimeout(() => loader.hide(), 1.5 * 1000)
+        $("#menuseattype").addClass("active");
     }
 })

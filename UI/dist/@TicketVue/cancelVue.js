@@ -1,3 +1,4 @@
+Vue.use(VueLoading);
 new Vue({
     el: "#app",
     created: function () {
@@ -15,6 +16,10 @@ new Vue({
     },
 
     updated: function () {
+        let loader = this.$loading.show({
+            loader: 'dots'
+        });
+        setTimeout(() => loader.hide(), 1.5 * 1000)
         $("#myTable").DataTable();
         $("#menucancelticket").addClass("active");
     },
@@ -146,5 +151,8 @@ new Vue({
         listTicket() {
             return this.Ticket;
         }
+    },
+    mounted: function () {
+
     }
 })

@@ -5,7 +5,7 @@
 // })
 
 
-
+Vue.use(VueLoading);
 new Vue({
     el: "#app",
     created: async function () {
@@ -366,8 +366,14 @@ new Vue({
     },
     updated: function () {
         $("#myTable").DataTable();
-
     },
+    mounted: function () {
+        $("#menuticket").addClass("active");
+        let loader = this.$loading.show({
+            loader: 'dots'
+        });
+        setTimeout(() => loader.hide(), 1.5 * 1000)
+    }
     // mounted: function () {
     //     window.Vue.use(VuejsDialog.main.default)
     //     $(document).on("click", "#cancelTick", function () {
