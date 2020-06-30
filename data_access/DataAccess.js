@@ -7,7 +7,7 @@ Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
 };
 
 // database cloud sql.freeasphost.net
-// var sequelize = new Sequelize('tuantai1234_trainticketdatabase', 'tuantai1234', '79495291', {
+// var sequelize = new Sequelize('db_a63781_phantuantai12', 'phantuantai12', '79495291Z*z', {
 //     dialect: 'mssql',
 //     host: 'sql.freeasphost.net',
 //     //port: '1433',
@@ -15,20 +15,18 @@ Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
 // })
 
 // database local
-var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '123456789', {
-    dialect: 'mssql',
-    host: 'localhost',
-    //port: '1433',
-    //port: '57031'
-})
-
-//  database cloud sql5059.site4now.net
-// var sequelize = new Sequelize('DB_A5DDEE_trainticket', 'DB_A5DDEE_trainticket_admin', '79495291Z*z', {
+// var sequelize = new Sequelize('TrainTicketDatabase', 'sa', '79495291', {
 //     dialect: 'mssql',
-//     host: 'sql5059.site4now.net',
+//     host: 'localhost',
 //     //port: '1433',
 //     //port: '57031'
 // })
+
+//  database cloud sql5059.site4now.net
+var sequelize = new Sequelize('DB_A63781_phantuantai12', 'DB_A63781_phantuantai12_admin', '79495291Z*z', {
+    dialect: 'mssql',
+    host: 'sql5050.site4now.net',
+})
 
 //1 Train Entity
 class Train extends Model { }
@@ -232,7 +230,7 @@ Ticket.belongsTo(Seat, { foreignKey: "SeatID" });
 ScheduleDetail.hasMany(TableCost, { foreignKey: "ScheduleID" })
 Ticket.belongsTo(Station, { foreignKey: 'DepartureStationID' })
 Ticket.belongsTo(Station, { foreignKey: 'ArrivalStationID' })
-Customer.hasOne(Ticket);
+Customer.hasMany(Ticket);
 
 module.exports.Train = Train;
 module.exports.Carriage = Carriage;

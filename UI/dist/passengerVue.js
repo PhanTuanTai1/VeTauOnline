@@ -4,13 +4,28 @@ function changeStatus(data) {
     socket.emit('changeStatus', data);
 }      
 
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length,c.length);
+        }
+    }
+    return "";
+}
+
 socket.on('response', data => {
     try {
         //alert(typeof(data.data));
         if(typeof(data.data) == "undefined"){
             listBlock = data;
             var filter = data.filter(seat => {
-                return seat.session_id != document.cookie
+                return seat.session_id != getCookie("session_id")
             })
             
             filter.forEach(seat => {
@@ -21,20 +36,16 @@ socket.on('response', data => {
             //alert(JSON.stringify(data.data.listSeatBlock));
             listBlock = data.data.listSeatBlock;
             var filter = data.data.listSeatBlock.filter(seat => {
-                return seat.session_id != document.cookie
+                return seat.session_id != getCookie("session_id")
             })
             
             filter.forEach(seat => {
                 document.getElementById(seat.id).setAttribute('class', seat.class);              
             })
-            //alert(data.data.id);
-            //alert(data.split('_')[3]);
-            
+
             vm.listSelected.forEach(seat => {
-                //alert(data.split('_')[3]);
                 if(seat.split('_')[3]  == data.data.id) {
                     vm.listSelected.pop();
-                    //break;
                 }
             })
             
@@ -55,10 +66,10 @@ socket.on('response', data => {
 
 socket.on('response_unblock', (data)=> {
     try {
-            document.getElementById(data.id).setAttribute('class', data.class.replace("reserved", "available"));                   
+        document.getElementById(data.id).setAttribute('class', data.class.replace("reserved", "available"));                      
     }
     catch(err) {
-
+        
     }
 })
 
@@ -172,11 +183,11 @@ var vm = new Vue({
         localStorage.setItem("tableResult", data.innerHTML);    
 
         var listFilterBlock = listBlock.filter(data => {
-            return data.session_id != document.cookie
+            return data.session_id != getCookie("session_id")
         })
 
         var listFilterSelected = listBlock.filter(data => {
-            return data.session_id == document.cookie && data.number == 1;
+            return data.session_id == getCookie("session_id") && data.number == 1;
         })
         listFilterBlock.forEach(data => {
             document.getElementById(data.id).setAttribute('class',data.class);
@@ -188,7 +199,7 @@ var vm = new Vue({
 
         if(typeof(this.result2) != "undefined" && this.result2 != null) {
             var listFilterSelected2 = listBlock.filter(data => {
-                return data.session_id == document.cookie && data.number == 2;
+                return data.session_id == getCookie("session_id") && data.number == 2;
             })
             listFilterSelected2.forEach(data => {
                 //document.getElementById(data.id).setAttribute('class',data.class);
@@ -340,6 +351,7 @@ var vm = new Vue({
             }
         },
         selectSeat: function(element, number){
+            
             if(this.seatTypeDisplay[0].ID == 1 || this.seatTypeDisplay[0].ID == 6) {
                 if($(element).attr('class') == 'train_bed_cell bed can_block hard_bed_left sold_out' || $(element).attr('class').search('reserved') != -1) return;
                 
@@ -348,30 +360,38 @@ var vm = new Vue({
                     if(number == 1 && this.numberPass.length > this.listSelected.length){
                         if($(element).attr('class').search("soft_bed_left") != -1){
                             $(element).attr('class','train_bed_cell bed can_block soft_bed_left selected');
-                            changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: document.cookie, number: number});
+                            changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: getCookie("session_id"), number: number});
+                            this.listSelected.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
                         }
                         else if($(element).attr('class').search("soft_bed_right") != -1) {
                             $(element).attr('class','train_bed_cell bed can_block soft_bed_right selected');
-                            changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: document.cookie, number: number});
+                            changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: getCookie("session_id"), number: number});
+                            this.listSelected.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
                         }
                         //alert($(element).children().html());
-                        this.listSelected.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                        
                     }
                     else if(number == 2 && this.numberPass.length > this.listSelected2.length){
                         if($(element).attr('class').search("soft_bed_left") != -1){
                             $(element).attr('class','train_bed_cell bed can_block soft_bed_left selected');
-                            changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: document.cookie, number: number});
+                            changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: getCookie("session_id"), number: number});
+                            this.listSelected2.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
                         }
                         else if($(element).attr('class').search("soft_bed_right") != -1) {
                             $(element).attr('class','train_bed_cell bed can_block soft_bed_right selected');
-                            changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: document.cookie, number: number});
+                            changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: getCookie("session_id"), number: number});
+                            this.listSelected2.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
                         }
 
-                        this.listSelected2.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                        
                     }
                     else 
                     {
-                        alert("Vượt quá số lượng");
+                        this.error = "Vượt quá số lượng";
+                        $("#errors").modal({
+                            fadeDuration: 100
+                        });
+                        //alert("Vượt quá số lượng");
                     }
                 }
                 else {
@@ -388,7 +408,7 @@ var vm = new Vue({
                         return data != ($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
                     })
                     this.listSelected = filteredItems;
-                    changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), unblock: true, session_id: document.cookie, number: number});
+                    changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), unblock: true, session_id: getCookie("session_id"), number: number});
                     }
                     else if(number == 2){
                         if($(element).attr('class').search("soft_bed_left") != -1){
@@ -401,7 +421,7 @@ var vm = new Vue({
                             return data != ($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
                         })
                         this.listSelected2 = filteredItems;
-                        changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), unblock: true, session_id: document.cookie, number: number});
+                        changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), unblock: true, session_id: getCookie("session_id"), number: number});
                     }
                 }
             }
@@ -422,13 +442,17 @@ var vm = new Vue({
                     }
                     else 
                     {
-                        alert("Vượt quá số lượng");
+                        this.error = "Vượt quá số lượng";
+                        $("#errors").modal({
+                            fadeDuration: 100
+                        });
+                        //alert("Vượt quá số lượng");
                     }
                 }
                 else {
                     if(number == 1) {
                         $(element).attr('class','train_cell seat can_block soft_seat_right available');
-                    var filteredItems  = this.listSelected.filter(data => {
+                        var filteredItems  = this.listSelected.filter(data => {
                         return data != ($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
                     })
                     this.listSelected = filteredItems;

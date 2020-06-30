@@ -19,7 +19,8 @@ var transporter = mail.createTransport({
 var STATUS = {
     "NOTPRINT": "1",
     "PRINTED": "2",
-    "CANCEL": "3"
+    "CANCEL": "3",
+    "WAITING_CANCEL" : "4"
 }
 
 module.exports.index = function (req, res) {
@@ -176,19 +177,18 @@ function getScheduleMatch(Date, DepartureID, ListSchedule) {
             console.log("----------Expected:" +  DateDepartFormat);
             console.log("----------Actual:" +  DateDepart);
             console.log("Schedule.DateDeparture: " + schedule.DateDeparture);
-
             var check = await checkIsSameDepartureStationIDFirst(DepartureID, schedule.ID);
 
             console.log("----------OR Expected:" +  moment(schedule.DateDeparture).format('DD-MM-YYYY'));
             console.log("----------OR Actual:" +  moment(Date).subtract(7, 'hour').format('DD-MM-YYYY'));
             console.log("---------------Check: " + check);
-
-            if((DateDepartFormat === DateDepart && !check) 
+            console.log("Date parameter: " + Date)
+            if((DateDepartFormat == DateDepart && !check) 
                 || (check && moment(schedule.DateDeparture).format('DD-MM-YYYY') == moment(Date).subtract(7, 'hour').format('DD-MM-YYYY'))) 
             {           
                 ListFilter.push(schedule)
             }       
-            else if(moment(moment(DateDepartFormat).add(129600000, 'milliseconds')._d).format('YYYY-MM-DD') === parseDateDepart._d){
+            else if(moment(moment(DateDepartFormat).add(129600000, 'milliseconds')._d).format('YYYY-MM-DD') == parseDateDepart._d){
                 ListFilter.push(schedule)                     
             }
 
@@ -573,9 +573,11 @@ module.exports.getSeatTypeBySeatID = function (req, res) {
 }
 
 module.exports.RedirectToNganLuong = function (req, res) {
-    var url = 'https://sandbox.nganluong.vn:8088/nl35/checkout.php?';
+    let return_url = "https://trainticketonlinevn.herokuapp.com/paymentSuccess";
+    //let return_url = "http://localhost:3000/paymentSuccess";
+    let url = 'https://sandbox.nganluong.vn:8088/nl35/checkout.php?';
     url += 'merchant_site_code=48847&';
-    url += 'return_url=http://localhost:3000/paymentSuccess&';
+    url += 'return_url=' + return_url + '&';
     url += 'receiver=phantuantai1234@gmail.com&';
     url += 'transaction_info=thanhtoantienvetau&';
     url += 'order_code=' + req.cookies.data.ID + '&';
@@ -589,17 +591,17 @@ module.exports.RedirectToNganLuong = function (req, res) {
     url += 'order_description=1&';
     url += 'buyer_info=1&';
     url += 'affiliate_code=1&';
-    var secure_code = md5(48847 + ' ' + 'http://localhost:3000/paymentSuccess' + ' ' + 'phantuantai1234@gmail.com' + ' ' + 'thanhtoantienvetau' + ' '
+    var secure_code = md5(48847 + ' ' + return_url + ' ' + 'phantuantai1234@gmail.com' + ' ' + 'thanhtoantienvetau' + ' '
         + req.cookies.data.ID + ' ' + req.cookies.data.TotalCost + ' ' + 'vnd' + ' ' + 1 + ' ' + 0 + ' ' + 0 + ' ' + 0 + ' '
         + 0 + ' ' + 1 + ' ' + 1 + ' ' + 1 + ' ' + '3fb19dfe9df59a63b23ca36069c3aea5')
     url += 'secure_code=' + secure_code;
     res.redirect(url);
 }
 
-function SendMail(html, option){
+function SendMail(email ,html, option){
     var mailOptions = {
         from: 'trainticketonlinevn@gmail.com',
-        to: 'phantuantai1234@gmail.com',
+        to: email,
         subject: 'Thank you for booking at our website (' + option + ')',
         html: html
     };
@@ -622,15 +624,15 @@ module.exports.InsertData = async function (req, res) {
     var ListTicket2;
     var html2;
     var option = "One Way";
-    if (typeof (req.cookies.data5) != undefined) {
+    if (typeof(req.cookies.data5) != "undefined") {
         ListTicket2 = req.cookies.data5;
         html2 = await createTableListCustomer(Representative, ListPassenger, ListTicket2, req.query.payment_id);
         option = "Round Trip";
-        SendMail(html2, option)
+        SendMail(Representative.Email, html2, option)
     }
 
     var html = await createTableListCustomer(Representative, ListPassenger, ListTicket, req.query.payment_id);
-    SendMail(html, option)
+    SendMail(Representative.Email, html, option)
 
     db.Representative.create(Representative).then(data => {
         InsertPassenger(ListPassenger).then(data => {
@@ -688,7 +690,15 @@ module.exports.GetAllSchedule = function(req,res) {
         attributes: ['ID', 'DateDeparture', 'TrainID','TimeDeparture'],
         where: {
             DateDeparture: {[Op.gte] : moment()._d}
-        }
+        },
+        include: {
+            model: db.ScheduleDetail,
+            attributes: ['ID', 'DepartureStationID', 'ArrivalStationID', 'Length'],
+            limit: 1,
+            order:  [
+                ['Length', 'DESC']
+            ]
+        },
     }).then(data => {
         console.log("GetAllSchedule: " + JSON.stringify(data));
         res.end(JSON.stringify(data));
@@ -812,11 +822,20 @@ function getListSeatSoldDetail(Schedule, isBreak){
             }
         }).then(async data => {
             console.log("getListSeatSoldDetail: " + JSON.stringify(data));
+            let listScheduleDetail = [];
             data.ScheduleDetails.forEach((detail,index,array) => {
                 if(detail.DepartureStationID >= Schedule.ScheduleDetails[0].ArrivalStationID){
-                    array.splice(index,1)
+                    //array.splice(index,1)
+                    listScheduleDetail = array.filter(x => {
+                        return x.ID != detail.ID;
+                    })
+                }
+                else {
+                    listScheduleDetail = array;
                 }
             })
+
+            data.ScheduleDetails = listScheduleDetail;
             console.log("getListSeatSoldDetail After: " + JSON.stringify(data));
             var ListTicket = await getListTicketSold(data);
             if(isBreak) {
@@ -861,7 +880,8 @@ function getListTicketSold(Schedule) {
                         DepartureStationID: detail.DepartureStationID,
                         ArrivalStationID: detail.ArrivalStationID,
                         TrainName: data.Name,
-                        DepartureDate : date
+                        DepartureDate : date,
+                        Status: 1
                     }
                 }).then(result => {
                     
@@ -1099,7 +1119,7 @@ async function createTableListCustomer(Representative, ListPassenger, ListTicket
         + "<p>Payment ID: " + PaymentID + "</p>"
         + "<p>Passport: " + Representative.Passport + "</p>"
         + "<p style='color:red;'>Note: <span style='font-weight:bold'>PAYMENT ID</span> used to refund money in case of error</p></div>";
-        var listCustomer = "<h2>List Customer</h2> <table> <tr> <th>Full Name</th> <th>Passport</th> <th>Departure Station</th> <th>Price (VND)</th></tr>";
+        var listCustomer = "<h2>List Customer</h2> <table> <tr><th>Ticket ID</th> <th>Full Name</th> <th>Passport</th> <th>Departure Station</th> <th>Price (VND)</th></tr>";
         var DepartureStation = await getStationByID(ListTicket[0].DepartureStationID);
         ListPassenger.forEach((passenger,index,array) => {
             var ticket = ListTicket.filter(ticket => {
@@ -1107,15 +1127,27 @@ async function createTableListCustomer(Representative, ListPassenger, ListTicket
             })
            
             listCustomer += "<tr>" 
-                         +"<td>"+passenger.Name+"</td>"
-                         +"<td>"+passenger.Passport+"</td>"
-                         +"<td>"+DepartureStation[0].Name+"</td>"
-                         +"<td>"+JSON.stringify(ticket[0].Price).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")+"</td>"
+                         +"<td>"+ ticket[0].ID +"</td>"   
+                         +"<td>"+ passenger.Name+"</td>"
+                         +"<td>"+ passenger.Passport+"</td>"
+                         +"<td>"+ DepartureStation[0].Name+"</td>"
+                         +"<td>"+ JSON.stringify(ticket[0].Price).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")+"</td>"
                          +"</tr>"           
             if(index + 1 === array.length) {
                 listCustomer += "</table></body></html>";
                 resolve(html + bookingInformation + listCustomer);
             }
         })
+    })
+}
+
+
+module.exports.ChangeStatusTicket = function(req,res){
+    db.Ticket.update({
+        Status: STATUS["WAITING_CANCEL"],       
+    },
+    {where: {ID: req.query.TicketID},}).then(data => {
+        console.log("Ticket: " + JSON.stringify(data));
+        res.end(JSON.stringify({status: 200}))
     })
 }

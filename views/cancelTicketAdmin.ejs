@@ -4,14 +4,14 @@
 <head>
     <title>Admin | Canceled pending ticket</title>
 
-    <%- include('adminheader'); -%>
+    <%- include('adminHeader'); -%>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
     <div class="wrapper">
         <!-- Navbar -->
         <div id="sidebar">
-            <%- include('adminsidebar'); -%>
+            <%- include('adminSidebar', {Staff : data}); -%>
         </div>
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper p-4">
@@ -93,7 +93,7 @@
     <script src="../dist/axios.js"></script>
     <script src="../dist/sweetalert2.all.min.js"></script>
     <script src="../dist/moment.js"></script>
-    <script type="module" src="../dist/@TicketVue/cancelvue.js"></script>
+    <script type="module" src="../dist/@TicketVue/cancelVue.js"></script>
 </body>
 
 </html>

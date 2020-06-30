@@ -39,10 +39,21 @@ app.use(session({
     }
 }))
 
-
-
-
 app.get("/", function (req, res) {
+    var session_id = req.cookies.session_id;
+
+    if(session_id != "undefined"){
+        let data =  listSeatBlock.filter(x => {
+            return x.session_id != session_id;
+        })
+        let data2 = listSeatBlock.filter(x => {
+            return x.session_id == session_id;
+        })
+    
+        listSeatBlock = data;
+        res.cookie('session_id', req.session.id);
+    }
+
     res.render('index2');
 })
 
@@ -50,7 +61,7 @@ app.get("/passenger", function (req, res) {
     //console.log(req.headers.cookie.session_id);
     if (typeof (req.headers.cookie) == "undefined") {
         console.log("SessionID: " + req.session.id);
-        res.cookie('sesion_id', req.session.id);
+        
     }
 
     controller.passenger(req, res);
@@ -98,7 +109,7 @@ app.get("/getListSeatSold", function (req, res) {
 
 app.post("/createInfomation", function (req, res) {
     console.log("Type of: " + typeof (req.headers.cookie))
-    if (typeof (req.headers.cookie == "undefined")) {
+    if (typeof(req.headers.cookie) == "undefined") {
         console.log(req.headers.cookie);
         console.log("req.session.id: " + req.session.id);
         res.cookie('session_id', req.session.id)
@@ -109,9 +120,7 @@ app.post("/createInfomation", function (req, res) {
 app.get('/test', function (req, res) {
     res.render('test');
 })
-// app.get('/CheckLogin' , function(req,res){
-//     loginController.CheckLogin(req,res);
-// }) 
+
 app.get('/login', function (req, res) {
     res.render("login");
 })
@@ -185,33 +194,35 @@ app.get('/getAllScheduleDetailClient',function(req,res) {
 })
 //render
 app.get("/admin/dashboard", function (req, res) {
-    // loginController.CheckLogin().then(check => {
-    //     if (check) {
-    //         loginController.GetUserFromSession(req, res);
-    res.render('admin');
-    //     }
-    //     else {
-    //         res.render('login');
-    //     }
-    // })
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            var staffData = await loginController.GetUser(req);
+            res.render('admin', {data: staffData});
+        }
+        else {
+            res.render('login');
+        }
+    })
 })
 app.get("/abc", function (req, res) {
     managerCtrler.getListCusBySchedule(req, res)
 })
 app.get("/admin/customer", function (req, res) {
-    // loginController.CheckLogin().then(check => {
-    //     if (check) {
-    res.render('customeradmin');
-    //     }
-    //     else {
-    //         res.render('login');
-    //     }
-    // })
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            var staffData = await loginController.GetUser(req);
+            res.render('customerAdmin', {data: staffData});
+        }
+        else {
+            res.render('login');
+        }
+    })
 })
 app.get("/admin/station", function (req, res) {
-    loginController.CheckLogin().then(check => {
+    loginController.CheckLogin(req).then(async check => {
         if (check) {
-            res.render('stationadmin');
+            var staffData = await loginController.GetUser(req);
+            res.render('stationAdmin', {data: staffData});
         }
         else {
             res.render('login');
@@ -223,9 +234,13 @@ app.get("/getAllScheNoCond", function (req, res) {
     managerCtrler.getAllScheDetailWithNoCondition(req, res);
 })
 app.get("/admin/train", function (req, res) {
-    loginController.CheckLogin().then(check => {
+    loginController.CheckLogin(req).then(check => {
         if (check) {
-            res.render('trainadmin');
+            console.log(req);
+            loginController.GetUser(req).then(staffData => {
+                res.render('trainAdmin', {data: staffData});
+            });
+            
         }
         else {
             res.render('login');
@@ -233,9 +248,10 @@ app.get("/admin/train", function (req, res) {
     })
 })
 app.get("/admin/seat", function (req, res) {
-    loginController.CheckLogin().then(check => {
+    loginController.CheckLogin(req).then(async check => {
         if (check) {
-            res.render('seatadmin');
+            var staffData = await loginController.GetUser(req);
+            res.render('seatAdmin', {data : staffData});
         }
         else {
             res.render('login');
@@ -243,9 +259,10 @@ app.get("/admin/seat", function (req, res) {
     })
 })
 app.get("/admin/seattype", function (req, res) {
-    loginController.CheckLogin().then(check => {
+    loginController.CheckLogin(req).then(async check => {
         if (check) {
-            res.render('seattypeadmin');
+            var staffData = await loginController.GetUser(req);
+            res.render('seatTypeAdmin', {data: staffData});
         }
         else {
             res.render('login');
@@ -253,9 +270,10 @@ app.get("/admin/seattype", function (req, res) {
     })
 })
 app.get("/admin/carriage", function (req, res) {
-    loginController.CheckLogin().then(check => {
+    loginController.CheckLogin(req).then(async check => {
         if (check) {
-            res.render('carriageadmin');
+            var staffData = await loginController.GetUser(req);
+            res.render('carriageAdmin', {data: staffData});
         }
         else {
             res.render('login');
@@ -263,32 +281,72 @@ app.get("/admin/carriage", function (req, res) {
     })
 })
 app.get("/admin/schedule", function (req, res) {
-    // loginController.CheckLogin().then(check => {
-    //     if (check) {
-    res.render('scheduleadmin');
-    //     }
-    //     else {
-    //         res.render('login');
-    //     }
-    // })
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            var staffData = await loginController.GetUser(req);
+            res.render('scheduleAdmin', {data: staffData});
+        }
+        else {
+            res.render('login');
+        }
+    })
 })
 
 //action customer
 app.delete("/admin/customer", function (req, res) {
-    managerCtrler.delCustomerByID(req, res)
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            managerCtrler.delCustomerByID(req, res)
+        }
+        else {
+            res.redirect('/admin/customer');
+        }
+    })
+    
 });
 app.post("/admin/customer", function (req, res) {
-    managerCtrler.createCustomer(req, res);
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            managerCtrler.createCustomer(req, res);
+        }
+        else {
+            
+            res.redirect('/admin/customer');
+        }
+    })
+    
 })
 app.put("/admin/customer", function (req, res) {
-    managerCtrler.updateCustomer(req, res)
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            managerCtrler.updateCustomer(req, res);
+        }
+        else {
+            res.redirect('/admin/customer');
+        }
+    })
 })
 
 //action train
 app.get("/getTrain", function (req, res) {
-    managerCtrler.getTrainByID(req, res);
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            managerCtrler.getTrainByID(req, res);
+        }
+        else {
+            res.redirect('/admin/train');
+        }
+    })
 })
 app.post("/admin/train", function (req, res) {
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            managerCtrler.getTrainByID(req, res);
+        }
+        else {
+            res.redirect('/admin/train');
+        }
+    })
     managerCtrler.createTrain(req, res);
 })
 app.delete("/admin/train", function (req, res) {
@@ -311,24 +369,26 @@ app.put("/admin/carriage", function (req, res) {
 
 //test print
 app.get("/admin/ticket", function (req, res) {
-    // loginController.CheckLogin().then(check => {
-    //     if (check) {
-    res.render('ticketadmin');
-    //     }
-    //     else {
-    //         res.render('login');
-    //     }
-    // })
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            var staffData = await loginController.GetUser(req);
+            res.render('ticketAdmin', {data : staffData});
+        }
+        else {
+            res.render('login');
+        }
+    })
 })
 app.get("/admin/cancelticket", function (req, res) {
-    // loginController.CheckLogin().then(check => {
-    //     if (check) {
-    res.render('cancelticketadmin');
-    //     }
-    //     else {
-    //         res.render('login');
-    //     }
-    // })
+    loginController.CheckLogin(req).then(async check => {
+        if (check) {
+            var staffData = await loginController.GetUser(req);
+            res.render('cancelTicketAdmin', {data: staffData});
+        }
+        else {
+            res.render('login');
+        }
+    })
 })
 app.put("/cancelTicketWithMail", function (req, res) {
     managerCtrler.cancelTicket(req, res)
@@ -357,6 +417,7 @@ var io = io.on('connection', (socket) => {
         //console.log(listSeatBlock.length)
         io.emit('response_unblock', listSeatBlock.shift());
     }, 900000)
+
     socket.on('changeStatus', (data) => {
         var check = false;
         listSeatBlock.forEach(seat => {
@@ -406,6 +467,7 @@ var io = io.on('connection', (socket) => {
         }
     })
 });
+
 app.get("/getAllScheduleDetail", function (req, res) {
     managerCtrler.getAllScheduleDetail(req, res)
 })
@@ -431,6 +493,10 @@ process.on("unhandledRejection", function (reason, p) {
     console.log("Unhandled Rejection:", reason.stack);
     //process.exit(1);
 });
+
+app.get('/changeStatus', (req,res) => {
+    controller.ChangeStatusTicket(req,res);
+})
 
 http.listen(port, function () {
     console.log("Run on port " + port);
