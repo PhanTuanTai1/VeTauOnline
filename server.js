@@ -1,5 +1,4 @@
 var express = require("express");
-var config = require("./config/connectionString");
 var controller = require("./controller/indexController");
 var managerCtrler = require("./controller/managerController");
 var loginController = require("./controller/loginController");
@@ -112,7 +111,7 @@ app.get('/test', function (req, res) {
 })
 // app.get('/CheckLogin' , function(req,res){
 //     loginController.CheckLogin(req,res);
-// })
+// }) 
 app.get('/login', function (req, res) {
     res.render("login");
 })
@@ -173,6 +172,17 @@ app.get("/getAllSchedule", function (req, res) {
     managerCtrler.getAllSchedule(req, res)
 })
 
+app.get('/listFare',function(req,res){
+    res.render('listFare');
+})
+
+app.get('/getAllScheduleClient',function(req,res) {
+    controller.GetAllSchedule(req,res);
+})
+
+app.get('/getAllScheduleDetailClient',function(req,res) {
+    controller.GettAllScheduleDetailByID(req,res);
+})
 //render
 app.get("/admin/dashboard", function (req, res) {
     // loginController.CheckLogin().then(check => {

@@ -1,4 +1,8 @@
-new Vue({
+function Cancel(object, TicketID){
+    vm.changeStatus(object, TicketID);
+}
+
+var vm = new Vue({
     el: '#app',
     created: async function(){
         await axios.get('/getAllStation').then(res => {
@@ -23,7 +27,8 @@ new Vue({
         status: {
             1: "NOT PRINT",
             2: "PRINTED",
-            3: "CANCEL"
+            3: "CANCEL",
+            4: "WAITING CANCEL"
         }
     },
     methods: {
@@ -66,6 +71,11 @@ new Vue({
             })
             //alert(JSON.stringify(result));
             return result[0].TypeObjectName;
+        },
+
+        changeStatus(object, TicketID){
+            var DOM = $(object);
+            alert(TicketID);
         }
     }
 })
