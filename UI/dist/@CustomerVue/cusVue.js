@@ -1,4 +1,4 @@
-
+Vue.use(VueLoading);
 
 new Vue({
   el: "#app",
@@ -33,6 +33,10 @@ new Vue({
     }
   },
   mounted: function () {
+    let loader = this.$loading.show({
+      loader: 'dots'
+    });
+    setTimeout(() => loader.hide(), 1.5 * 1000)
     $("#menucustomer").addClass("active");
   },
   methods: {

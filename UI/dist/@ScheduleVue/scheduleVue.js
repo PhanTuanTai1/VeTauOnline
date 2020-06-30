@@ -1,4 +1,4 @@
-
+Vue.use(VueLoading);
 new Vue({
   el: "#app",
   created: function () {
@@ -266,6 +266,10 @@ new Vue({
 
   },
   mounted: function () {
+    let loader = this.$loading.show({
+      loader: 'dots'
+    });
+    setTimeout(() => loader.hide(), 1.5 * 1000)
     $("#menuschedule").addClass("active");
     $(document).on("change", "#from", async function () {
       let fromID = $("#from").val();
