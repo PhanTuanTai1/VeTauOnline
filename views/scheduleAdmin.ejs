@@ -61,9 +61,11 @@
                                     <td>{{new Date(item.DateDeparture).toDateString()}}</td>
                                     <td>{{formatTime(item.TimeDeparture)}}</td>
                                     <td>{{item.Train.Name}}</td>
-                                    <td class="text-right"><button type="button" class="btn btn-danger"
+                                    <td class="text-right">
+                                        <button v-bind:id="item.ID" type="button" class="btn btn-danger del"
                                             @click="delSchedule(item.ID,index)"><i class="fa fa-trash"></i>
                                             Delete</button>
+                                        <!-- <button @click="checkAbleDel(item.ID,this)">abc</button> -->
                                         <button type="button" class="btn btn-info" @click="viewDetail(item.ID)"><i
                                                 class="fa fa-info"></i> View detail</button></td>
                                 </tr>

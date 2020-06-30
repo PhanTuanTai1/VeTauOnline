@@ -46,16 +46,16 @@ new Vue({
     abc() {
       let id = $("#select").val();
       axios.get(window.origin + '/abc?scheID=' + id).then(res => {
-        if (res != null) {
+        if (res.data.length != 0) {
           this.Customers = [];
           this.Customers = res.data;
           $("#count p").text('');
           $("#count p").text(`Total ${(res.data).length} customer(s) on this schedule...`);
         }
         else {
-          this.Customers = null
+          this.Customers = [];
           $("#count p").text('');
-          $("#count p").text("<p>0</p>");
+          $("#count p").text("No customers on this schedule");
         }
       })
     },

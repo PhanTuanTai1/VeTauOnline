@@ -29,6 +29,7 @@ new Vue({
     formatTime(Time) {
       return moment(Time).subtract(7, 'hour').format('HH:mm');
     },
+
     async viewDetail(IDinput) {
       let detail = (await axios.get(window.origin + '/getAllScheduleDetail?ScheduleID=' + IDinput)).data;
       let sch = this.Schedules.find(x => x.ID == IDinput);
@@ -298,5 +299,14 @@ new Vue({
   },
   updated: function () {
     $("#myTable").DataTable();
+    this.Schedules.map(async sche => {
+      let detail = (await axios.get(window.origin + '/getAllScheduleDetail?ScheduleID=' + sche.ID).then(res => { return res })).data;
+      detail.map(async de => {
+        let temp = await (await axios.get(window.origin + '/abc?scheID=' + de.ID)).data;
+        if (temp.length != 0) {
+          $(`#${sche.ID}`).prop('disabled', true);
+        }
+      })
+    })
   }
 })
