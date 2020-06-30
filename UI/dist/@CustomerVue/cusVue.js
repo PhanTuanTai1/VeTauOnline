@@ -22,7 +22,10 @@ new Vue({
     mainSchedule: null,
   },
   updated: function () {
-    $("#myTable").DataTable();
+    $("#myTable").DataTable({
+      "retrieve": true,
+      "info": false
+    });
     $("#select").select2({
       theme: "classic",
     });
@@ -46,9 +49,13 @@ new Vue({
         if (res != null) {
           this.Customers = [];
           this.Customers = res.data;
+          $("#count p").text('');
+          $("#count p").text(`Total ${(res.data).length} customer(s) on this schedule...`);
         }
         else {
           this.Customers = null
+          $("#count p").text('');
+          $("#count p").text("<p>0</p>");
         }
       })
     },
