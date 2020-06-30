@@ -15,6 +15,9 @@ new Vue({
         $("#myTable").DataTable();
 
         console.log(this.Seats.find(x => x.CarriageID == null))
+    },
+    mounted: function () {
+        $("#menuseat").addClass("active");
     }
 
 })

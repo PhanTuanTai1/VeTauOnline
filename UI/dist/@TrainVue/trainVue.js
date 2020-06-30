@@ -163,5 +163,8 @@ new Vue({
   },
   updated: function () {
     $("#myTable").DataTable();
+  },
+  mounted: function () {
+    $("#menutrain").addClass("active");
   }
 })

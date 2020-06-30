@@ -166,18 +166,6 @@ new Vue({
             Swal.showValidationMessage('Train name can not be empty!');
             return;
           }
-          // let lengthArr = [];
-          // let sch = this.Schedules.filter(x => x.TrainID == document.getElementById('train').value);
-          // sch.map(x => {
-          //   // detailList.filter(detail => detail.ScheduleID == x.ID).map(data => {
-          //   //   lengthArr.push(new Date(moment(x.DateDeparture).add((data.Length / 60), "hours")).getTime());
-          //   // })
-          //   lengthArr.push(Math.max(detailList.filter(de => de.SchduleID == x.ID).map(data => data)));
-
-          // });
-
-          // console.log(new Date(document.getElementById('date').value).getTime());
-          // console.log(lengthArr);
           if (document.getElementById('from').value == "") {
             Swal.showValidationMessage('Please select Departure station!');
             return;
@@ -198,6 +186,20 @@ new Vue({
             Swal.showValidationMessage('Date can not be the past!');
             return;
           }
+          let trainExistArr = this.Schedules.filter(x => x.TrainID == document.getElementById('train').value);
+          trainExistArr.map(async train => {
+            let start = (new Date(train.DateDeparture)).getTime();
+            let a = await (await axios.get(window.origin + "/getAllScheduleDetail?ScheduleID=" + train.ID)).data;
+            if (a != null) {
+              a.map(e => {
+                if ((new Date(document.getElementById('date').value).getTime()) >= start && (new Date(document.getElementById('date').value).getTime()) <= (new Date((moment(start).add(e.Time, "hours"))).getTime())) {
+                  Swal.showValidationMessage(`This train ${$("#train option:selected").text()} is on duty this date`);
+                  return;
+                }
+              })
+            }
+            console.log(start)
+          });
           // if ((new Date(document.getElementById('date').value).getTime()) >= Math.max(lengthArr)) {
           //   Swal.showValidationMessage('This train is busy on this date!')
           // }
@@ -264,6 +266,7 @@ new Vue({
 
   },
   mounted: function () {
+    $("#menuschedule").addClass("active");
     $(document).on("change", "#from", async function () {
       let fromID = $("#from").val();
       let toID = $("#to").val();
