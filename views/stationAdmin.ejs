@@ -4,14 +4,14 @@
 <head>
     <title>Admin | Station</title>
 
-    <%- include('adminheader'); -%>
+    <%- include('adminHeader'); -%>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
     <div class="wrapper">
         <!-- Navbar -->
         <div id="sidebar">
-            <%- include('adminsidebar'); -%>
+            <%- include('adminSidebar', {Staff : data}); -%>
         </div>
 
         <!-- Content Wrapper. Contains page content -->
@@ -61,7 +61,7 @@
 
         <!-- Main Footer -->
         <footer>
-            <%- include('adminfooter'); -%>
+            <%- include('adminFooter'); -%>
         </footer>
     </div>
 

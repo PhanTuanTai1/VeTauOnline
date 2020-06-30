@@ -29,7 +29,7 @@
     <link rel="stylesheet" type="text/css" href="../vendor/owl-carousel2/owl.theme.default.css">
     <link rel="stylesheet" type="text/css" href="../vendor/lightgallery/lightgallery.css">
     <link rel="stylesheet" type="text/css" href="../dist/baolau.min6ffc.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../dist/css/DataTables-1.10.21/css/jquery.dataTables.min.css"/>
     <!-- jQuery -->
     <script type="text/javascript" src="../vendor/js/jquery.min.js"></script>
 </head>
@@ -37,44 +37,10 @@
 <body>
 <!-- Sidebar Content -->
 
-<section class="left side-nav">
-    <button type="button" class="close visible-xs visible-sm">&times;</button>
-    <nav class="mobile-nav-links links">
-        <ul>
-            <li><a class="active" href="index.html">HOME</a></li>
-
-                            <li>
-                    <a href="destinations.html">Destinations</a>
-                </li>
-            
-            
-                            <li><a href="https://www.baolau.vn/en/manage" target="_blank">MANAGE BOOKING</a></li>
-            
-                            <li><a  href="agent.html">AGENT</a></li>
-                            <li><a  href="affiliate.html">AFFILIATE</a></li>
-                            <li><a  href="help.html">HELP</a></li>
-            
-            
-            <li style="margin-bottom: 40px"><a href="index.html#Contact_popup" data-toggle="modal">CONTACT US</a></li>
-
-            <!-- Mobile language -->
-                            <li class="visible-xs visible-sm">
-                    <a class="subnav" href="#"><div class="language-flag en"></div> English</a>
-                    <ul>
-                                                                                                            <li><a href="../es/index.html"><div class="language-flag es"></div> Español</a></li>
-                                                                               <li><a href="../fr/index.html"><div class="language-flag fr"></div> Français</a></li>
-                                                                               <li><a href="../vi/index.html"><div class="language-flag vi"></div> Tiếng Việt</a></li>
-                                                                                                                                                                                               <li><a href="../th/index.html"><div class="language-flag th"></div> ไทย</a></li>
-                                           </ul>
-                </li>
-            
-            <!-- Mobile currency -->
-                     </ul>
-    </nav>
-</section><!--End side-menu-left-->
+<%- include('section')%>
 
 <!---------------------------END Mobile Sidebar Content-------------------------------------->
-<!-- <div id="waiting_overlay" style="display:block;background-color: lightgoldenrodyellow;">
+<div id="waiting_overlay" style="display:block;background-color: lightgoldenrodyellow;">
     <div class="container">
         <h2 style="color: #fff; text-transform: uppercase;" id="waiting_text1" class="refrigerator"></h2>
         <span id="waiting_text2" class="big-big-text"></span>
@@ -86,48 +52,13 @@
         <br>
         <img src="../images/genaral/244.gif" style="width:100px">
     </div>
-</div> -->
+</div>
 <div id="menu_overlay"></div>
 
 <div id="main_container" >
 <div class="filter">
 <div class="global-wrap">
-<header id="main-header" class="header">
-    <div class="header-bar" >
-        <!-- Mobile Menu -->
-        <div class="row mobile-header hidden-lg hidden-md">
-            <div class="container">
-                
-                                <a class="mobile-logo" href="index.html" target="_top">
-                    <!-- <img src="../images/logos/baolau/logo_color.svg" /> -->
-                </a>
-                
-                
-                
-                                    <a class="btn-user pull-left" href="#login_popup" data-toggle="modal">
-                        <img src="../images/avatars/profile-yellow.png"/>
-                    </a>
-                
-                                    <a class="btn-menu pull-right" href="#">
-                        <i class="fa fa-bars"></i>
-                    </a>
-                             </div>
-        </div>
-                  <!-- DESKTOP MANAGE BOOKING -->
-                                    <div style="padding: 0 25px;" class="sidebar-menu-style pull-right hidden-sm hidden-xs">
-                        <a href="https://www.baolau.vn/en/manage" target="_blank">
-                            <i style="padding-right: 5px" class="fa fa-file-text" aria-hidden="true"></i>
-                            Manage booking                        </a>
-                    </div>
-                <!-- DESKTOP DESTINATIONS -->
-                                    <div style="padding: 0 25px;" class="sidebar-menu-style pull-right hidden-sm hidden-xs">                        
-                        <a href="destinations.html">
-                        	<i style="padding-right: 5px" class="fa fa-map-signs" aria-hidden="true"></i> 
-                        	Destinations                        </a>
-                    </div>
-                            </div><!-- sidebar-menu -->
-            </div><!-- END sub-header -->
-</header>
+    <%- include('sectionDesktop')%>
 
 <div id="app" class="subpage">
     <div class="panel-dark">
@@ -245,107 +176,7 @@
 
 
 <!-- FOOTER -->
-<footer class="main-footer">
-    
-<div class="gap gap-section hidden-sm hidden-xs"></div>
-<div class="gap gap-small hidden-lg hidden-md"></div>
-<div class="container">
-    <div class="row mobile-text-center">
-        <div class="col-md-3 col-sm-12">
-            <div class="footer-title">
-                Information            </div>
-            <br>
-            <div class="footer-link">
-                <ul>
-                    <li><a href="about.html">About Us</a></li>
-                    <li><a href="help.html">Help</a></li>
-                    <li><a href="https://www.baolau.com/blog">Blog</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="visible-sm visible-xs col-sm-12" style="height: 25px"></div>
-        <div class="col-md-3 col-sm-12">
-            <div class="footer-title">
-                 Terms and Conditions             </div>
-             <br>
-             <div class="footer-link">
-                <ul>
-                    <li><a href="legal/index.html#privacy-policy">Privacy Policy</a></li>
-                    <li><a href="legal/index.html#terms-of-use">Terms of Use</a></li>
-                                    </ul>
-            </div>
-        </div>
-        <div class="visible-sm visible-xs col-sm-12" style="height: 25px"></div>
-        <div class="col-md-3 col-sm-12">
-             <div class="footer-title">
-                 Work With Us             </div>
-             <br>
-             <div class="footer-link">
-                <ul>
-                    <li><a href="agent.html">Agent</a></li>
-                    <li><a style="border:none" href="affiliate.html">Affiliate</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="visible-sm visible-xs col-sm-12" style="height: 25px"></div>
-        <div class="col-md-3 col-sm-12">
-            <div class="footer-title">
-                 Follow Us             </div>
-             <br>
-             <a href="https://twitter.com/baolau" target="_blank" class="Socail-twitter-animate box-icon-normal img-circle"></a>&nbsp;
-        </div>
-    </div>
-</div>
-    <div style="border-top: 1px solid #282c2c;margin: 15px 0 30px 0;"></div>
-    <div class="container">
-        <div class="row mobile-text-center">
-            <div class="col-md-3 col-sm-12">
-                <!-- <img style="width: 120px" src="../images/logos/baolau/logo_white.svg"></img> -->
-            </div>
-            <div class="visible-sm visible-xs col-sm-12" style="height: 25px"></div>
-            <div class="col-md-3 col-sm-12">
-                 
-                    <div class="footer-title">
-                         Company                     </div>
-                     <br>
-                     <span class="bold">Baolau Pte. Ltd, 201434204K, Singapore 
-                     <br>
-                     <span class="bold">Baolau Co. Ltd, 0313838015, Vietnam                     <br>
-                     <span class="bold">Baolau Pte. Ltd, 0100561101255, Thailand 
-                     <br>
-                     <span class="bold">Boeki Up, Japan 
-                 
-            </div>
-            <div class="visible-sm visible-xs col-sm-12" style="height: 25px"></div>
-            <div class="col-md-3 col-sm-12">
-                 <div class="footer-title">
-                     Contact Us                 </div>
-                 <br>
-                <div class="small-text">
-                                            <button style="background:none;" type="button" class="btn-contact super-bold" data-toggle="modal" data-target="#Contact_popup" data-whatever="@getbootstrap"><a href="../cdn-cgi/l/email-protection.html" class="__cf_email__" data-cfemail="87e4e8e9f3e6e4f3c7e5e6e8ebe6f2a9e4e8ea">[email&#160;protected]</a></button>
-                                    </div>
-            </div>
-            <div class="visible-sm visible-xs col-sm-12" style="height: 25px"></div>
-            <div class="col-md-3 col-sm-12">
-                 <div class="footer-title">
-                    Call center
-                 </div>
-                 <br>
-                 <div><i style="padding-right: 5px" class="fa fa-phone"></i><span class="bold">‎(+84) 28 777 222 77</span></div>
-                 <div style="padding-top: 5px"><i style="padding-right: 5px" class="fa fa-phone"></i><span class="bold">‎(+66) 662 026 1730</div>
-                 <div style="padding-top: 5px"><i style="padding-right: 5px" class="fa fa-clock-o"></i><span class='bold'>Monday to Sunday, 08:00-22:00 (ICT)</span></div>
-            </div>
-        </div>
-    </div>
-    <div style="border-top: 1px solid #282c2c;margin: 20px 0 25px 0;"></div>
-    <div class="container">
-        <div style="padding-bottom: 25px;white-space: normal;" class="footer-logo payment text-center">
-            <div style="margin-bottom: 15px" class="bold">We accept payments with Visa, MasterCard, American Express, JCB, UnionPay and Alipay.</div>
-                        <div style="margin-top: 20px" class="text-center">© 2013-2020 — All rights reserved</div>
-        </div>
-    </div>
-         
-</footer>
+<%- include('footer')%>
 <!-- END FOOTER -->
 
 </div>
@@ -371,7 +202,7 @@
     <!-- <script src="../dist/myVue5.js"></script>	 -->
     <script type="text/javascript" src="../dist/baolau.min6ffc.js"></script>
     <script type="text/javascript" src="../dist/listScheduleDetailVue.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>   
+    <script type="text/javascript" src="../dist/js/jquery.dataTables.js"></script>    
     <script>
         window.onunload = () => {
             $("#table_id").DataTable();

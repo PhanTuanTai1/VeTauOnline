@@ -1,5 +1,13 @@
-function Cancel(object, TicketID){
-    vm.changeStatus(object, TicketID);
+function Cancel(object, TicketID, index){
+    vm.changeStatus(object, TicketID, index);
+}
+
+function CancelTicket(){
+    vm.CancelTicket();
+}
+
+function ClearData(){
+    vm.ClearData();
 }
 
 var vm = new Vue({
@@ -29,7 +37,8 @@ var vm = new Vue({
             2: "PRINTED",
             3: "CANCEL",
             4: "WAITING CANCEL"
-        }
+        },
+        tempData: null
     },
     methods: {
         loadData: function(){
@@ -73,9 +82,35 @@ var vm = new Vue({
             return result[0].TypeObjectName;
         },
 
-        changeStatus(object, TicketID){
-            var DOM = $(object);
-            alert(TicketID);
+        changeStatus(object, TicketID, index){
+            $("#confirm").modal({
+                fadeDuration: 100
+            });
+            
+            //alert(JSON.stringify(DOM));
+            var data = {
+                TicketID: TicketID,
+                index: index
+
+            }
+            
+            this.tempData = data;
+        },
+
+        CancelTicket(){
+            var lstBtn = document.getElementsByName('btnCancel');
+            var parent = document.getElementById("parent" + this.tempData.index);
+            axios.get('/changeStatus?TicketID=' + this.tempData.TicketID).then(res => {
+                parent.removeChild(lstBtn[this.tempData.index]);
+                var StatusTicketGroup = document.getElementsByName("StatusTicket");
+                StatusTicketGroup[this.tempData.index].innerHTML = this.status[4];
+                $('#confirm').modal('hide');
+            })
+        },
+
+        ClearData(){
+            this.tempData = null;
+            $('#confirm').modal('hide');
         }
     }
 })

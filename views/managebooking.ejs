@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <meta name="author" content="Baolau">
     
-    <title>Search and book flights, trains, buses and ferries in Asia – Baolau</title>
+    <title>Train Ticket Online VN | Manage Booking</title>
     <meta name="description" content="Information and ticket booking service for travelling in China, Vietnam, Cambodia, Laos, Thailand, Myanmar, Malaysia, Philippines and Indonesia. Find schedules and fares, book flights, trains, buses and ferries."/>
     <meta name="keywords" content="flights, cheap flights, flights to hanoi, flights to bangkok, flights to saigon, book train ticket, book train ticket online, train to sapa, train to hanoi, train to saigon, train to bangkok, train to chiang mai, bus ticket, book bus ticket online, buy bus ticket online, bus ticket to hanoi, bus ticket to saigon"/>
     
@@ -88,7 +88,35 @@
     </div>
 </div>
 <div id="menu_overlay"></div>
-
+<div id="confirm" class="modal fade">
+        
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+           <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body text-center">
+               <div class="gap gap-super-small"></div>
+                <div style="letter-spacing: 3px; margin: -30px 0 35px;" class="refrigerator uppercase yellow-text super-big-text">
+                    Confirm                    </div>
+                <div class="gap gap-small"></div>
+                <div class="message" style="letter-spacing: 1px; color: #f5f5f5" class="message big-text italic">
+                    Are you sure you want to cancel this ticket ?
+                </div>
+                <div style="margin-top: 10px;">
+                    <button class="btn btn-default" style="background-color: red;" onclick="CancelTicket()">Yes</button>
+                    <button class="btn btn-default" onclick="ClearData()">No</button>
+                </div>
+            </div><!-- /.modal-content -->
+            
+            <div class="gap gap-super-small"></div>
+            <div>
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
 <div id="main_container" >
 <div class="filter">
 <div class="global-wrap">
@@ -225,18 +253,28 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <%result.Customers.forEach(customer =>{%>
-                                    <tr>
-                                        <td><%=customer.Name%></td>
-                                        <td name="TypeObjectID" data-id="<%=customer.TypeObjectID%>"><%=customer.TypeObjectID%></td>
-                                        <td><%=customer.Passport%></td>
-                                        <td name="DepartureStationID" data-id="<%=customer.Ticket.DepartureStationID%>"><%=customer.Ticket.DepartureStationID%></td>
-                                        <td name="ArrivalStationID" data-id="<%=customer.Ticket.ArrivalStationID%>"><%=customer.Ticket.ArrivalStationID%></td>
-                                        <td><%=JSON.stringify(customer.Ticket.Price).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%> VND%></td>
-                                        <td name="StatusTicket" data-status="<%=customer.Ticket.Status%>"><%=customer.Ticket.Status%></td>
-                                        <td style="text-align: center;"><input style="background-color: red;" type="button" value="Cancel" class="btn btn-danger" onclick="Cancel(this, '<%=customer.Ticket.ID%>')"/></td>
-                                    </tr>
-                                <%})%>
+                                <%var index = 0%>
+                                <%for(var i = 0; i < result.Customers.length; i++){%>
+                                    <%for(var j = 0; j < result.Customers[i].Tickets.length;j++){%>
+                                        <tr>
+                                            <td><%=result.Customers[i].Name%></td>
+                                            <td name="TypeObjectID" data-id="<%=result.Customers[i].TypeObjectID%>"><%=result.Customers[i].TypeObjectID%></td>
+                                            <td><%=result.Customers[i].Passport%></td>
+                                            <td name="DepartureStationID" data-id="<%=result.Customers[i].Tickets[j].DepartureStationID%>"><%=result.Customers[i].Tickets[j].DepartureStationID%></td>
+                                            <td name="ArrivalStationID" data-id="<%=result.Customers[i].Tickets[j].ArrivalStationID%>"><%=result.Customers[i].Tickets[j].ArrivalStationID%></td>
+                                            <td><%=JSON.stringify(result.Customers[i].Tickets[j].Price).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%> VND%></td>
+                                            <td name="StatusTicket" data-status="<%=result.Customers[i].Tickets[j].Status%>"><%=result.Customers[i].Tickets[j].Status%></td>
+                                            <%if(result.Customers[i].Tickets[j].Status == 1 ){%>
+                                            <td id="parent<%=index%>" style="text-align: center;"><input style="background-color: red;" type="button" value="Cancel" class="btn btn-danger" name="btnCancel" onclick="Cancel(this, '<%=result.Customers[i].Tickets[j].ID%>', '<%=index%>')"/></td>
+                                            <%index++%>
+                                            <%}else{%>
+                                                <td></td>
+                                            <%}%>
+                                        </tr>
+                                        
+                                    <%}%>
+                                <%}%>
+                                
                             </tbody>
                         </table>
                     </div>
@@ -251,114 +289,7 @@
 
 
 <!-- FOOTER -->
-<footer class="main-footer">
-    
-<div class="gap gap-section hidden-sm hidden-xs"></div>
-<div class="gap gap-small hidden-lg hidden-md"></div>
-<div class="container">
-    <div class="row mobile-text-center">
-        <div class="col-md-3 col-sm-12">
-            <div class="footer-title">
-                Information            </div>
-            <br>
-            <div class="footer-link">
-                <ul>
-                    <li><a href="about.html">About Us</a></li>
-                    <li><a href="help.html">Help</a></li>
-                    <li><a href="https://www.baolau.com/blog">Blog</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="visible-sm visible-xs col-sm-12" style="height: 25px"></div>
-        <div class="col-md-3 col-sm-12">
-            <div class="footer-title">
-                 Terms and Conditions             </div>
-             <br>
-             <div class="footer-link">
-                <ul>
-                    <li><a href="legal/index.html#privacy-policy">Privacy Policy</a></li>
-                    <li><a href="legal/index.html#terms-of-use">Terms of Use</a></li>
-                                    </ul>
-            </div>
-        </div>
-        <div class="visible-sm visible-xs col-sm-12" style="height: 25px"></div>
-        <div class="col-md-3 col-sm-12">
-             <div class="footer-title">
-                 Work With Us             </div>
-             <br>
-             <div class="footer-link">
-                <ul>
-                    <li><a href="agent.html">Agent</a></li>
-                    <li><a style="border:none" href="affiliate.html">Affiliate</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="visible-sm visible-xs col-sm-12" style="height: 25px"></div>
-        <div class="col-md-3 col-sm-12">
-            <div class="footer-title">
-                 Follow Us             </div>
-             <br>
-             <a href="https://twitter.com/baolau" target="_blank" class="Socail-twitter-animate box-icon-normal img-circle"></a>&nbsp;
-        </div>
-    </div>
-</div>
-    <div style="border-top: 1px solid #282c2c;margin: 15px 0 30px 0;"></div>
-    <div class="container">
-        <div class="row mobile-text-center">
-            <div class="col-md-3 col-sm-12">
-                <!-- <img style="width: 120px" src="../images/logos/baolau/logo_white.svg"></img> -->
-            </div>
-            <div class="visible-sm visible-xs col-sm-12" style="height: 25px"></div>
-            <div class="col-md-3 col-sm-12">
-                 
-                    <div class="footer-title">
-                         Company                     </div>
-                     <br>
-                     <span class="bold">Baolau Pte. Ltd, 201434204K, Singapore 
-                     <br>
-                     <span class="bold">Baolau Co. Ltd, 0313838015, Vietnam                     <br>
-                     <span class="bold">Baolau Pte. Ltd, 0100561101255, Thailand 
-                     <br>
-                     <span class="bold">Boeki Up, Japan 
-                 
-            </div>
-            <div class="visible-sm visible-xs col-sm-12" style="height: 25px"></div>
-            <div class="col-md-3 col-sm-12">
-                 <div class="footer-title">
-                     Contact Us                 </div>
-                 <br>
-                <div class="small-text">
-                                            <button style="background:none;" type="button" class="btn-contact super-bold" data-toggle="modal" data-target="#Contact_popup" data-whatever="@getbootstrap"><a href="../cdn-cgi/l/email-protection.html" class="__cf_email__" data-cfemail="87e4e8e9f3e6e4f3c7e5e6e8ebe6f2a9e4e8ea">[email&#160;protected]</a></button>
-                                    </div>
-            </div>
-            <div class="visible-sm visible-xs col-sm-12" style="height: 25px"></div>
-            <div class="col-md-3 col-sm-12">
-                 <div class="footer-title">
-                    Call center
-                 </div>
-                 <br>
-                 <div><i style="padding-right: 5px" class="fa fa-phone"></i><span class="bold">‎(+84) 28 777 222 77</span></div>
-                 <div style="padding-top: 5px"><i style="padding-right: 5px" class="fa fa-phone"></i><span class="bold">‎(+66) 662 026 1730</div>
-                 <div style="padding-top: 5px"><i style="padding-right: 5px" class="fa fa-clock-o"></i><span class='bold'>Monday to Sunday, 08:00-22:00 (ICT)</span></div>
-            </div>
-        </div>
-    </div>
-    <div style="border-top: 1px solid #282c2c;margin: 20px 0 25px 0;"></div>
-    <div class="container">
-        <div style="padding-bottom: 25px;white-space: normal;" class="footer-logo payment text-center">
-            <div style="margin-bottom: 15px" class="bold">We accept payments with Visa, MasterCard, American Express, JCB, UnionPay and Alipay.</div>
-            <!-- <img src="../images/footer/payments/visa.svg"></img>
-            <img src="../images/footer/payments/mastercard.svg"></img>
-            <img src="../images/footer/payments/amex.svg"></img>
-                               
-                <img src="../images/footer/payments/jcb.svg"></img>
-                <img src="../images/footer/payments/unionpay.svg"></img>
-                <img style="margin-bottom: 2px" src="../images/footer/payments/alipay.svg"></img> -->
-                        <div style="margin-top: 20px" class="text-center">© 2013-2020 — All rights reserved</div>
-        </div>
-    </div>
-         
-</footer>
+<%- include('footer')%>
 <!-- END FOOTER -->
 
 </div>

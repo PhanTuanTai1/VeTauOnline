@@ -3,11 +3,11 @@ new Vue({
   el: "#app",
   created: function () {
     axios.get(window.origin + '/getAllSchedule').then(res => { this.Schedules = res.data })
-    axios.get('http://localhost:3000/getAllSta')
+    axios.get('/getAllSta')
       .then(res => {
         this.Stations = res.data;
       })
-    axios.get('http://localhost:3000/getAllTrain')
+    axios.get('/getAllTrain')
       .then(res => {
         this.Trains = res.data;
       })

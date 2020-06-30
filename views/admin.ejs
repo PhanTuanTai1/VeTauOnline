@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <%- include('adminheader') %>
+  <%- include('adminHeader') %>
   <title>Admin Dashboard</title>
 </head>
 
@@ -10,7 +10,7 @@
   <div class="wrapper">
     <!-- Navbar -->
     <div>
-      <%- include('adminsidebar') %>
+      <%- include('adminSidebar', {Staff: data}) %>
     </div>
 
     <!-- Content Wrapper. Contains page content -->
