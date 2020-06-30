@@ -1,3 +1,4 @@
+Vue.use(VueLoading);
 new Vue({
     el: "#app",
     created: function () {
@@ -57,6 +58,10 @@ new Vue({
 
     },
     mounted: async function () {
+        let loader = this.$loading.show({
+            loader: 'dots'
+        });
+        setTimeout(() => loader.hide(), 1.5 * 1000)
         const countTickByMonth = [];
         const countTickByStatus = [];
         const priceMonth = [];

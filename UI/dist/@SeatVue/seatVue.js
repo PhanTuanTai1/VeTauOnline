@@ -1,3 +1,4 @@
+Vue.use(VueLoading);
 new Vue({
     el: "#app",
     created: function () {
@@ -12,11 +13,15 @@ new Vue({
 
     },
     updated: function () {
+        let loader = this.$loading.show({
+            loader: 'dots'
+        });
+        setTimeout(() => loader.hide(), 1.5 * 1000)
         $("#myTable").DataTable();
 
-        console.log(this.Seats.find(x => x.CarriageID == null))
     },
     mounted: function () {
+
         $("#menuseat").addClass("active");
     }
 
