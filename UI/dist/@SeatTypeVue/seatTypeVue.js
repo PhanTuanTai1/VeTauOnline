@@ -13,5 +13,8 @@ new Vue({
     },
     updated: function () {
         $("#myTable").DataTable();
+    },
+    mounted: function () {
+        $("#menuseattype").addClass("active");
     }
 })

@@ -366,8 +366,10 @@ new Vue({
     },
     updated: function () {
         $("#myTable").DataTable();
-
     },
+    mounted: function () {
+        $("#menuticket").addClass("active");
+    }
     // mounted: function () {
     //     window.Vue.use(VuejsDialog.main.default)
     //     $(document).on("click", "#cancelTick", function () {

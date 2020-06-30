@@ -14,6 +14,9 @@ new Vue({
   },
   updated: function () {
     $("#myTable").DataTable();
+  },
+  mounted: function () {
+    $("#menustation").addClass("active");
   }
 
 })

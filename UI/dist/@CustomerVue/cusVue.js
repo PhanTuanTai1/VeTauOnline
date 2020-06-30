@@ -32,6 +32,9 @@ new Vue({
       return this.Customers;
     }
   },
+  mounted: function () {
+    $("#menucustomer").addClass("active");
+  },
   methods: {
     abc() {
       let id = $("#select").val();
