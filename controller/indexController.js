@@ -410,7 +410,8 @@ module.exports.passenger = function (req, res) {
                     DEPART: req.query.DEPART,
                     ONE_WAY: req.query.ONE_WAY,
                     ROUND_TRIP: req.query.ROUND_TRIP,
-                    query: req.query.Query
+                    query: req.query.Query,
+                    duration: Duration
                 })
             })
         }
@@ -426,7 +427,8 @@ module.exports.passenger = function (req, res) {
                 DEPART: req.query.DEPART,
                 ONE_WAY: req.query.ONE_WAY,
                 ROUND_TRIP: req.query.ROUND_TRIP,
-                query: req.query.Query
+                query: req.query.Query,
+                duration: Duration
             })
         }
     })

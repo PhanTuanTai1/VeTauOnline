@@ -32,6 +32,14 @@
     <script src="../dist/socket.io.js"></script>
     <!-- jQuery -->
     <script type="text/javascript" src="../vendor/js/jquery.min.js"></script>
+    <style>
+        .pull-left > div {
+            margin-right: 10px;
+        }
+        .pull-right > div {
+            margin-left: 10px;
+        }
+    </style>
 </head>
 
 <body style="overflow: hidden;">
@@ -429,7 +437,7 @@
                                                         <div class="diagram-number">...</div>
                                                     </div>
                                                     <div class="diagram_cell train-block last">
-                                                        <div class="diagram-number" name="hiddenTrain2">SE3</div>
+                                                        <div class="diagram-number" name="hiddenTrain2">{{Train2}}</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -504,10 +512,10 @@
                                 </div>
                                 <div class="horizontal-devider"></div>
                                 <div class="gap gap-mini"></div>
-                                <div class="row hidden-sm hidden-xs">
+                                <div class="row">
                                     <div class="col-md-12">
                                         <div class="diagram-train">
-                                            <div class="mobile-scroll">
+                                            <div >
                                                 <div class="diagram_cell train-block etc"> 
                                                     <div class="diagram-number">...</div>
                                                 </div>
@@ -529,7 +537,7 @@
                                                     <div class="diagram-number">...</div>
                                                 </div>
                                                 <div class="diagram_cell train-block last">
-                                                    <div class="diagram-number" name="hiddenTrain">SE3</div>
+                                                    <div class="diagram-number" name="hiddenTrain">{{Train1}}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -537,9 +545,9 @@
                                 </div>
         
                                 <div class="gap gap-medium hidden-sm hidden-xs"></div>
-                                <div style="position: relative; height: 300px;">
-                                    <%- include('chooseSeat') %>
-                                </div>
+                                    <div >
+                                        <%- include('chooseSeat') %>
+                                    </div>
                             </div>
                         </div>
                         <br>
