@@ -90,24 +90,26 @@ function change(element, number){
     // diagram_cell train-block selectable selected
     // diagram_cell train-block available
     let carriageSelected = document.getElementsByName('carriageSelected' + number)[0];
-    // var activeDiv = document.getElementsByName('activeDiv' + number)[0];
-    // var parentSeatID = $(element).attr('data-parent');
-    // document.getElementById(parentSeatID).style['z-index'] = -1;
-    carriageSelected.setAttribute('class', 'diagram_cell train-block available');    
-    carriageSelected.removeAttribute('name');
-    $(element).attr('class', 'diagram_cell train-block selectable selected')
-    $(element).attr('name', 'carriageSelected' + number)
-    // // $(element).attr('id', 'transform: translate3d(0px, -10px, 0px); transition: all 0.8s ease 0s;')
-    // //alert(activeDiv.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.getAttribute('class'))
-    // activeDiv.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.setAttribute('style', 'display:block;');
-    // activeDiv.removeAttribute('name');
-    // document.getElementById('parentSeat' + $(element).attr('id')).setAttribute('style', 'display:none;');
-    // // document.getElementById('carriage_' + $(element).attr('id')).setAttribute('name', 'activeDiv' + number);
-    let selected = document.getElementById("parentSeat" + $(element).attr('id'));
-    selected.style.display = "block";
     let carriageBefore = document.getElementsByName('carriageBefore' + number)[0];
-    carriageBefore.style.display = "none";
-    selected.setAttribute('name', "carriageBefore" + number);
+
+    if($(element).attr('data-click') == "false"){
+        carriageSelected.setAttribute('class', 'diagram_cell train-block available');    
+        carriageSelected.removeAttribute('name');
+        carriageSelected.setAttribute('data-click', 'false');
+        $(element).attr('class', 'diagram_cell train-block selectable selected')
+        $(element).attr('name', 'carriageSelected' + number)
+        $(element).attr('data-click', 'true')
+        let selected = document.getElementById("parentSeat" + $(element).attr('id'));
+        selected.style.display = "block";
+        carriageBefore.style.display = "none";
+
+        selected.setAttribute('name', "carriageBefore" + number);
+        selected.setAttribute('data-click', 'true');
+        carriageBefore.removeAttribute('name');
+    }
+    
+
+    
 }
 
 var vm = new Vue({
