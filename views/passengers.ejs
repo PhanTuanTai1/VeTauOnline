@@ -29,20 +29,32 @@
     <link rel="stylesheet" type="text/css" href="../vendor/owl-carousel2/owl.theme.default.css">
     <link rel="stylesheet" type="text/css" href="../vendor/lightgallery/lightgallery.css">
     <link rel="stylesheet" type="text/css" href="../dist/baolau.min6ffc.css">
+    <link rel="stylesheet" href="../dist/w3.css">
     <script src="../dist/socket.io.js"></script>
     <!-- jQuery -->
     <script type="text/javascript" src="../vendor/js/jquery.min.js"></script>
     <style>
+        html, body {
+            font-family: Panton !important;
+            line-height: initial !important;
+        }
         .pull-left > div {
-            margin-right: 10px;
+            margin-right: 9px;
         }
         .pull-right > div {
-            margin-left: 10px;
+            margin-left: 9px;
+        }
+        .ss_train .bed .bed-number {
+        bottom: 5px !important;
+        left: 1px;
+        font-size: 10px;
+        color: #fff;
+        width: 100%;
         }
     </style>
 </head>
 
-<body style="overflow: hidden;">
+<body style="overflow: hidden;" class="fontFamily">
     <input type="hidden" value="<%=JSON.stringify(result.DateDeparture)%>" id="dateDepart">
         <input type="hidden" value="<%=JSON.stringify(result)%>" id="result">
         <%if(typeof(result2) != "undefined"){%>
@@ -419,6 +431,7 @@
                                                     <div class="diagram_cell train-block etc"> 
                                                         <div class="diagram-number">...</div>
                                                     </div>
+                                                    <!-- chooseSeat2  -->
                                                    <span v-if="carriageDisplay2" v-for="(carriage, index) in carriageDisplay2">
                                                     <div style="cursor: pointer;" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 2)" v-bind:id="carriageDisplay2[carriageDisplay2.length - (index + 1)].ID" name="carriageSelected2" class="diagram_cell train-block selectable selected" v-if="carriageDisplay2.length - (index + 1) == 0">
                                                         <div class="diagram-number" >{{carriageDisplay2.length - index}}</div>
@@ -519,11 +532,12 @@
                                                 <div class="diagram_cell train-block etc"> 
                                                     <div class="diagram-number">...</div>
                                                 </div>
+                                                <!-- chooseSeat1 -->
                                                <span v-if="carriageDisplay" v-for="(carriage, index) in carriageDisplay">
-                                                <div style="cursor: pointer;" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 1)" v-bind:id="carriageDisplay[carriageDisplay.length - (index + 1)].ID" name="carriageSelected1" class="diagram_cell train-block selectable selected" v-if="carriageDisplay.length - (index + 1) == 0">
+                                                <div style="cursor: pointer;" data-click="true" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 1)" v-bind:id="carriageDisplay[carriageDisplay.length - (index + 1)].ID" name="carriageSelected1" class="diagram_cell train-block selectable selected" v-if="carriageDisplay.length - (index + 1) == 0">
                                                     <div class="diagram-number" >{{carriageDisplay.length - index}}</div>
                                                 </div>
-                                                <div style="cursor: pointer;" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 1)" class="diagram_cell train-block available" v-bind:id="carriageDisplay[carriageDisplay.length - (index + 1)].ID" v-else>
+                                                <div style="cursor: pointer;" data-click="false" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 1)" class="diagram_cell train-block available" v-bind:id="carriageDisplay[carriageDisplay.length - (index + 1)].ID" v-else>
                                                     <div class="diagram-number" >{{carriageDisplay.length - index}}</div>
                                                 </div>
                                                 <!-- <div style="cursor: pointer;" class="diagram_cell train-block selectable selected">
