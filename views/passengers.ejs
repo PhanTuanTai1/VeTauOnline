@@ -137,7 +137,7 @@
                 </div>
                 <%if(typeof(ROUND_TRIP) != "undefined"){%>
                     <div class="current bold">
-                        <span>Departure</span>
+                        <span>Return</span>
                     </div>
                 <%}%>
             </div>
@@ -402,7 +402,7 @@
             
                                     <!-- <div style="opacity: .8; margin-top: 15px" class="horizontal-devider"></div> -->
             
-                                    <div class="row" v-if="SeatTypeID != 1 || SeatTypeID != 6">
+                                    <div class="row" v-if="SeatTypeID1 != 'undefined' && (SeatTypeID1 === 2 || SeatTypeID1 === 3 || SeatTypeID1 === 4 || SeatTypeID1 === 5)">
                                         <div style="margin-top: 15px; margin-bottom: 30px;" class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12 col-xs-offset-0">
                                             <div class="legend">
                                                 <div class="col-md-3 col-sm-3 col-xs-6">
@@ -421,22 +421,41 @@
                                             <!-- End legend-->
                                         </div>
                                     </div>
+                                    <div class="row" v-else-if="SeatTypeID1 != 'undefined' && SeatTypeID1 === 1 || SeatTypeID1 === 6">
+                                        <div style="margin-top: 15px; margin-bottom: 30px;" class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12 col-xs-offset-0">
+                                            <div class="legend">
+                                                                    <div class="col-md-3 col-sm-3 col-xs-6">
+                                                    <span> <i style="font-size: 40px;" class="icon-soft-bed-bottom"></i> <br> Available                        </span>
+                                                </div>
+                                                <div class="col-md-3 col-sm-3 col-xs-6">
+                                                    <span style="color: #ffbb00;"> <i style="font-size: 40px;" class="icon-soft-bed-people-bottom"></i> <br> Selected                        </span>
+                                                </div>
+                                                <div class="seat_legend col-md-3 col-sm-3 col-xs-6">
+                                                    <span style="color: #d54844;"> <i style="font-size: 40px;" class="icon-soft-bed-people-bottom"></i> <br> Sold out                        </span>
+                                                </div>
+                                                <div class="seat_legend col-md-3 col-sm-3 col-xs-6">
+                                                    <span style="color: #666b71;"> <i style="font-size: 40px; opacity: .3" class="icon-soft-bed-reserve-bottom"></i> <br> Reserved                        </span>
+                                                </div>
+                                            </div>
+                                            <!-- End legend-->
+                                        </div>
+                                    </div>
             
                                     <div class="horizontal-devider"></div>
                                     <div class="gap gap-mini"></div>
-                                    <div class="row hidden-sm hidden-xs">
+                                    <div class="row">
                                         <div class="col-md-12">
                                             <div class="diagram-train">
-                                                <div class="mobile-scroll">
+                                                <div>
                                                     <div class="diagram_cell train-block etc"> 
                                                         <div class="diagram-number">...</div>
                                                     </div>
                                                     <!-- chooseSeat2  -->
                                                    <span v-if="carriageDisplay2" v-for="(carriage, index) in carriageDisplay2">
-                                                    <div style="cursor: pointer;" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 2)" v-bind:id="carriageDisplay2[carriageDisplay2.length - (index + 1)].ID" name="carriageSelected2" class="diagram_cell train-block selectable selected" v-if="carriageDisplay2.length - (index + 1) == 0">
+                                                    <div style="cursor: pointer;" data-click="true" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 2)" v-bind:id="carriageDisplay2[carriageDisplay2.length - (index + 1)].ID" name="carriageSelected2" class="diagram_cell train-block selectable selected" v-if="carriageDisplay2.length - (index + 1) == 0">
                                                         <div class="diagram-number" >{{carriageDisplay2.length - index}}</div>
                                                     </div>
-                                                    <div style="cursor: pointer;" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 2)" class="diagram_cell train-block available" v-bind:id="carriageDisplay2[carriageDisplay2.length - (index + 1)].ID" v-else>
+                                                    <div style="cursor: pointer;" data-click="false" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 2)" class="diagram_cell train-block available" v-bind:id="carriageDisplay2[carriageDisplay2.length - (index + 1)].ID" v-else>
                                                         <div class="diagram-number" >{{carriageDisplay2.length - index}}</div>
                                                     </div>
                                                     <!-- <div style="cursor: pointer;" class="diagram_cell train-block selectable selected">
@@ -458,7 +477,7 @@
                                     </div>
             
                                     <div class="gap gap-medium hidden-sm hidden-xs"></div>
-                                    <div style="position: relative; height: 300px;">
+                                    <div>
                                         <%- include('chooseSeat2') %>
                                     </div>
                                 </div>
@@ -482,8 +501,6 @@
                                     </div>
                                 </div>
                                 <div class="gap gap-small hidden-sm hidden-xs"></div>
-        
-                                <!-- <div style="opacity: .8; margin-top: 15px" class="horizontal-devider"></div> -->
         
                                 <div class="row" v-if="SeatTypeID != 'undefined' && (SeatTypeID === 2 || SeatTypeID === 3 || SeatTypeID === 4 || SeatTypeID === 5)">
                                     <div style="margin-top: 15px; margin-bottom: 30px;" class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12 col-xs-offset-0">

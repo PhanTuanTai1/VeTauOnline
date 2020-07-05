@@ -26,12 +26,12 @@
                 <th class="hidden-sm hidden-xs button-alignment border-right"></th>
             </tr>
         </thead>
-        <%var hour = parseInt(moment(result.TimeDeparture).subtract(7, 'hour').format('HH'))%>
-        <%var min = parseInt(moment(result.TimeDeparture).format('mm'))%>
-        <%var DateDepart = new Date(moment(result.DateDeparture).add(hour,'hour').add(min, 'minutes'))%>
-        <%var DateArrive = new Date(moment(result.DateDeparture).add(hour,'hour').add(result.ScheduleDetails[0].Time * 60 + min, 'minutes'))%>
         <tbody>
             <%if(index == 1){%>
+                <%var hour = parseInt(moment(result.TimeDeparture).subtract(7, 'hour').format('HH'))%>
+                <%var min = parseInt(moment(result.TimeDeparture).format('mm'))%>
+                <%var DateDepart = new Date(moment(result.DateDeparture).add(hour,'hour').add(min, 'minutes'))%>
+                <%var DateArrive = new Date(moment(result.DateDeparture).add(hour,'hour').add(result.ScheduleDetails[0].Time * 60 + min, 'minutes'))%>
                 <tr id="Schedule<%=result.ID%>" 
                     class="result clickable_tr train vr direct" 
                     data-toggle="collapse"
@@ -275,6 +275,10 @@
                         <td colspan="7"></td>
                     </tr>
             <%}else{%>
+                <%var hour = parseInt(moment(result.TimeDeparture).subtract(7, 'hour').format('HH'))%>
+                <%var min = parseInt(moment(result.TimeDeparture).format('mm'))%>
+                <%var DateDepart = new Date(moment(result.DateDeparture).add(hour,'hour').add(min, 'minutes'))%>
+                <%var DateArrive = new Date(moment(result.DateDeparture).add(hour,'hour').add(result.ScheduleDetails[0].Time * 60 + min, 'minutes'))%>
                 <tr id="Schedule<%=result.ID%>" 
                     class="result clickable_tr train vr direct" 
                     data-toggle="collapse"
@@ -289,12 +293,8 @@
                             <div class="super-bold"><%=moment(result.TimeDeparture).subtract('hour', 7).format('LT')%></div>
                             <div><%=moment(result.DateDeparture).format('DD-MM-YYYY')%></div>
                         </td>
-                        <td class="text-right">
-                            <div class="super-bold">04:38</div>
-                            <div>Fr, 17/04</div>
-                        </td>
                         <td class="text-center">
-                            17h 10m </td>
+                            <%=new duration(DateDepart, DateArrive).toString("%Hs hour %M minutes")%> </td>
                         <td class="searchresult-itenerary hidden-sm hidden-xs">
                             <span style="display:inline-block" >
                                 <span >{{Depart2}}</span><br>
@@ -383,7 +383,7 @@
                                                 </td>
                                                 <td class="text-right">
                                                     <span>
-                            <span class="bold">17h 10m</span>
+                            <span class="bold"><%=new duration(DateDepart, DateArrive).toString("%Hs hour %M minutes")%></span>
                                                     </span>
                                                 </td>
                                                 <td class="text-center">

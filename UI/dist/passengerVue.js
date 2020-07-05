@@ -99,7 +99,7 @@ function change(element, number){
         $(element).attr('class', 'diagram_cell train-block selectable selected')
         $(element).attr('name', 'carriageSelected' + number)
         $(element).attr('data-click', 'true')
-        let selected = document.getElementById("parentSeat" + $(element).attr('id'));
+        let selected = document.getElementById("parentSeat" + $(element).attr('id') + number);
         selected.style.display = "block";
         carriageBefore.style.display = "none";
 

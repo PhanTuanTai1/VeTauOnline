@@ -1,4 +1,4 @@
-<div class="seat_carousel owl-carousel seat_selection owl-loaded w3-container city w3-animate-opacity" name="carriageBefore1" v-bind:id="'parentSeat' + carriage.ID" v-for="(carriage,index) in carriageDisplay" v-if="index == 0" style="display:block;">
+<div class="seat_carousel owl-carousel seat_selection owl-loaded w3-container city w3-animate-opacity" name="carriageBefore1" v-bind:id="'parentSeat' + carriage.ID + '1'" v-for="(carriage,index) in carriageDisplay" v-if="index == 0" style="display:block;">
     
     <div class="owl-stage-outer" >
         <div class="owl-stage" style="margin: 0 auto;">
@@ -1250,7 +1250,7 @@
     </div>
 </div>
 
-<div class="seat_carousel owl-carousel seat_selection owl-loaded w3-container city w3-animate-opacity"  v-bind:id="'parentSeat' + carriage.ID" v-else style="display:none;">
+<div class="seat_carousel owl-carousel seat_selection owl-loaded w3-container city w3-animate-opacity"  v-bind:id="'parentSeat' + carriage.ID + '1'" v-else style="display:none;">
     
     <div class="owl-stage-outer" >
         <div class="owl-stage" style="margin: 0 auto;">
