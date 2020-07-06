@@ -393,7 +393,7 @@ module.exports.createCarriage = async function (req, res) {
   {
     seatCount = 28;
   }
-  else if (seatTypeID == 2) //khoang 6
+  else if (seatTypeID == 6) //khoang 6
   {
     seatCount = 42;
   }
@@ -420,7 +420,7 @@ module.exports.editCarriage = async function (req, res) {
     {
       seatCount = 28;
     }
-    else if (seatTypeID == 2) //khoang 6
+    else if (seatTypeID == 6) //khoang 6
     {
       seatCount = 42;
     }
