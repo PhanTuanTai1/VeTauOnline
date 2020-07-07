@@ -517,7 +517,11 @@ module.exports.getListCusBySchedule = async function (req, res) {
     where: {
       DepartureStationID: from,
       ArrivalStationID: to,
-      DepartureDate: date
+      DepartureDate: date,
+      [Op.or]: [
+        { Status: 1 },
+        { Status: 2 }
+      ]
     },
     raw: true
   });
