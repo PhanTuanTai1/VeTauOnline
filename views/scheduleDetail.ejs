@@ -96,18 +96,18 @@
                                                 <div class="relative fares-choose-items" >
                                                     <div class="fares-choose radio">
                                                         <%if(index == 0){%>
-                                                            <input type="radio" id="cost_fare<%=index%><%=SCHEDULEDETAILID%>"
+                                                            <input type="radio" id="cost_fare_desktop<%=index%><%=SCHEDULEDETAILID%>"
                                                             name="cost<%=SCHEDULEDETAILID%>" 
                                                             class="fare_radio"
                                                             value="<%=cost.Cost%>"  checked>
-                                                            <label for="cost_fare<%=index%><%=SCHEDULEDETAILID%>" onclick="changeHref('<%=SCHEDULEDETAILID%>', '<%=cost.SeatTypeID%>')"></label>
+                                                            <label for="cost_fare_desktop<%=index%><%=SCHEDULEDETAILID%>" onclick="changeHref('<%=SCHEDULEDETAILID%>', '<%=cost.SeatTypeID%>')"></label>
                                                         <%}else {%>
-                                                            <input type="radio" id="cost_fare<%=index%><%=SCHEDULEDETAILID%>"
+                                                            <input type="radio" id="cost_fare_desktop<%=index%><%=SCHEDULEDETAILID%>"
                                                             name="cost<%=SCHEDULEDETAILID%>" 
                                                             class="fare_radio"
                                                             value="<%=cost.Cost%>"  
                                                             >
-                                                            <label for="cost_fare<%=index%><%=SCHEDULEDETAILID%>" onclick="changeHref('<%=SCHEDULEDETAILID%>', '<%=cost.SeatTypeID%>')"></label>
+                                                            <label for="cost_fare_desktop<%=index%><%=SCHEDULEDETAILID%>" onclick="changeHref('<%=SCHEDULEDETAILID%>', '<%=cost.SeatTypeID%>')"></label>
                                                         <%}%>
                                                         <%index++%>
                                                         
@@ -254,7 +254,7 @@
                                                     <input type="radio" id="cost_fare<%=index%><%=SCHEDULEDETAILID%>"
                                                     name="cost<%=SCHEDULEDETAILID%>" 
                                                     class="fare_radio"
-                                                    value="<%=cost.Cost%>"  checked>
+                                                    value="<%=cost.Cost%>">
                                                     <label for="cost_fare<%=index%><%=SCHEDULEDETAILID%>" onclick="changeHref('<%=SCHEDULEDETAILID%>', '<%=cost.SeatTypeID%>')"></label>
                                                 <%}else {%>
                                                     <input type="radio" id="cost_fare<%=index%><%=SCHEDULEDETAILID%>"
@@ -306,7 +306,7 @@
                                                     <input type="radio" id="cost_fare_mobile<%=index%><%=SCHEDULEDETAILID%>"
                                                     name="cost<%=SCHEDULEDETAILID%>" 
                                                     class="fare_radio"
-                                                    value="<%=cost.Cost%>"  checked>
+                                                    value="<%=cost.Cost%>">
                                                     <label style="text-align: left;" for="cost_fare_mobile<%=index%><%=SCHEDULEDETAILID%>" onclick="changeHref('<%=SCHEDULEDETAILID%>', '<%=cost.SeatTypeID%>')"></label>
                                                 <%}else {%>
                                                     <input type="radio" id="cost_fare_mobile<%=index%><%=SCHEDULEDETAILID%>"
