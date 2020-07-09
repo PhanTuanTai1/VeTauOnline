@@ -7,7 +7,8 @@ var UUID = require('uuidjs');
 var md5 = require('md5');
 var Duration = require("duration");
 var mail = require('nodemailer')
-var config = require('../config/common')
+var config = require('../config/common');
+const { resolve } = require('bluebird');
 var transporter = mail.createTransport({
     service: 'gmail',
     auth: {
@@ -410,7 +411,8 @@ module.exports.passenger = function (req, res) {
                     DEPART: req.query.DEPART,
                     ONE_WAY: req.query.ONE_WAY,
                     ROUND_TRIP: req.query.ROUND_TRIP,
-                    query: req.query.Query
+                    query: req.query.Query,
+                    duration: Duration
                 })
             })
         }
@@ -426,7 +428,8 @@ module.exports.passenger = function (req, res) {
                 DEPART: req.query.DEPART,
                 ONE_WAY: req.query.ONE_WAY,
                 ROUND_TRIP: req.query.ROUND_TRIP,
-                query: req.query.Query
+                query: req.query.Query,
+                duration: Duration
             })
         }
     })
@@ -476,7 +479,7 @@ module.exports.getAllSeat = function (req, res) {
     })
 }
 
-module.exports.createSession = function (req, res) {
+module.exports.createSession = async function (req, res) {
     var Representative = req.body.data.Representative;
     var ListPassenger = req.body.data.ListPassenger;
     var ListSeat = req.body.data.ListSeat;
@@ -484,11 +487,11 @@ module.exports.createSession = function (req, res) {
     var TicketInfo = req.body.data.TicketInfo
     var TicketInfo2;
     var RepresentativeID = parseInt(UUID.genV4().bitFields.clockSeqLow) + parseInt(Math.random() * 10000000);
-    var total = TicketInfo.Price * ListPassenger.length;
+    var total = await calculateCost(TicketInfo, ListPassenger);
 
     if (typeof (req.body.data.TicketInfo2) != "undefined") {
         TicketInfo2 = req.body.data.TicketInfo2;
-        total += TicketInfo2.Price * ListPassenger.length
+        total += await calculateCost(TicketInfo2, ListPassenger);
         ListSeat2 = req.body.data.ListSeat2;
 
         var RepresentativeModel = db.Representative.build({
@@ -546,6 +549,24 @@ module.exports.createSession = function (req, res) {
 
 }
 
+function calculateCost(Ticket, ListPassenger){
+    return new Promise(resolve => {
+        db.TypeObject.findAll({
+            attributes: ['ID','TypeObjectName','Discount']
+        }).then(data => {
+            let total = 0;
+            ListPassenger.forEach((passenger, index, array) => {
+                var discount = data.find(x => x.ID == parseInt(passenger.TypeObject))
+                total += Ticket.Price - (Ticket.Price * parseFloat(discount.Discount));
+
+                if(index == array.length - 1) {
+                    resolve(total);
+                }
+            })
+        })
+        
+    });
+}
 module.exports.payment = function (req, res) {
     if (typeof (req.cookies.data6) != "undefined") {
         console.log(req.cookies.data6);
@@ -785,24 +806,42 @@ function CreateTicket(ListPassengerModel, TicketInfo, ListSeat) {
     var ListTicketInfo = [];
 
     return new Promise(resolve => {
-        ListPassengerModel.forEach((data, index) => {
+        ListPassengerModel.forEach((data, index, array) => {
             var ID = parseInt(UUID.genV4().bitFields.clockSeqLow) + parseInt(Math.random() * 10000000);
-
-            var TicketModel = db.Ticket.build({
-                'ID': ID,
-                'CustomerID': data.ID,
-                'SeatID': ListSeat[index].ID,
-                'DepartureDate': TicketInfo.DepartureDate,
-                'DepartureTime': TicketInfo.DepartureTime,
-                'Price': TicketInfo.Price,
-                'Status': STATUS["NOTPRINT"],
-                'DepartureStationID': TicketInfo.DepartureStationID,
-                'ArrivalStationID': TicketInfo.ArrivalStationID,
-                'TrainName': TicketInfo.TrainName
-            })
-            ListTicketInfo.push(TicketModel);
+            caculateCostForTicket(TicketInfo.Price, data).then(cost => {
+                var TicketModel = db.Ticket.build({
+                    'ID': ID,
+                    'CustomerID': data.ID,
+                    'SeatID': ListSeat[index].ID,
+                    'DepartureDate': TicketInfo.DepartureDate,
+                    'DepartureTime': TicketInfo.DepartureTime,
+                    'Price': cost,
+                    'Status': STATUS["NOTPRINT"],
+                    'DepartureStationID': TicketInfo.DepartureStationID,
+                    'ArrivalStationID': TicketInfo.ArrivalStationID,
+                    'TrainName': TicketInfo.TrainName
+                })
+                ListTicketInfo.push(TicketModel);
+                
+                if(index == array.length - 1) {
+                    resolve(ListTicketInfo);
+                }
+            });
         })
-        resolve(ListTicketInfo);
+        
+    })
+}
+
+function caculateCostForTicket(Price, Passenger) {
+    return new Promise(resolve => {
+        db.TypeObject.findOne({
+            attributes: ['Discount'],
+            where : {
+                ID: Passenger.TypeObjectID
+            }
+        }).then(data => {
+            resolve(Price - (Price * data.Discount));
+        })
     })
 }
 

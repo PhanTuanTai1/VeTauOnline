@@ -60,7 +60,7 @@ new Vue({
         },
 
         FormatTime: function(Time){
-            return moment(Time).format('LT');
+            return moment(Time).subtract(7, 'hour').format('LT');
         }
     },
     computed: {

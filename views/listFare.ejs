@@ -120,7 +120,7 @@
                                     <td>{{FormatDate(schedule.DateDeparture)}}</td>
                                     <td>{{ScheduleName(schedule.ScheduleDetails[0].DepartureStationID)}}</td>
                                     <td>{{ScheduleName(schedule.ScheduleDetails[0].ArrivalStationID)}}</td>
-                                    <td>{{schedule.TimeDeparture}}</td>
+                                    <td>{{FormatTime(schedule.TimeDeparture)}}</td>
                                     <td style="text-align: center;"><a v-bind:href="'/getAllScheduleDetailClient?ID='+schedule.ID" target="_blank" class="btn btn-default">Schedule Detail</a></td>
                                 </tr>                                   
                             </tbody>
