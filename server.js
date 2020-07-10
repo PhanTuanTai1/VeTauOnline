@@ -197,7 +197,12 @@ app.get("/admin/dashboard", function (req, res) {
     loginController.CheckLogin(req).then(async check => {
         if (check) {
             var staffData = await loginController.GetUser(req);
-            res.render('admin', {data: staffData});
+            if(staffData.Role != 1) {
+                res.render('admin', {data: staffData});
+            } 
+            else {
+                res.redirect('/admin/ticket');
+            }        
         }
         else {
             res.render('login');
@@ -211,7 +216,12 @@ app.get("/admin/customer", function (req, res) {
     loginController.CheckLogin(req).then(async check => {
         if (check) {
             var staffData = await loginController.GetUser(req);
-            res.render('customerAdmin', {data: staffData});
+            if(staffData.Role != 1) {
+                res.render('customerAdmin', {data: staffData});
+            } 
+            else {
+                res.redirect('/admin/ticket');
+            }
         }
         else {
             res.render('login');
@@ -222,7 +232,15 @@ app.get("/admin/station", function (req, res) {
     loginController.CheckLogin(req).then(async check => {
         if (check) {
             var staffData = await loginController.GetUser(req);
-            res.render('stationAdmin', {data: staffData});
+            if(staffData.Role == 3) {
+                res.render('stationAdmin', {data: staffData});
+            } 
+            else if(staffData.Role == 2){
+                res.redirect('/admin/dashboard');
+            }
+            else {
+                res.redirect('/admin/ticket');
+            }
         }
         else {
             res.render('login');
@@ -236,9 +254,16 @@ app.get("/getAllScheNoCond", function (req, res) {
 app.get("/admin/train", function (req, res) {
     loginController.CheckLogin(req).then(check => {
         if (check) {
-            console.log(req);
             loginController.GetUser(req).then(staffData => {
-                res.render('trainAdmin', {data: staffData});
+                if(staffData.Role == 3) {
+                    res.render('trainAdmin', {data: staffData});
+                } 
+                else if(staffData.Role == 2){
+                    res.redirect('/admin/dashboard');
+                }
+                else {
+                    res.redirect('/admin/ticket');
+                }
             });
             
         }
@@ -251,7 +276,15 @@ app.get("/admin/seat", function (req, res) {
     loginController.CheckLogin(req).then(async check => {
         if (check) {
             var staffData = await loginController.GetUser(req);
-            res.render('seatAdmin', {data : staffData});
+            if(staffData.Role == 3) {
+                res.render('seatAdmin', {data: staffData});
+            } 
+            else if(staffData.Role == 2){
+                res.redirect('/admin/dashboard');
+            }
+            else {
+                res.redirect('/admin/ticket');
+            }
         }
         else {
             res.render('login');
@@ -262,7 +295,15 @@ app.get("/admin/seattype", function (req, res) {
     loginController.CheckLogin(req).then(async check => {
         if (check) {
             var staffData = await loginController.GetUser(req);
-            res.render('seatTypeAdmin', {data: staffData});
+            if(staffData.Role == 3) {
+                res.render('seatTypeAdmin', {data: staffData});
+            } 
+            else if(staffData.Role == 2){
+                res.redirect('/admin/dashboard');
+            }
+            else {
+                res.redirect('/admin/ticket');
+            }
         }
         else {
             res.render('login');
@@ -273,7 +314,15 @@ app.get("/admin/carriage", function (req, res) {
     loginController.CheckLogin(req).then(async check => {
         if (check) {
             var staffData = await loginController.GetUser(req);
-            res.render('carriageAdmin', {data: staffData});
+            if(staffData.Role == 3) {
+                res.render('carriageAdmin', {data: staffData});
+            } 
+            else if(staffData.Role == 2){
+                res.redirect('/admin/dashboard');
+            }
+            else {
+                res.redirect('/admin/ticket');
+            }
         }
         else {
             res.render('login');
@@ -284,7 +333,12 @@ app.get("/admin/schedule", function (req, res) {
     loginController.CheckLogin(req).then(async check => {
         if (check) {
             var staffData = await loginController.GetUser(req);
-            res.render('scheduleAdmin', {data: staffData});
+            if(staffData.Role != 1) {
+                res.render('scheduleAdmin', {data: staffData});
+            } 
+            else {
+                res.redirect('/admin/ticket');
+            }
         }
         else {
             res.render('login');
