@@ -557,8 +557,10 @@ http.listen(port, function () {
     console.log("Run on port " + port);
 });
 
-
-
+app.get('/admin/logout', (req,res) => {
+    res.cookie('uid', "");
+    res.end(JSON.stringify("/login"));
+})
 // //TEST CHAT 
 // app.get("/chat", function (req, res) {
 //     res.render('chat');

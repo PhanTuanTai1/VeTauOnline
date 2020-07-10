@@ -1,4 +1,4 @@
-<strong>Copyright &copy; 2020 <a href="http://localhost:3000/admin">Train booking</a>.</strong>
+<strong>Copyright &copy; 2020 <a href="/admin">Train booking</a>.</strong>
 All rights reserved.
 <div class="float-right d-none d-sm-inline-block">
     <b>Version</b> 1.0
@@ -6,6 +6,16 @@ All rights reserved.
 <script src="../dist/vue-loading.min.js"></script>
 
 <script type="text/javascript" charset="utf8" src="../dist/js/datatables.min.js"></script>
+
+<script>
+    function logout() {
+        axios.get('/admin/logout').then(res => {
+            location.href = res.data;
+        })
+    }
+
+    
+</script>
 <!-- <script>
     setTimeout(() => {
         $("#loading").hide();
