@@ -409,14 +409,12 @@ app.post("/admin/schedule", function (req, res) {
 })
 
 var listSeatBlock = [];
-
+var fnc = new Function('io, data', 'setTimeout(() => {io.emit("response_unblock", data)}, 900000);');
+//900000
 var io = io.on('connection', (socket) => {
+    
     console.log('a user connected');
     socket.emit('response', listSeatBlock);
-    setInterval(() => {
-        //console.log(listSeatBlock.length)
-        io.emit('response_unblock', listSeatBlock.shift());
-    }, 900000)
 
     socket.on('changeStatus', (data) => {
         var check = false;
@@ -451,6 +449,7 @@ var io = io.on('connection', (socket) => {
             if (!check) {
                 listSeatBlock.push(data);
                 socket.broadcast.emit('response', listSeatBlock);
+                fnc(io, data);
             }
             else {
                 //console.log(socket.id);
@@ -458,13 +457,15 @@ var io = io.on('connection', (socket) => {
             }
         }
         else if (typeof (data.class) != "undefined" && data.unblock == true) {
-            var listUnblock = listSeatBlock.filter(seat => {
-                return data.id != seat.id;
-            });
-
+            var listUnblock = listSeatBlock.filter(seat => { return data.id != seat.id;});
             listSeatBlock = listUnblock;
             socket.broadcast.emit('response_unblock', data);
         }
+    })
+
+    socket.on('deleteSeat', (data) => {
+        var listUnblock = listSeatBlock.filter(seat => { return data.id != seat.id;});
+        listSeatBlock = listUnblock;
     })
 });
 

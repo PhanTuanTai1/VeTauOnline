@@ -20,7 +20,7 @@ new Vue({
     SearchFrom: null,
     SearchTo: null,
     depart_date: new Date(),
-    return_date: new Date(),
+    return_date: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1),
     departureStationID: null,
     arrivalStationID: null,
     round_trip: true,
@@ -165,6 +165,18 @@ new Vue({
       url += "PASSENGERS=" + this.passengers; 
 
       return url;
+    }
+  },
+  computed: {
+    disabledDates_To() {
+      return {       
+        to: new Date(new Date() - 86400000)
+      };
+    },
+    disabledDates_From() {
+      return {       
+        to: new Date()
+      };
     }
   },
   components: {

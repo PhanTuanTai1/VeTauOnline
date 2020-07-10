@@ -96,18 +96,18 @@
                                                 <div class="relative fares-choose-items" >
                                                     <div class="fares-choose radio">
                                                         <%if(index == 0){%>
-                                                            <input type="radio" id="cost_fare<%=index%><%=SCHEDULEDETAILID%>"
+                                                            <input type="radio" id="cost_fare_desktop<%=index%><%=SCHEDULEDETAILID%>"
                                                             name="cost<%=SCHEDULEDETAILID%>" 
                                                             class="fare_radio"
                                                             value="<%=cost.Cost%>"  checked>
-                                                            <label for="cost_fare<%=index%><%=SCHEDULEDETAILID%>" onclick="changeHref('<%=SCHEDULEDETAILID%>', '<%=cost.SeatTypeID%>')"></label>
+                                                            <label for="cost_fare_desktop<%=index%><%=SCHEDULEDETAILID%>" onclick="changeHref('<%=SCHEDULEDETAILID%>', '<%=cost.SeatTypeID%>')"></label>
                                                         <%}else {%>
-                                                            <input type="radio" id="cost_fare<%=index%><%=SCHEDULEDETAILID%>"
+                                                            <input type="radio" id="cost_fare_desktop<%=index%><%=SCHEDULEDETAILID%>"
                                                             name="cost<%=SCHEDULEDETAILID%>" 
                                                             class="fare_radio"
                                                             value="<%=cost.Cost%>"  
                                                             >
-                                                            <label for="cost_fare<%=index%><%=SCHEDULEDETAILID%>" onclick="changeHref('<%=SCHEDULEDETAILID%>', '<%=cost.SeatTypeID%>')"></label>
+                                                            <label for="cost_fare_desktop<%=index%><%=SCHEDULEDETAILID%>" onclick="changeHref('<%=SCHEDULEDETAILID%>', '<%=cost.SeatTypeID%>')"></label>
                                                         <%}%>
                                                         <%index++%>
                                                         
@@ -192,22 +192,18 @@
                 <div>
                     <!-- Origin -->
                     <div class="col-xs-4">
-                        <h4 class="station-text bold">HÀ NỘI</h4>
+                        <h4 class="station-text bold"><%=departureStation[0].Name%>  </h4>
 
-                        <span class="popover-address origin-address" data-container="body" data-placement="auto" data-trigger="click focus" data-content="120 Lê Duẩn, Quận Hoàn Kiếm, Hà Nội" style="text-decoration: underline" data-original-title="" title="">
-                                                    Ga Hà Nội                                                </span>
+                                                              </span>
                     </div>
 
                     <div class="col-xs-4 text-center">
                         <img class="searchresult-logo" src="https://booking.baolau.com/images/logos/transports/logo-vr.png">
-                        <div style="font-size: 13px">SE1</div>
+                        <div style="font-size: 13px"><%=train.Name%></div>
                     </div>
 
                     <div class="col-xs-4 text-right">
-                        <h4 class="station-text bold">HỒ CHÍ MINH</h4>
-
-                        <span class="popover-address destination-address" data-container="body" data-placement="auto" data-trigger="click focus" data-content="01 Nguyễn Thông, Phường 9, Quận 3, Thành phố Hồ Chí Minh" style="text-decoration: underline" data-original-title="" title="">
-                                                    Ga Sài Gòn                                                </span>
+                        <h4 class="station-text bold"><%=arrivalStation[0].Name%>  </h4>
                     </div>
 
                     <div class="clearfix"></div>
@@ -227,17 +223,17 @@
 
                 <div>
                     <div class="col-xs-4">
-                        <span class="blue-text big-text bold">22:15</span>
-                        <p>T5, 26/03</p>
+                        <span class="blue-text big-text bold"><%=moment(result[0].ScheduleDetails[0].StartTime).subtract(7,'hour').format('LT')%></span>
+                        <p><%=moment(result[0].DateDeparture).format('DD-MM-YYYY')%></p>
                     </div>
 
                     <div style="margin-top: 10px" class="col-xs-4 text-center">
-                        <span class="small-text">31h 30m</span>
+                        <span class="small-text"><%=new duration(DateDepart, DateArrive).toString("%Hs hour %M minutes")%></span>
                     </div>
 
                     <div class="col-xs-4 text-right">
-                        <span class="blue-text big-text bold">05:45</span>
-                        <p>T7, 28/03</p>
+                        <span class="blue-text big-text bold"><%=moment(result[0].TimeDeparture).add(result[0].ScheduleDetails[0].Time * 60, 'minutes').subtract(7, "hour").format("LT")%></span>
+                        <p><%=moment(result[0].DateDeparture).add(result[0].ScheduleDetails[0].Time * 60 + min , 'minutes').add(hour,"hour").subtract(7, "hour").format("DD-MM-YYYY")%></p>
                     </div>
 
                     <div class="clearfix"></div>
@@ -252,62 +248,92 @@
                                 <%result[0].ScheduleDetails[0].TableCosts.forEach(function(cost){%>
                                     <%if(typeof(ListSeatSold.get(cost.SeatTypeID)) != "undefined"){%>
                                         <%if(dic.get(cost.SeatTypeID).TotalSeat - ListSeatSold.get(cost.SeatTypeID).SeatSold > 0){%>
-                                            
-                                        <%}else{%>
+                                        <div class="relative fares-choose-items" >
+                                            <div class="fares-choose radio">
+                                                <%if(index == 0){%>
+                                                    <input type="radio" id="cost_fare<%=index%><%=SCHEDULEDETAILID%>"
+                                                    name="cost<%=SCHEDULEDETAILID%>" 
+                                                    class="fare_radio"
+                                                    value="<%=cost.Cost%>">
+                                                    <label for="cost_fare<%=index%><%=SCHEDULEDETAILID%>" onclick="changeHref('<%=SCHEDULEDETAILID%>', '<%=cost.SeatTypeID%>')"></label>
+                                                <%}else {%>
+                                                    <input type="radio" id="cost_fare<%=index%><%=SCHEDULEDETAILID%>"
+                                                    name="cost<%=SCHEDULEDETAILID%>" 
+                                                    class="fare_radio"
+                                                    value="<%=cost.Cost%>"  
+                                                    >
+                                                    <label for="cost_fare<%=index%><%=SCHEDULEDETAILID%>" onclick="changeHref('<%=SCHEDULEDETAILID%>', '<%=cost.SeatTypeID%>')"></label>
+                                                <%}%>
+                                            </div>
 
+                                            <label class="fares-description">
+                                            <p><%=dic.get(cost.SeatTypeID).SeatTypeName%></p>
+                                            <span class="yellow-text js-fare_price money">
+                                                <%=JSON.stringify(cost.Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%>&nbsp;VND
+                                            </span>                                               
+                                            </label>
+                                        </div>
+                                        <%}else{%>
+                                            <div class="relative fares-choose-items" >
+                                                <div class="fares-choose radio">
+                                                    <%if(index == 0){%>
+                                                        <input type="radio" 
+                                                        name="cost" 
+                                                        class="fare_radio"
+                                                        disabled>
+                                                        <label ></label>
+                                                    <%}else {%>
+                                                        <input type="radio" 
+                                                        name="cost" 
+                                                        class="fare_radio"
+                                                        disabled>
+                                                        <label ></label>
+                                                    <%}%>
+                                                </div>
+
+                                                <label class="fares-description">
+                                                <p><%=dic.get(cost.SeatTypeID).SeatTypeName%></p>
+                                                <span class="red-text">
+                                                        Sold Out
+                                                </span>                                               
+                                                </label>
+                                            </div>
                                         <%}%>
                                     <%}else{%>
+                                        <div class="relative fares-choose-items" >
+                                            <div class="fares-choose radio">
+                                                <%if(index == 0){%>
+                                                    <input type="radio" id="cost_fare_mobile<%=index%><%=SCHEDULEDETAILID%>"
+                                                    name="cost<%=SCHEDULEDETAILID%>" 
+                                                    class="fare_radio"
+                                                    value="<%=cost.Cost%>">
+                                                    <label style="text-align: left;" for="cost_fare_mobile<%=index%><%=SCHEDULEDETAILID%>" onclick="changeHref('<%=SCHEDULEDETAILID%>', '<%=cost.SeatTypeID%>')"></label>
+                                                <%}else {%>
+                                                    <input type="radio" id="cost_fare_mobile<%=index%><%=SCHEDULEDETAILID%>"
+                                                    name="cost<%=SCHEDULEDETAILID%>" 
+                                                    class="fare_radio"
+                                                    value="<%=cost.Cost%>"  
+                                                    >
+                                                    <label style="text-align: left;" for="cost_fare_mobile<%=index%><%=SCHEDULEDETAILID%>" onclick="changeHref('<%=SCHEDULEDETAILID%>', '<%=cost.SeatTypeID%>')"></label>
+                                                <%}%>
+                                                <%index++%>
+                                                
+                                            </div>
 
+                                            <label class="fares-description">
+                                            <%if(typeof(dic.get(cost.SeatTypeID)) != "undefined"){%>
+                                            <p><%=dic.get(cost.SeatTypeID).SeatTypeName%></p>
+                                            <%}else{%>
+                                                <p>Error</p>
+                                            <%}%>
+                                            <span class="yellow-text js-fare_price money">
+                                                <%=JSON.stringify(cost.Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%>&nbsp;VND
+                                            </span>                                               
+                                            </label>
+                                        </div>
                                     <%}%>
-                                <%})%>             
-                                <label class="mobile-fare" for="mobile_fare_1f38e1631532974a701fa783bcb1c1cc_66890155_NML56">
-                                    <div class="fare-type-title">
-                                        <span>Ngồi mềm</span>
-                                    </div>
-                                    <div class="mobile-fare-choose relative ">
-                                        <div class="radio">
-                                            <input id="mobile_fare_1f38e1631532974a701fa783bcb1c1cc_66890155_NML56" type="radio" name="mobile_fares_1f38e1631532974a701fa783bcb1c1cc_66890155" class="fare_radio" data-fare="NML56" data-price="995000" data-label="Ngồi mềm" data-has_promotion="0" data-basefare="995000" checked="">
-
-                                            <label for="mobile_fare_1f38e1631532974a701fa783bcb1c1cc_66890155_NML56"></label>
-                                        </div>
-                                        <div style="padding-bottom: 20px;">
-                                            <span class="yellow-text js-fare_price bold money" data-amount="995000" data-currency="VND">995,000&nbsp;đ</span>
-                                        </div>
-                                        <!-- <div style="padding-bottom: 10px; text-decoration: underline;" class="fare-info-button blue-text" data-origin_country_code="VN" data-destination_country_code="VN" data-transport="vr" data-alert="eyJvcmlnaW5faWQiOiIyODEiLCJkZXN0aW5hdGlvbl9pZCI6IjMyNCIsInRyYXZlbF9kYXRlIjoiMjAyMC0wMy0yNiIsInRyYW5zcG9ydF9jb2RlIjoidnIiLCJ2ZXNzZWwiOiJTRTEifQ==" data-fare="NML56" data-status="1"><i style="margin-right: 8px" class="fa-info-circle" aria-hidden="true"></i>Điều kiện giá vé</div> -->
-                                    </div>
-                                </label>
-                                <label class="mobile-fare" for="mobile_fare_1f38e1631532974a701fa783bcb1c1cc_66890155_BnL">
-                                    <div class="fare-type-title">
-                                        <span>Nằm khoang 6</span>
-                                    </div>
-                                    <div class="mobile-fare-choose relative ">
-                                        <div class="radio">
-                                            <input id="mobile_fare_1f38e1631532974a701fa783bcb1c1cc_66890155_BnL" type="radio" name="mobile_fares_1f38e1631532974a701fa783bcb1c1cc_66890155" class="fare_radio" data-fare="BnL" data-price="1356000" data-label="Nằm khoang 6" data-has_promotion="0">
-
-                                            <label for="mobile_fare_1f38e1631532974a701fa783bcb1c1cc_66890155_BnL"></label>
-                                        </div>
-                                        <div style="padding-bottom: 20px;">
-                                            <span class="yellow-text js-fare_price bold money" data-amount="1356000" data-currency="VND">1,356,000&nbsp;đ</span>
-                                        </div>
-                                        <div style="padding-bottom: 10px; text-decoration: underline;" class="fare-info-button blue-text" data-origin_country_code="VN" data-destination_country_code="VN" data-transport="vr" data-alert="eyJvcmlnaW5faWQiOiIyODEiLCJkZXN0aW5hdGlvbl9pZCI6IjMyNCIsInRyYXZlbF9kYXRlIjoiMjAyMC0wMy0yNiIsInRyYW5zcG9ydF9jb2RlIjoidnIiLCJ2ZXNzZWwiOiJTRTEifQ==" data-fare="BnL" data-status="1"><i style="margin-right: 8px" class="fa-info-circle" aria-hidden="true"></i>Điều kiện giá vé</div>
-                                    </div>
-                                </label>
-                                <label class="mobile-fare" for="mobile_fare_1f38e1631532974a701fa783bcb1c1cc_66890155_AnL">
-                                    <div class="fare-type-title">
-                                        <span>Nằm khoang 4</span>
-                                    </div>
-                                    <div class="mobile-fare-choose relative ">
-                                        <div class="radio">
-                                            <input id="mobile_fare_1f38e1631532974a701fa783bcb1c1cc_66890155_AnL" type="radio" name="mobile_fares_1f38e1631532974a701fa783bcb1c1cc_66890155" class="fare_radio" data-fare="AnL" data-price="1506000" data-label="Nằm khoang 4" data-has_promotion="0">
-
-                                            <label for="mobile_fare_1f38e1631532974a701fa783bcb1c1cc_66890155_AnL"></label>
-                                        </div>
-                                        <div style="padding-bottom: 20px;">
-                                            <span class="yellow-text js-fare_price bold money" data-amount="1506000" data-currency="VND">1,506,000&nbsp;đ</span>
-                                        </div>
-                                        <div style="padding-bottom: 10px; text-decoration: underline;" class="fare-info-button blue-text" data-origin_country_code="VN" data-destination_country_code="VN" data-transport="vr" data-alert="eyJvcmlnaW5faWQiOiIyODEiLCJkZXN0aW5hdGlvbl9pZCI6IjMyNCIsInRyYXZlbF9kYXRlIjoiMjAyMC0wMy0yNiIsInRyYW5zcG9ydF9jb2RlIjoidnIiLCJ2ZXNzZWwiOiJTRTEifQ==" data-fare="AnL" data-status="1"><i style="margin-right: 8px" class="fa-info-circle" aria-hidden="true"></i>Điều kiện giá vé</div>
-                                    </div>
-                                </label>
+                                    <%index++%>
+                                <%});%>
                             </div>
                         </div>
                     </section>

@@ -1,8 +1,8 @@
-<div class="seat_carousel owl-carousel seat_selection owl-loaded" v-bind:id="'parentSeat' + carriage.ID" v-for="(carriage,index) in carriageDisplay" v-if="index == 0" style="display:block;position: absolute;z-index:2"  >
+<div class="seat_carousel owl-carousel seat_selection owl-loaded w3-container city w3-animate-opacity" name="carriageBefore1" v-bind:id="'parentSeat' + carriage.ID + '1'" v-for="(carriage,index) in carriageDisplay" v-if="index == 0" style="display:block;">
     
     <div class="owl-stage-outer" >
-        <div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all 0.8s ease 0s; width: 1280px; margin: 0 auto;">
-            <div class="owl-item" style="width: 1280px;transform: translate3d(0px, 0px, 0px); transition: all 0.8s ease 0s;">
+        <div class="owl-stage" style="margin: 0 auto;">
+            <div class="owl-item" style="width: 100%;">
                 <div class="item">
                     <div class="text-center visible-sm visible-xs">
                         <p class="big-text" style="text-transform: capitalize">
@@ -13,8 +13,7 @@
                     <div class="gap gap-small visible-sm visible-xs"></div>
             
                     <div class="ss_train ss_train_seat_row">
-                            <div class="ss_train_direct" v-if="index === 0" v-bind:id="'carriage_' + carriage.ID" 
-                            style="transform: translate3d(0px, 0px, 0px); transition: all 0.8s ease 0s;" name="activeDiv1">
+                            <div class="ss_train_direct" style="transform: translate3d(0px, 0px, 0px); transition: all 0.8s ease 0s;" v-if="index === 0" v-bind:id="'carriage_' + carriage.ID" name="activeDiv1" >
                                 <div v-if="SeatTypeID != 'undefined' && (SeatTypeID === 2 || SeatTypeID === 3 || SeatTypeID === 4 || SeatTypeID === 5)">
                                     <div class="train_row clearfix">
                                         <div class="train_cell seat can_block soft_seat_right available" v-bind:name="'carriage_' + carriage.ID" onclick="select(this, 1)" data-seat-id="4937-0-0-0" >
@@ -214,7 +213,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="ss_train ss_train_bed_row clearfix" v-if="SeatTypeID != 'undefined' && (SeatTypeID === 1)" style="width: 1280px;">
+                                <div class="ss_train ss_train_bed_row clearfix" v-if="SeatTypeID != 'undefined' && (SeatTypeID === 1)" style="width: 100%;">
                                     <div class="ss_train_bed_col">
                                         <div style="margin-bottom: 30px; text-transform: capitalize;" class="text-center">Khoang 1</div>
                                 
@@ -390,7 +389,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="mobile_bed_row" v-if="SeatTypeID != 'undefined' && (SeatTypeID === 6)" style="width: 1280px;">
+                                <div class="mobile_bed_row" v-if="SeatTypeID != 'undefined' && (SeatTypeID === 6)" style="width: 100%;">
                                     <div class="ss_train ss_train_bed_row clearfix">
                                         <div class="ss_train_bed_col">
                                             <div style="margin-bottom: 30px; text-transform: capitalize;" class="text-center">Khoang 1</div>
@@ -1251,11 +1250,11 @@
     </div>
 </div>
 
-<div class="seat_carousel owl-carousel seat_selection owl-loaded"  v-bind:id="'parentSeat' + carriage.ID" v-else style="display:block;position: absolute;"  >
+<div class="seat_carousel owl-carousel seat_selection owl-loaded w3-container city w3-animate-opacity"  v-bind:id="'parentSeat' + carriage.ID + '1'" v-else style="display:none;">
     
     <div class="owl-stage-outer" >
-        <div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all 0.8s ease 0s; width: 1280px; margin: 0 auto;">
-            <div class="owl-item" style="width: 1280px;transform: translate3d(0px, 0px, 0px); transition: all 0.8s ease 0s;">
+        <div class="owl-stage" style="margin: 0 auto;">
+            <div class="owl-item" style="width: 100%;">
                 <div class="item">
                     <div class="text-center visible-sm visible-xs">
                         <p class="big-text" style="text-transform: capitalize">
@@ -1467,7 +1466,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="ss_train ss_train_bed_row clearfix" v-if="SeatTypeID != 'undefined' && (SeatTypeID === 1)" style="width: 1280px;">
+                            <div class="ss_train ss_train_bed_row clearfix" v-if="SeatTypeID != 'undefined' && (SeatTypeID === 1)" style="width: 100%;">
                                 <div class="ss_train_bed_col">
                                     <div style="margin-bottom: 30px; text-transform: capitalize;" class="text-center">Khoang 1</div>
                             
@@ -1643,7 +1642,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="mobile_bed_row" v-if="SeatTypeID != 'undefined' && (SeatTypeID === 6)" style="width: 1280px;">
+                            <div class="mobile_bed_row" v-if="SeatTypeID != 'undefined' && (SeatTypeID === 6)" style="width: 100%;">
                                 <div class="ss_train ss_train_bed_row clearfix">
                                     <div class="ss_train_bed_col">
                                         <div style="margin-bottom: 30px; text-transform: capitalize;" class="text-center">Khoang 1</div>
@@ -1880,7 +1879,7 @@
                             </div>
                             </div>
                             <div class="ss_train_direct" v-else 
-                            style="transform: translate3d(0px, 300px, 0px); transition: all 0.8s ease 0s;" 
+                            style="transform: translate3d(0px, 0px, 0px); transition: all 0.8s ease 0s;" 
                             v-bind:id="'carriage_' + carriage.ID">
                             <div v-if="SeatTypeID != 'undefined' && (SeatTypeID === 2 || SeatTypeID === 3 || SeatTypeID === 4 || SeatTypeID === 5)">
                                 <div class="train_row clearfix">
@@ -2081,7 +2080,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="ss_train ss_train_bed_row clearfix" v-if="SeatTypeID != 'undefined' && (SeatTypeID === 1)" style="width: 1280px;">
+                            <div class="ss_train ss_train_bed_row clearfix" v-if="SeatTypeID != 'undefined' && (SeatTypeID === 1)" style="width: 100%;">
                                 <div class="ss_train_bed_col">
                                     <div style="margin-bottom: 30px; text-transform: capitalize;" class="text-center">Khoang 1</div>
                             
@@ -2257,7 +2256,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="mobile_bed_row" v-if="SeatTypeID != 'undefined' && (SeatTypeID === 6)" style="width: 1280px;">
+                            <div class="mobile_bed_row" v-if="SeatTypeID != 'undefined' && (SeatTypeID === 6)" style="width: 100%;">
                                 <div class="ss_train ss_train_bed_row clearfix">
                                     <div class="ss_train_bed_col">
                                         <div style="margin-bottom: 30px; text-transform: capitalize;" class="text-center">Khoang 1</div>

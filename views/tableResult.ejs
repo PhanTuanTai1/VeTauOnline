@@ -10,10 +10,7 @@
                     <span class="sort-by" data-toggle="popover" data-container="body" data-placement="auto" data-trigger="hover" data-content="Sort by: Departure" data-original-title="" title="">Departure</span>
 
                 </th>
-                <th class="text-right" data-sort="arrival">
-                    <i class="caret private-show hidden-xs"></i>
-                    <span class="sort-by" data-toggle="popover" data-container="body" data-placement="auto" data-trigger="hover" data-content="Sort by: Arrival" data-original-title="" title="">Arrival</span>
-                </th>
+                
                 <th class="text-center" data-sort="duration">
                     <span class="sort-by" data-toggle="popover" data-container="body" data-placement="auto" data-trigger="hover" data-content="Sort by: Duration" data-original-title="" title="">Duration</span>
                     <i class="caret private-show hidden-xs"></i>
@@ -31,6 +28,10 @@
         </thead>
         <tbody>
             <%if(index == 1){%>
+                <%var hour = parseInt(moment(result.TimeDeparture).subtract(7, 'hour').format('HH'))%>
+                <%var min = parseInt(moment(result.TimeDeparture).format('mm'))%>
+                <%var DateDepart = new Date(moment(result.DateDeparture).add(hour,'hour').add(min, 'minutes'))%>
+                <%var DateArrive = new Date(moment(result.DateDeparture).add(hour,'hour').add(result.ScheduleDetails[0].Time * 60 + min, 'minutes'))%>
                 <tr id="Schedule<%=result.ID%>" 
                     class="result clickable_tr train vr direct" 
                     data-toggle="collapse"
@@ -45,12 +46,9 @@
                             <div class="super-bold"><%=moment(result.TimeDeparture).subtract('hour', 7).format('LT')%></div>
                             <div><%=moment(result.DateDeparture).format('DD-MM-YYYY')%></div>
                         </td>
-                        <td class="text-right">
-                            <div class="super-bold">04:38</div>
-                            <div>Fr, 17/04</div>
-                        </td>
+                        
                         <td class="text-center">
-                            17h 10m </td>
+                            <%=new duration(DateDepart, DateArrive).toString("%Hs hour %M minutes")%></td>
                         <td class="searchresult-itenerary hidden-sm hidden-xs">
                             <span style="display:inline-block" >
                                 <span >{{Depart1}}</span><br>
@@ -61,7 +59,7 @@
                             <span style="font-size:13px" >{{Arrival1}}</span></span>
                         </td>
                         <td class="total_price yellow-text super-bold price-alignment">
-                            <span class="money" data-amount="579000" data-currency="VND"><%=JSON.stringify(result.ScheduleDetails[0].TableCosts[0].Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%>&nbsp;VND</span> <i class="js-result_promo_tag fa fa-tag yellow-text" style="display:none"></i> </td>
+                            <span class="money"><%=JSON.stringify(result.ScheduleDetails[0].TableCosts[0].Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%>&nbsp;VND</span> <i class="js-result_promo_tag fa fa-tag yellow-text" style="display:none"></i> </td>
                         <td class="text-right button-alignment">
                             <i class="fa button-direct hidden-xs hidden-sm"></i>
         
@@ -119,8 +117,8 @@
                                                                     <p id="typeSeat"></p>
                                                                     <span class="yellow-text js-fare_price money" data-currency="VND"><%=JSON.stringify(result.ScheduleDetails[0].TableCosts[0].Cost).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%>&nbsp;VND</span>
                                                                     <div class="fare-info-button" data-origin_country_code="VN" data-destination_country_code="VN" data-transport="vr" data-alert="eyJvcmlnaW5faWQiOiIyNjQiLCJkZXN0aW5hdGlvbl9pZCI6IjMyNCIsInRyYXZlbF9kYXRlIjoiMjAyMC0wNC0xNiIsInRyYW5zcG9ydF9jb2RlIjoidnIiLCJ2ZXNzZWwiOiJTRTMifQ==" data-fare="NML56" data-status="1" data-overwrites="eyJzZWF0X3NlbGVjdGlvbiI6ImZhcmVfcnVsZV9vcHRpb25fcGVybWl0dGVkIn0=" data-container="body" data-placement="auto" data-trigger="hover" data-template="<span class='farerule popover-style'><span> <i style ='font-size:20px' class='fa-info-circle'></i></span><span class='farerule-content popover-content small-text'></span></span>" data-html="true" data-content="">
-                                                                        <div><i style="font-size: 20px" class="fa-info-circle" aria-hidden="true"></i></div>
-                                                                        <div>Fare rules</div>
+                                                                        
+                                                                        
                                                                     </div>
                                                                 </label>
         
@@ -130,7 +128,7 @@
                                                     </div>
                                                 </td>
                                             </tr>
-        
+                                            
                                             <!-- Vessel -->
                                             <tr style="border:none">
                                                 <td style="text-align:center">
@@ -138,9 +136,8 @@
                                                     <div style="font-size: 13px" >{{Train1}}</div>
                                                 </td>
                                                 <td class="text-right">
-                                                    <span>
-                            <span class="bold">17h 10m</span>
-                                                    </span>
+                                                    
+                                    <span class="bold"><%=new duration(DateDepart, DateArrive).toString("%Hs hour %M minutes")%></span>
                                                 </td>
                                                 <td class="text-center">
                                                     <div class="searchresult-timeline">
@@ -155,13 +152,13 @@
                     </div>-->
                                                 </td>
                                             </tr>
-        
+                                            
                                             <!--  Destination -->
                                             <tr style="border:none">
                                                 <td></td>
                                                 <td class="text-right">
-                                                    <span class="blue-text super-bold">04:38</span>
-                                                    <p>Fr, 17/04</p>
+                                                    <span class="blue-text super-bold"><%=moment(result.TimeDeparture).add(result.ScheduleDetails[0].Time * 60, 'minutes').subtract(7, "hour").format("LT")%></span>
+                                                    <p><%=moment(result.DateDeparture).add(result.ScheduleDetails[0].Time * 60 + min , 'minutes').add(hour,"hour").subtract(7, "hour").format("DD-MM-YYYY")%></p>
                                                 </td>
                                                 <td class="relative text-center">
                                                     <div class="searchresult-timeline">
@@ -278,6 +275,10 @@
                         <td colspan="7"></td>
                     </tr>
             <%}else{%>
+                <%var hour = parseInt(moment(result.TimeDeparture).subtract(7, 'hour').format('HH'))%>
+                <%var min = parseInt(moment(result.TimeDeparture).format('mm'))%>
+                <%var DateDepart = new Date(moment(result.DateDeparture).add(hour,'hour').add(min, 'minutes'))%>
+                <%var DateArrive = new Date(moment(result.DateDeparture).add(hour,'hour').add(result.ScheduleDetails[0].Time * 60 + min, 'minutes'))%>
                 <tr id="Schedule<%=result.ID%>" 
                     class="result clickable_tr train vr direct" 
                     data-toggle="collapse"
@@ -292,12 +293,8 @@
                             <div class="super-bold"><%=moment(result.TimeDeparture).subtract('hour', 7).format('LT')%></div>
                             <div><%=moment(result.DateDeparture).format('DD-MM-YYYY')%></div>
                         </td>
-                        <td class="text-right">
-                            <div class="super-bold">04:38</div>
-                            <div>Fr, 17/04</div>
-                        </td>
                         <td class="text-center">
-                            17h 10m </td>
+                            <%=new duration(DateDepart, DateArrive).toString("%Hs hour %M minutes")%> </td>
                         <td class="searchresult-itenerary hidden-sm hidden-xs">
                             <span style="display:inline-block" >
                                 <span >{{Depart2}}</span><br>
@@ -386,7 +383,7 @@
                                                 </td>
                                                 <td class="text-right">
                                                     <span>
-                            <span class="bold">17h 10m</span>
+                            <span class="bold"><%=new duration(DateDepart, DateArrive).toString("%Hs hour %M minutes")%></span>
                                                     </span>
                                                 </td>
                                                 <td class="text-center">

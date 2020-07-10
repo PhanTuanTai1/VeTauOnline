@@ -29,12 +29,32 @@
     <link rel="stylesheet" type="text/css" href="../vendor/owl-carousel2/owl.theme.default.css">
     <link rel="stylesheet" type="text/css" href="../vendor/lightgallery/lightgallery.css">
     <link rel="stylesheet" type="text/css" href="../dist/baolau.min6ffc.css">
+    <link rel="stylesheet" href="../dist/w3.css">
     <script src="../dist/socket.io.js"></script>
     <!-- jQuery -->
     <script type="text/javascript" src="../vendor/js/jquery.min.js"></script>
+    <style>
+        html, body {
+            font-family: Panton !important;
+            line-height: initial !important;
+        }
+        .pull-left > div {
+            margin-right: 9px;
+        }
+        .pull-right > div {
+            margin-left: 9px;
+        }
+        .ss_train .bed .bed-number {
+        bottom: 5px !important;
+        left: 1px;
+        font-size: 10px;
+        color: #fff;
+        width: 100%;
+        }
+    </style>
 </head>
 
-<body style="overflow: hidden;">
+<body style="overflow: hidden;" class="fontFamily">
     <input type="hidden" value="<%=JSON.stringify(result.DateDeparture)%>" id="dateDepart">
         <input type="hidden" value="<%=JSON.stringify(result)%>" id="result">
         <%if(typeof(result2) != "undefined"){%>
@@ -117,7 +137,7 @@
                 </div>
                 <%if(typeof(ROUND_TRIP) != "undefined"){%>
                     <div class="current bold">
-                        <span>Departure</span>
+                        <span>Return</span>
                     </div>
                 <%}%>
             </div>
@@ -382,7 +402,7 @@
             
                                     <!-- <div style="opacity: .8; margin-top: 15px" class="horizontal-devider"></div> -->
             
-                                    <div class="row" v-if="SeatTypeID != 1 || SeatTypeID != 6">
+                                    <div class="row" v-if="SeatTypeID1 != 'undefined' && (SeatTypeID1 === 2 || SeatTypeID1 === 3 || SeatTypeID1 === 4 || SeatTypeID1 === 5)">
                                         <div style="margin-top: 15px; margin-bottom: 30px;" class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12 col-xs-offset-0">
                                             <div class="legend">
                                                 <div class="col-md-3 col-sm-3 col-xs-6">
@@ -401,21 +421,41 @@
                                             <!-- End legend-->
                                         </div>
                                     </div>
+                                    <div class="row" v-else-if="SeatTypeID1 != 'undefined' && SeatTypeID1 === 1 || SeatTypeID1 === 6">
+                                        <div style="margin-top: 15px; margin-bottom: 30px;" class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12 col-xs-offset-0">
+                                            <div class="legend">
+                                                                    <div class="col-md-3 col-sm-3 col-xs-6">
+                                                    <span> <i style="font-size: 40px;" class="icon-soft-bed-bottom"></i> <br> Available                        </span>
+                                                </div>
+                                                <div class="col-md-3 col-sm-3 col-xs-6">
+                                                    <span style="color: #ffbb00;"> <i style="font-size: 40px;" class="icon-soft-bed-people-bottom"></i> <br> Selected                        </span>
+                                                </div>
+                                                <div class="seat_legend col-md-3 col-sm-3 col-xs-6">
+                                                    <span style="color: #d54844;"> <i style="font-size: 40px;" class="icon-soft-bed-people-bottom"></i> <br> Sold out                        </span>
+                                                </div>
+                                                <div class="seat_legend col-md-3 col-sm-3 col-xs-6">
+                                                    <span style="color: #666b71;"> <i style="font-size: 40px; opacity: .3" class="icon-soft-bed-reserve-bottom"></i> <br> Reserved                        </span>
+                                                </div>
+                                            </div>
+                                            <!-- End legend-->
+                                        </div>
+                                    </div>
             
                                     <div class="horizontal-devider"></div>
                                     <div class="gap gap-mini"></div>
-                                    <div class="row hidden-sm hidden-xs">
+                                    <div class="row">
                                         <div class="col-md-12">
                                             <div class="diagram-train">
-                                                <div class="mobile-scroll">
+                                                <div>
                                                     <div class="diagram_cell train-block etc"> 
                                                         <div class="diagram-number">...</div>
                                                     </div>
+                                                    <!-- chooseSeat2  -->
                                                    <span v-if="carriageDisplay2" v-for="(carriage, index) in carriageDisplay2">
-                                                    <div style="cursor: pointer;" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 2)" v-bind:id="carriageDisplay2[carriageDisplay2.length - (index + 1)].ID" name="carriageSelected2" class="diagram_cell train-block selectable selected" v-if="carriageDisplay2.length - (index + 1) == 0">
+                                                    <div style="cursor: pointer;" data-click="true" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 2)" v-bind:id="carriageDisplay2[carriageDisplay2.length - (index + 1)].ID" name="carriageSelected2" class="diagram_cell train-block selectable selected" v-if="carriageDisplay2.length - (index + 1) == 0">
                                                         <div class="diagram-number" >{{carriageDisplay2.length - index}}</div>
                                                     </div>
-                                                    <div style="cursor: pointer;" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 2)" class="diagram_cell train-block available" v-bind:id="carriageDisplay2[carriageDisplay2.length - (index + 1)].ID" v-else>
+                                                    <div style="cursor: pointer;" data-click="false" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 2)" class="diagram_cell train-block available" v-bind:id="carriageDisplay2[carriageDisplay2.length - (index + 1)].ID" v-else>
                                                         <div class="diagram-number" >{{carriageDisplay2.length - index}}</div>
                                                     </div>
                                                     <!-- <div style="cursor: pointer;" class="diagram_cell train-block selectable selected">
@@ -429,7 +469,7 @@
                                                         <div class="diagram-number">...</div>
                                                     </div>
                                                     <div class="diagram_cell train-block last">
-                                                        <div class="diagram-number" name="hiddenTrain2">SE3</div>
+                                                        <div class="diagram-number" name="hiddenTrain2">{{Train2}}</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -437,7 +477,7 @@
                                     </div>
             
                                     <div class="gap gap-medium hidden-sm hidden-xs"></div>
-                                    <div style="position: relative; height: 300px;">
+                                    <div>
                                         <%- include('chooseSeat2') %>
                                     </div>
                                 </div>
@@ -461,8 +501,6 @@
                                     </div>
                                 </div>
                                 <div class="gap gap-small hidden-sm hidden-xs"></div>
-        
-                                <!-- <div style="opacity: .8; margin-top: 15px" class="horizontal-devider"></div> -->
         
                                 <div class="row" v-if="SeatTypeID != 'undefined' && (SeatTypeID === 2 || SeatTypeID === 3 || SeatTypeID === 4 || SeatTypeID === 5)">
                                     <div style="margin-top: 15px; margin-bottom: 30px;" class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12 col-xs-offset-0">
@@ -504,18 +542,19 @@
                                 </div>
                                 <div class="horizontal-devider"></div>
                                 <div class="gap gap-mini"></div>
-                                <div class="row hidden-sm hidden-xs">
+                                <div class="row">
                                     <div class="col-md-12">
                                         <div class="diagram-train">
-                                            <div class="mobile-scroll">
+                                            <div >
                                                 <div class="diagram_cell train-block etc"> 
                                                     <div class="diagram-number">...</div>
                                                 </div>
+                                                <!-- chooseSeat1 -->
                                                <span v-if="carriageDisplay" v-for="(carriage, index) in carriageDisplay">
-                                                <div style="cursor: pointer;" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 1)" v-bind:id="carriageDisplay[carriageDisplay.length - (index + 1)].ID" name="carriageSelected1" class="diagram_cell train-block selectable selected" v-if="carriageDisplay.length - (index + 1) == 0">
+                                                <div style="cursor: pointer;" data-click="true" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 1)" v-bind:id="carriageDisplay[carriageDisplay.length - (index + 1)].ID" name="carriageSelected1" class="diagram_cell train-block selectable selected" v-if="carriageDisplay.length - (index + 1) == 0">
                                                     <div class="diagram-number" >{{carriageDisplay.length - index}}</div>
                                                 </div>
-                                                <div style="cursor: pointer;" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 1)" class="diagram_cell train-block available" v-bind:id="carriageDisplay[carriageDisplay.length - (index + 1)].ID" v-else>
+                                                <div style="cursor: pointer;" data-click="false" v-bind:data-parent="'parentSeat' + carriage.ID" onclick="change(this, 1)" class="diagram_cell train-block available" v-bind:id="carriageDisplay[carriageDisplay.length - (index + 1)].ID" v-else>
                                                     <div class="diagram-number" >{{carriageDisplay.length - index}}</div>
                                                 </div>
                                                 <!-- <div style="cursor: pointer;" class="diagram_cell train-block selectable selected">
@@ -529,7 +568,7 @@
                                                     <div class="diagram-number">...</div>
                                                 </div>
                                                 <div class="diagram_cell train-block last">
-                                                    <div class="diagram-number" name="hiddenTrain">SE3</div>
+                                                    <div class="diagram-number" name="hiddenTrain">{{Train1}}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -537,9 +576,9 @@
                                 </div>
         
                                 <div class="gap gap-medium hidden-sm hidden-xs"></div>
-                                <div style="position: relative; height: 300px;">
-                                    <%- include('chooseSeat') %>
-                                </div>
+                                    <div >
+                                        <%- include('chooseSeat') %>
+                                    </div>
                             </div>
                         </div>
                         <br>
