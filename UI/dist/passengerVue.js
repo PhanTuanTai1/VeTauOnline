@@ -66,7 +66,16 @@ socket.on('response', data => {
 
 socket.on('response_unblock', (data)=> {
     try {
-        document.getElementById(data.id).setAttribute('class', data.class.replace("reserved", "available"));                      
+        document.getElementById(data.id).setAttribute('class', data.class.replace("reserved", "available"));           
+        socket.emit('deleteSeat',data);
+        var temp = vm.listSelected.filter(x => {
+            return x.split("_")[3] != data.id;
+        })
+        vm.listSelected = temp;
+        var temp2 = vm.listSelected2.filter(x => {
+            return x.split("_")[3] != data.id;
+        })
+        vm.listSelected2 = temp2;
     }
     catch(err) {
         
@@ -75,26 +84,32 @@ socket.on('response_unblock', (data)=> {
 
 function select(element, number){
     vm.selectSeat(element, number);
-    
 }
 
 function change(element, number){
     // diagram_cell train-block selectable selected
     // diagram_cell train-block available
-    var carriageSelected = document.getElementsByName('carriageSelected' + number)[0];
-    var activeDiv = document.getElementsByName('activeDiv' + number)[0];
-    var parentSeatID = $(element).attr('data-parent');
-    document.getElementById(parentSeatID).style['z-index'] = -1;
-    carriageSelected.setAttribute('class', 'diagram_cell train-block available');    
-    carriageSelected.removeAttribute('name');
-    $(element).attr('class', 'diagram_cell train-block selectable selected')
-    $(element).attr('name', 'carriageSelected' + number)
-    // $(element).attr('id', 'transform: translate3d(0px, -10px, 0px); transition: all 0.8s ease 0s;')
-    activeDiv.setAttribute('style', 'transform: translate3d(0px, 300px, 0px); transition: all 0.8s ease 0s');
-    activeDiv.removeAttribute('name');
-    document.getElementById('carriage_' + $(element).attr('id')).setAttribute('style', 'transform: translate3d(0px, 0px, 0px); transition: all 0.8s ease 0s');
-    document.getElementById('carriage_' + $(element).attr('id')).setAttribute('name', 'activeDiv' + number);
-    document.getElementById("parentSeat" + $(element).attr('id')).style['z-index'] = 99;
+    let carriageSelected = document.getElementsByName('carriageSelected' + number)[0];
+    let carriageBefore = document.getElementsByName('carriageBefore' + number)[0];
+
+    if($(element).attr('data-click') == "false"){
+        carriageSelected.setAttribute('class', 'diagram_cell train-block available');    
+        carriageSelected.removeAttribute('name');
+        carriageSelected.setAttribute('data-click', 'false');
+        $(element).attr('class', 'diagram_cell train-block selectable selected')
+        $(element).attr('name', 'carriageSelected' + number)
+        $(element).attr('data-click', 'true')
+        let selected = document.getElementById("parentSeat" + $(element).attr('id') + number);
+        selected.style.display = "block";
+        carriageBefore.style.display = "none";
+
+        selected.setAttribute('name', "carriageBefore" + number);
+        selected.setAttribute('data-click', 'true');
+        carriageBefore.removeAttribute('name');
+    }
+    
+
+    
 }
 
 var vm = new Vue({
@@ -144,7 +159,9 @@ var vm = new Vue({
         
        await this.setCarriageDisplay();
        if(typeof(this.result2)  != "undefined" && this.result2 != null) await this.setCarriageDisplay2();
-
+       
+       this.listSelected = new Array();
+       this.listSelected2 = new Array();
        this.numberPass = new Array();
        
        for(var i = 0; i < this.total;i++){
@@ -166,8 +183,7 @@ var vm = new Vue({
              this.setStationName(this.result2, 2);
         }
         
-        this.listSelected = new Array();
-        this.listSelected2 = new Array();
+        
     },
     updated: function(){
         this.loadSeat(this.carriageDisplay, this.seatSold);
@@ -387,11 +403,11 @@ var vm = new Vue({
                     }
                     else 
                     {
-                        this.error = "Vượt quá số lượng";
+                        this.error = "Exceeded quantity passengers";
                         $("#errors").modal({
                             fadeDuration: 100
                         });
-                        //alert("Vượt quá số lượng");
+                        //alert("Exceeded quantity passengers");
                     }
                 }
                 else {
@@ -442,11 +458,11 @@ var vm = new Vue({
                     }
                     else 
                     {
-                        this.error = "Vượt quá số lượng";
+                        this.error = "Exceeded quantity passengers";
                         $("#errors").modal({
                             fadeDuration: 100
                         });
-                        //alert("Vượt quá số lượng");
+                        //alert("Exceeded quantity passengers");
                     }
                 }
                 else {
