@@ -45,15 +45,86 @@
             width: 100%;
             background-color: inherit !important;
         }
+
+        .agile__dots {
+            bottom: 150px;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            flex-direction: column;
+            right: 30px;
+            position: absolute;
+        }
+
+        .agile__dot {
+            margin: 5px 0;
+        }
+
+        .agile__dot button {
+            background-color: transparent;
+            border: 1px solid #fff;
+            cursor: pointer;
+            display: block;
+            height: 10px;
+            font-size: 0;
+            line-height: 0;
+            margin: 0;
+            padding: 0;
+            -webkit-transition-duration: 0.3s;
+            transition-duration: 0.3s;
+            width: 10px;
+        }
+
+        .agile__dot--current button,
+        .agile__dot:hover button {
+            background-color: #fff;
+        }
+
+        .slide {
+            display: block;
+            height: 500px;
+            -o-object-fit: cover;
+            object-fit: cover;
+            width: 100%;
+        }
+
+        .carousel-item {
+            position: relative;
+            text-align: center;
+            color: white;
+        }
+
+        .carousel-item h1 {
+            color: white;
+        }
+
+        .caption {
+            position: relative;
+            left: 0;
+            bottom: 80px;
+            width: 100%;
+            padding: 10px 20px;
+            height: 100%;
+            background-color: rgba(170, 165, 165, 0.24);
+            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+            filter: alpha(opacity=70);
+            /* IE 5-7 */
+            -moz-opacity: 0.7;
+            /* Netscape */
+            -khtml-opacity: 0.7;
+            /* Safari 1.x */
+            opacity: 0.7;
+        }
     </style>
- 
+
 
     <!-- jQuery -->
     <script type="text/javascript" src="../vendor/js/jquery.min.js"></script>
+    <script src="https://unpkg.com/vue-agile"></script>
+    <link rel="stylesheet" href="../dist/VueAgile.css">
 </head>
 
 <body class="" style="overflow: hidden;">
-    
+
 
     <div id="message" class="container-fluid" style="display:none">
         <div class="close-message smaller-text" onclick="$('#message').slideUp('fast')"><i class="fa fa-times"></i>
@@ -115,138 +186,163 @@
     <div id="main_container">
         <div class="filter">
             <div class="global-wrap">
-            <%- include('sectionDesktop')%>
-            <div id="change">
-                <div class="row">
-                    <!-- <div class="col-md-12 padding-0">
+                <%- include('sectionDesktop')%>
+                <div id="change">
+                    <div class="row">
+                        <!-- <div class="col-md-12 padding-0">
                         <img src="../images/man_tourist_backpack_mountains_travel_114250_1366x768.jpg" />
                     </div> -->
                 </div>
-                <div id="homepage">
-                    <div class="landing-banner--size js-landing-banner hidden-xs" style="height: 535px;">
-                        <div class="owl-item active" style="width: 100%;">
-                            <div class="item" style="width:100%;">
-                               <div class="blur-top"></div>
-                               <img class=" lazyloaded" style="height: 535px;" src="../images/landing/train-vietnam.jpg">
-                               <div class="carousel-caption landing-banner__carousel-caption">
-                                  <h1 style="margin-bottom: 5px;">TRAIN TICKET ONLINE</h1>
-                                  <h3 style="color:#fff;font-size: 35px;">Viet Nam</h3>
-                               </div>
-                            </div>
-                         </div>
                     </div>
-                    <!-- SEARCH FORM  -->
-                    <div class="landing-banner__footer js-landing-banner__footer container">
-                        <div class="gap gap-medium-medium visible-xs"></div>
+                    <div id="homepage">
+                        <div id="carousel" class="landing-banner--size js-landing-banner hidden-xs"
+                            style="height: 535px;">
+                            <agile :nav-buttons="false" :autoplay-speed="5000" :speed="2500" fade="fade"
+                                pause-on-hover="pause-on-hover" pause-on-dots-hover="pause-on-dots-hover"
+                                autoplay="autoplay">
+                                <div class="carousel-item">
+                                    <img class="slide" src="../images/slide1.jpg" />
+                                    <h1 class="caption">VIETNAM online train booking</h1>
+                                </div>
+                                <div class="carousel-item">
+                                    <img class="slide" src="../images/slide2.jpg" />
+                                    <h1 class="caption">Ha Long Bay</h1>
+                                </div>
+                                <div class="carousel-item">
+                                    <img class="slide" src="../images/slide3.jpg" />
+                                    <h1 class="caption">Sapa</h1>
+                                </div>
+                                <div class="carousel-item">
+                                    <img class="slide" src="../images/slide4.jpg" />
+                                    <h1 class="caption">Nha Trang</h1>
+                                </div>
+                                <div class="carousel-item">
+                                    <img class="slide" src="../images/slide5.jpg" />
+                                    <h1 class="caption">Hoi An</h1>
+                                </div>
+                                <div class="carousel-item">
+                                    <img class="slide" src="../images/slide6.jpg" />
+                                    <h1 class="caption">Ban Gioc detain fall</h1>
+                                </div>
+                            </agile>
+                        </div>
+                        <!-- SEARCH FORM  -->
+                        <div class="landing-banner__footer js-landing-banner__footer container">
+                            <div class="gap gap-medium-medium visible-xs"></div>
 
-                        <form id="search_form" action="#" method="get">
+                            <form id="search_form" action="#" method="get">
 
-                            <div class="gap gap-small widget-hide"></div>
+                                <div class="gap gap-small widget-hide"></div>
 
-                            <!-- Hidden fields -->
+                                <!-- Hidden fields -->
 
-                            <input id="transports" name="transports" type="hidden" value="" />
-                            <!-- <input name="lang" type="hidden" value="en" /> -->
+                                <input id="transports" name="transports" type="hidden" value="" />
+                                <!-- <input name="lang" type="hidden" value="en" /> -->
 
 
-                            <!-- Big row of Booking Process -->
-                            <div class="widget-container" id="app">
-                                <div id="errors" class="modal fade">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                                        aria-hidden="true">&times;</span></button>
-                                            </div>
-                                            <div class="modal-body text-center">
-                                                <div class="gap gap-super-small"></div>
-                                                <div style="letter-spacing: 3px; margin: -30px 0 35px;"
-                                                    class="refrigerator uppercase yellow-text super-big-text">
-                                                    Error </div>
-                                                <div class="gap gap-small"></div>
-                                                <div class="message" style="letter-spacing: 1px; color: #f5f5f5" class="message big-text italic">
-                                                    {{errors}}
+                                <!-- Big row of Booking Process -->
+                                <div class="widget-container" id="app">
+                                    <div id="errors" class="modal fade">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close"><span
+                                                            aria-hidden="true">&times;</span></button>
                                                 </div>
-                                            </div><!-- /.modal-content -->
-                                            <div class="gap gap-super-small"></div>
+                                                <div class="modal-body text-center">
+                                                    <div class="gap gap-super-small"></div>
+                                                    <div style="letter-spacing: 3px; margin: -30px 0 35px;"
+                                                        class="refrigerator uppercase yellow-text super-big-text">
+                                                        Error </div>
+                                                    <div class="gap gap-small"></div>
+                                                    <div class="message" style="letter-spacing: 1px; color: #f5f5f5"
+                                                        class="message big-text italic">
+                                                        {{errors}}
+                                                    </div>
+                                                </div><!-- /.modal-content -->
+                                                <div class="gap gap-super-small"></div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-8 col-md-7">
-                                        <div class="row">
-                                            <!-- WHERE Leaving From -->
-                                            <div class="col-md-5_5 col-xs-12">
-                                                <template>
-                                                    <div class="form-group">
-                                                        <label>DEPARTURE</label>
-                                                        <input v-model="FROM" @input="searchFromStation" id="Depart"
-                                                            name="origin" value="" class="typeahead form-control"
-                                                            tabindex="1" placeholder="station"
-                                                            type="text" autocomplete="off" />
-                                                        <input type="hidden" id="origin_id" name="origin_id" value=""
-                                                            v-model="departureStationID">
-                                                        <input type="hidden" id="origin_town" name="origin_town"
-                                                            value="">
-                                                        <input type="hidden" id="origin_town_lang"
-                                                            name="origin_town_lang" value="">
-                                                        <input type="hidden" id="origin_type" name="origin_type"
-                                                            value="">
-                                                        <button type="button"
-                                                            class="icon-line-point input-icon typeahead-icon"
-                                                            data-target="#origin" data-default="Hanoi"></button>
-                                                        <div v-if="SearchFrom" style="align-items: center;">
-                                                            <ul style="z-index: 100;position: absolute;"
-                                                                class="tt-menu">
-                                                                <li v-for="station in SearchFrom" v-text="station.Name"
-                                                                    v-on:click="selectStationFrom(station.Name)"
-                                                                    class="inner capitalize town TH tt-suggestion tt-selectable">
-                                                                </li>
-                                                            </ul>
+                                    <div class="row">
+                                        <div class="col-lg-8 col-md-7">
+                                            <div class="row">
+                                                <!-- WHERE Leaving From -->
+                                                <div class="col-md-5_5 col-xs-12">
+                                                    <template>
+                                                        <div class="form-group">
+                                                            <label>DEPARTURE</label>
+                                                            <input v-model="FROM" @input="searchFromStation" id="Depart"
+                                                                name="origin" value="" class="typeahead form-control"
+                                                                tabindex="1" placeholder="station" type="text"
+                                                                autocomplete="off" />
+                                                            <input type="hidden" id="origin_id" name="origin_id"
+                                                                value="" v-model="departureStationID">
+                                                            <input type="hidden" id="origin_town" name="origin_town"
+                                                                value="">
+                                                            <input type="hidden" id="origin_town_lang"
+                                                                name="origin_town_lang" value="">
+                                                            <input type="hidden" id="origin_type" name="origin_type"
+                                                                value="">
+                                                            <button type="button"
+                                                                class="icon-line-point input-icon typeahead-icon"
+                                                                data-target="#origin" data-default="Hanoi"></button>
+                                                            <div v-if="SearchFrom" style="align-items: center;">
+                                                                <ul style="z-index: 100;position: absolute;"
+                                                                    class="tt-menu">
+                                                                    <li v-for="station in SearchFrom"
+                                                                        v-text="station.Name"
+                                                                        v-on:click="selectStationFrom(station.Name)"
+                                                                        class="inner capitalize town TH tt-suggestion tt-selectable">
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
                                                         </div>
-                                                    </div>
 
-                                                </template>
-                                            </div>
-                                            <!-- END col-md-5_5 _LEAVING FROM -->
+                                                    </template>
+                                                </div>
+                                                <!-- END col-md-5_5 _LEAVING FROM -->
 
-                                            <!-- WHERE Going to -->
-                                            <div class="col-md-5_5 col-xs-12">
-                                                <template>
-                                                    <div class="form-group">
-                                                        <label>DESTINATION</label>
-                                                        <input v-model="TO" @input="searchToStation" id="Arrival"
-                                                            name="destination" value="" tabindex="2"
-                                                            class="typeahead form-control"
-                                                            placeholder="station" type="text"
-                                                            autocomplete="off" />
-                                                        <input type="hidden" id="destination_id" name="destination_id"
-                                                            value="" v-model="arrivalStationID">
-                                                        <input type="hidden" id="destination_town"
-                                                            name="destination_town" value="">
-                                                        <input type="hidden" id="destination_town_lang"
-                                                            name="destination_town_lang" value="">
-                                                        <input type="hidden" id="destination_type"
-                                                            name="destination_type" value="">
-                                                        <button type="button"
-                                                            class="icon-line-point input-icon typeahead-icon"
-                                                            data-target="#destination"
-                                                            data-default="Ho Chi Minh"></button>
-                                                        <div v-if="SearchTo" style="align-items: center;">
-                                                            <ul style="z-index: 99;position: absolute;" class="tt-menu">
-                                                                <li v-for="station in SearchTo" v-text="station.Name"
-                                                                    v-on:click="selectStationTo(station.Name)"
-                                                                    class="inner capitalize town TH tt-suggestion tt-selectable">
-                                                                </li>
-                                                            </ul>
+                                                <!-- WHERE Going to -->
+                                                <div class="col-md-5_5 col-xs-12">
+                                                    <template>
+                                                        <div class="form-group">
+                                                            <label>DESTINATION</label>
+                                                            <input v-model="TO" @input="searchToStation" id="Arrival"
+                                                                name="destination" value="" tabindex="2"
+                                                                class="typeahead form-control" placeholder="station"
+                                                                type="text" autocomplete="off" />
+                                                            <input type="hidden" id="destination_id"
+                                                                name="destination_id" value=""
+                                                                v-model="arrivalStationID">
+                                                            <input type="hidden" id="destination_town"
+                                                                name="destination_town" value="">
+                                                            <input type="hidden" id="destination_town_lang"
+                                                                name="destination_town_lang" value="">
+                                                            <input type="hidden" id="destination_type"
+                                                                name="destination_type" value="">
+                                                            <button type="button"
+                                                                class="icon-line-point input-icon typeahead-icon"
+                                                                data-target="#destination"
+                                                                data-default="Ho Chi Minh"></button>
+                                                            <div v-if="SearchTo" style="align-items: center;">
+                                                                <ul style="z-index: 99;position: absolute;"
+                                                                    class="tt-menu">
+                                                                    <li v-for="station in SearchTo"
+                                                                        v-text="station.Name"
+                                                                        v-on:click="selectStationTo(station.Name)"
+                                                                        class="inner capitalize town TH tt-suggestion tt-selectable">
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </template>
-                                                <!-- END form-group -->
+                                                    </template>
+                                                    <!-- END form-group -->
+                                                </div>
+                                                <!-- END col-md-5_5 _GOING TO -->
+                                                <!-- END Row WHERE -->
                                             </div>
-                                            <!-- END col-md-5_5 _GOING TO -->
-                                            <!-- END Row WHERE -->
-                                        </div>
 
                                         <!-- BEGIN WHEN -->
                                         <div class="input-daterange">
@@ -280,350 +376,368 @@
                                                             <button type="button"
                                                                 class="fa fa-calendar input-icon"></button>
                                                         </div>
-                                                    </div>
-                                                    <!-- END col-md-5_5 _arriving on -->
-                                                </template>
-                                                <!-- END Row WHEN -->
+                                                        <!-- END col-md-5_5 _arriving on -->
+                                                    </template>
+                                                    <!-- END Row WHEN -->
+                                                </div>
                                             </div>
+                                            <!-- END input-daterange -->
+                                            <!-- END WHEN -->
                                         </div>
-                                        <!-- END input-daterange -->
-                                        <!-- END WHEN -->
-                                    </div>
-                                    <!-- END col-md-8_ WHERE & WHEN -->
+                                        <!-- END col-md-8_ WHERE & WHEN -->
 
-                                    <!-- BEGIN PASS & ROUND -->
-                                    <div class="col-lg-4 col-md-5 col-xs-12">
-                                        <div class="row">
-                                            <!-- Rountrip / One Way -->
-                                            <div class="col-xs-6 col-md-7">
-                                                <div class="form-group">
+                                        <!-- BEGIN PASS & ROUND -->
+                                        <div class="col-lg-4 col-md-5 col-xs-12">
+                                            <div class="row">
+                                                <!-- Rountrip / One Way -->
+                                                <div class="col-xs-6 col-md-7">
+                                                    <div class="form-group">
 
-                                                    <label>JOURNEY</label>
-                                                    <ul class="nav nav-pills">
-                                                        <li class="active">
-                                                            <a class="fa fa-exchange roundtrip_selector visible-xs"
-                                                                href="#roundtrip_yes" data-toggle="tab"></a>
-                                                            <!-- <a_roundtrip v-model="round_trip" v-on:click="enabledReturnDay()"></a_roundtrip> -->
-                                                            <a class="roundtrip_selector hidden-xs"
-                                                                href="#roundtrip_yes" data-toggle="tab"
-                                                                @click="enabledReturnDay()">Round trip</a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="fa fa-long-arrow-right roundtrip_selector visible-xs"
-                                                                href="#roundtrip_no" data-toggle="tab"></a>
-                                                            <!-- <a_oneway  v-model="one_way" @click="disabledReturnDay()" ></a_oneway> -->
-                                                            <a class="roundtrip_selector hidden-xs" href="#roundtrip_no"
-                                                                data-toggle="tab" @click="disabledReturnDay()">One
-                                                                way</a>
-                                                        </li>
-                                                    </ul>
-
-                                                </div>
-
-                                                <div style="display:none">
-                                                    <input id="roundtrip_yes" type="radio" name="roundtrip" value="yes"
-                                                        checked="checked" />
-                                                    <input id="roundtrip_no" type="radio" name="roundtrip" value="no" />
-                                                </div>
-                                            </div>
-
-                                            <!-- Passengers -->
-                                            <div class="col-xs-6 col-md-7">
-                                                <div class="form-group form-group-select-plus">
-                                                    <label>PASSENGERS
-                                                        <span style="background: none; cursor: pointer;"
-                                                            data-toggle="modal" data-target="#travel_with_child"
-                                                            data-whatever="@getbootstrap">(<i
-                                                                class="icon-with-child"></i>)</span>
-                                                    </label>
-
-                                                    <div id="passenger_selector" class="input-group">
-                                                        <ul>
-                                                            <li><button type="button" class="btn-circle minus"
-                                                                    data-value="-1" data-target="#passengers_count"
-                                                                    data-toggle="spinner">
-                                                                </button></li>
-                                                            <li><input id="passengers_count" type="text" readonly
-                                                                    data-ride="spinner" name="passengers_count"
-                                                                    class="input-number text-center" value="1"
-                                                                    data-min="1" data-max="5" v-model="passengers">
+                                                        <label>JOURNEY</label>
+                                                        <ul class="nav nav-pills">
+                                                            <li class="active">
+                                                                <a class="fa fa-exchange roundtrip_selector visible-xs"
+                                                                    href="#roundtrip_yes" data-toggle="tab"></a>
+                                                                <!-- <a_roundtrip v-model="round_trip" v-on:click="enabledReturnDay()"></a_roundtrip> -->
+                                                                <a class="roundtrip_selector hidden-xs"
+                                                                    href="#roundtrip_yes" data-toggle="tab"
+                                                                    @click="enabledReturnDay()">Round trip</a>
                                                             </li>
-                                                            <li><button type="button" class="btn-circle plus"
-                                                                    data-value="1" data-target="#passengers_count"
-                                                                    data-toggle="spinner" data-on="mousehold"
-                                                                    v-on:click="increasePassager()"></button></li>
+                                                            <li>
+                                                                <a class="fa fa-long-arrow-right roundtrip_selector visible-xs"
+                                                                    href="#roundtrip_no" data-toggle="tab"></a>
+                                                                <!-- <a_oneway  v-model="one_way" @click="disabledReturnDay()" ></a_oneway> -->
+                                                                <a class="roundtrip_selector hidden-xs"
+                                                                    href="#roundtrip_no" data-toggle="tab"
+                                                                    @click="disabledReturnDay()">One
+                                                                    way</a>
+                                                            </li>
                                                         </ul>
+
+                                                    </div>
+
+                                                    <div style="display:none">
+                                                        <input id="roundtrip_yes" type="radio" name="roundtrip"
+                                                            value="yes" checked="checked" />
+                                                        <input id="roundtrip_no" type="radio" name="roundtrip"
+                                                            value="no" />
                                                     </div>
                                                 </div>
-                                            </div>
 
-                                            <div id="search_button_container" class="col-xs-12 col-md-5 text-right">
-                                                <label class="hidden-sm hidden-xs widget-hide">&nbsp;</label>
-                                                <button id="searchButton"
-                                                    class="btn icon-search fixed-width green btn-block bold"
-                                                    type="button" name="input" value="Search"
-                                                    v-on:click="Search()">SEARCH</button>
-                                            </div>
+                                                <!-- Passengers -->
+                                                <div class="col-xs-6 col-md-7">
+                                                    <div class="form-group form-group-select-plus">
+                                                        <label>PASSENGERS
+                                                            <span style="background: none; cursor: pointer;"
+                                                                data-toggle="modal" data-target="#travel_with_child"
+                                                                data-whatever="@getbootstrap">(<i
+                                                                    class="icon-with-child"></i>)</span>
+                                                        </label>
 
+                                                        <div id="passenger_selector" class="input-group">
+                                                            <ul>
+                                                                <li><button type="button" class="btn-circle minus"
+                                                                        data-value="-1" data-target="#passengers_count"
+                                                                        data-toggle="spinner">
+                                                                    </button></li>
+                                                                <li><input id="passengers_count" type="text" readonly
+                                                                        data-ride="spinner" name="passengers_count"
+                                                                        class="input-number text-center" value="1"
+                                                                        data-min="1" data-max="5" v-model="passengers">
+                                                                </li>
+                                                                <li><button type="button" class="btn-circle plus"
+                                                                        data-value="1" data-target="#passengers_count"
+                                                                        data-toggle="spinner" data-on="mousehold"
+                                                                        v-on:click="increasePassager()"></button></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div id="search_button_container" class="col-xs-12 col-md-5 text-right">
+                                                    <label class="hidden-sm hidden-xs widget-hide">&nbsp;</label>
+                                                    <button id="searchButton"
+                                                        class="btn icon-search fixed-width green btn-block bold"
+                                                        type="button" name="input" value="Search"
+                                                        v-on:click="Search()">SEARCH</button>
+                                                </div>
+
+                                            </div>
+                                            <!-- END col-md-9 -->
+                                            <!-- END PASS & ROUND -->
                                         </div>
-                                        <!-- END col-md-9 -->
-                                        <!-- END PASS & ROUND -->
+                                        <!-- END col-md-4_PASS & ROUND -->
                                     </div>
-                                    <!-- END col-md-4_PASS & ROUND -->
                                 </div>
-                            </div>
-                            <!-- END big row -->
-                        </form>
+                                <!-- END big row -->
+                            </form>
 
-                        <div class="gap gap-small visible-sm visible-xs"></div>
+                            <div class="gap gap-small visible-sm visible-xs"></div>
 
-                        <!-- Modal travel with child-->
-                        <div class="modal fade" id="travel_with_child" tabindex="-1" role="dialog">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="row">
-                                        <div class="container-popup">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                    aria-label="Close">&times;</button>
+                            <!-- Modal travel with child-->
+                            <div class="modal fade" id="travel_with_child" tabindex="-1" role="dialog">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="row">
+                                            <div class="container-popup">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">&times;</button>
+                                                </div>
+                                                <div class="modal-body text-center">
+                                                    <div class="modal-title">TRAVEL WITH CHILDREN?</div>
+                                                    <span class="popup-form-line">
+                                                        Please select the number of passengers, including
+                                                        children.<br>Later
+                                                        on you will be able to specify the age and apply for children
+                                                        discount on selected transport providers. </span>
+                                                </div>
+                                                <div class="gap gap-small"></div>
                                             </div>
-                                            <div class="modal-body text-center">
-                                                <div class="modal-title">TRAVEL WITH CHILDREN?</div>
-                                                <span class="popup-form-line">
-                                                    Please select the number of passengers, including children.<br>Later
-                                                    on you will be able to specify the age and apply for children
-                                                    discount on selected transport providers. </span>
-                                            </div>
-                                            <div class="gap gap-small"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- END Modal children-->
-                        <div class="js-btn--srcolldown btn-next hidden-sm hidden-xs">
-                            <i class="fa-chevron-down"></i>
-                        </div>
-                    </div>
-
-
-                    <!-- WELCOME -->
-                    <div style="padding-bottom: 50px;"
-                        class="panel-dark js-scrollto-section landing-section__intro text-center">
-                        <div class="container">
-                            <div class="row">
-                                <div class="gap gap-section"></div>
-                                <div class="col-md-12 col-xs-12">
-                                    <h2 class="refrigerator">WELCOME TO TRAIN TICKET ONLINE VN</h2>
-                                    <p class="landing-section__subtitle" style="color: #65696e">We make travel easy</p>
-                                </div>
-                                <div class="gap gap-medium hidden-sm hidden-xs"></div>
-                                <div class="gap gap-small hidden-lg hidden-md"></div>
-
-                                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                                    <img class="lazyload" data-src="../images/icons/icon_map.svg"> <br>
-                                    <h4 class="refrigerator">REACH YOUR DESTINATION</h4>
-                                    <p>Find the best routes, compare hundreds of transport options and book your
-                                        flights, trains, buses and ferries.</p>
-                                </div>
-
-                                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                                    <img class="lazyload" data-src="../images/icons/icon_onlinebooking.svg"> <br>
-                                    <h4 class="refrigerator">BOOK ONLINE</h4>
-                                    <p>Pay online easily and safely. We accept international credit cards and support
-                                        other methods of electronic payment.</p>
-                                </div>
-
-                                <div class="gap gap-medium hidden-lg hidden-xs"></div>
-                                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                                    <img class="lazyload" data-src="../images/icons/icon_ticket.svg"> <br>
-                                    <h4 class="refrigerator">YOUR TICKETS BY EMAIL</h4>
-                                    <p>Receive your e-tickets and your itinerary via email. You can print the boarding
-                                        pass or carry on your mobile phone.</p>
-                                </div>
-
-                                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                                    <img class="lazyload" data-src="../images/icons/icon_travel.svg"> <br>
-                                    <h4 class="refrigerator">READY TO TRAVEL</h4>
-                                    <p>Always bring Baolau in your pocket and plan your trip anywhere, anytime. We are
-                                        the perfect travel companion.</p>
-                                </div>
+                            <!-- END Modal children-->
+                            <div class="js-btn--srcolldown btn-next hidden-sm hidden-xs">
+                                <i class="fa-chevron-down"></i>
                             </div>
                         </div>
-                    </div>
 
 
-                    <!-- TOP DESTINATION -->
-                    <div class="landing-section__destination panel-light">
-                        <div class="landing-section__tab">
-                            <div style="background-color: #74A600" class="landing-section--pattern container-fluid">
-                                <div class="container">
-                                    <h2 class="refrigerator" style="color:white; ">TOP DESTINATIONS</h2>
-                                    <p class="landing-section__subtitle">What do you expect from Asia? Cities and
-                                        monuments, palaces and pagodas, evergreen forests and deep jungles, limestone
-                                        mountains and natural parks, pristine beaches and lost islands... whatever it
-                                        is, you can find it in our list of destinations.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gap gap-small"></div>
-
-
-                    <!-- FIND YOUR WAY -->
-                    <div class="landing-section__tab hidden-xs js-carto-scroll">
-                        <div style="background-color: #2d3e52" class="landing-section--pattern container-fluid">
+                        <!-- WELCOME -->
+                        <div style="padding-bottom: 50px;"
+                            class="panel-dark js-scrollto-section landing-section__intro text-center">
                             <div class="container">
-                                <h2 class="refrigerator" style="color:white">FIND YOUR WAY</h2>
-                                <p class="landing-section__subtitle">We provide extensive coverage of the transportation
-                                    network in Asia, connecting airports, railway stations, bus stations and passenger
-                                    ports.</p>
+                                <div class="row">
+                                    <div class="gap gap-section"></div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <h2 class="refrigerator">WELCOME TO TRAIN TICKET ONLINE VN</h2>
+                                        <p class="landing-section__subtitle" style="color: #65696e">We make travel easy
+                                        </p>
+                                    </div>
+                                    <div class="gap gap-medium hidden-sm hidden-xs"></div>
+                                    <div class="gap gap-small hidden-lg hidden-md"></div>
+
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                                        <img class="lazyload" data-src="../images/icons/icon_map.svg"> <br>
+                                        <h4 class="refrigerator">REACH YOUR DESTINATION</h4>
+                                        <p>Find the best routes, compare hundreds of transport options and book your
+                                            flights, trains, buses and ferries.</p>
+                                    </div>
+
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                                        <img class="lazyload" data-src="../images/icons/icon_onlinebooking.svg"> <br>
+                                        <h4 class="refrigerator">BOOK ONLINE</h4>
+                                        <p>Pay online easily and safely. We accept international credit cards and
+                                            support
+                                            other methods of electronic payment.</p>
+                                    </div>
+
+                                    <div class="gap gap-medium hidden-lg hidden-xs"></div>
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                                        <img class="lazyload" data-src="../images/icons/icon_ticket.svg"> <br>
+                                        <h4 class="refrigerator">YOUR TICKETS BY EMAIL</h4>
+                                        <p>Receive your e-tickets and your itinerary via email. You can print the
+                                            boarding
+                                            pass or carry on your mobile phone.</p>
+                                    </div>
+
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                                        <img class="lazyload" data-src="../images/icons/icon_travel.svg"> <br>
+                                        <h4 class="refrigerator">READY TO TRAVEL</h4>
+                                        <p>Always bring Baolau in your pocket and plan your trip anywhere, anytime. We
+                                            are
+                                            the perfect travel companion.</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- REVIEW -->
-                    <div class="panel-dark hidden-xs">
-                        <div class="container">
-                            <div class="text-center">
-                                <div class="gap gap-section"></div>
-                                <h2 class="refrigerator uppercase">What do our customers have to say?</h2>
 
-                                <p class="landing-section__subtitle" style="color: #65696e">If you need more reasons to
-                                    book with us, read the latest reviews sent by our customers and get inspired by
-                                    their trips.</p>
-                                <div class="gap gap-small-small"></div>
+                        <!-- TOP DESTINATION -->
+                        <div class="landing-section__destination panel-light">
+                            <div class="landing-section__tab">
+                                <div style="background-color: #74A600" class="landing-section--pattern container-fluid">
+                                    <div class="container">
+                                        <h2 class="refrigerator" style="color:white; ">TOP DESTINATIONS</h2>
+                                        <p class="landing-section__subtitle">What do you expect from Asia? Cities and
+                                            monuments, palaces and pagodas, evergreen forests and deep jungles,
+                                            limestone
+                                            mountains and natural parks, pristine beaches and lost islands... whatever
+                                            it
+                                            is, you can find it in our list of destinations.</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="gallery__wrapper">
-                            <div id="js_landing_cs_reviews__carousel"
-                                class="js_3col_carousel owl-carousel owl-theme card__list" style="z-index: 0">
-                                <article class="item card__item">
-                                    <div class="card__thumbnail lazyload"
-                                        data-bg="http://booking.baolau.com/images/towns/low_res/VDH.jpg"
-                                        style="position: relative;">
-                                        <div style="background-color: rgba(0,0,0,.2);width: 100%;height: 100%"></div>
-                                        <div class="img-card-top text-center">
-                                            <h3 class="refrigerator">DONG HOI</h3>
-                                        </div>
-                                    </div>
-                                    <div class="card__item__avatar img-circle">
-                                        <i class="icon icon-train"></i>
-                                    </div>
-                                    <div class="card__item__content text-center"
-                                        style="margin-top: -20px;padding-top: 0">
-                                        <div class="big-text bold text-capitalize">
-                                            Chang Yong </div>
+                        <div class="gap gap-small"></div>
 
-                                        <div style="margin: 10px 0">
-                                            <span style="background: #fff; padding-left: 20px; padding-right: 20px"
-                                                class="rating">
-                                                <span><i class="fa fa-star" aria-hidden="true"></i></span>
-                                                <span><i class="fa fa-star" aria-hidden="true"></i></span>
-                                                <span><i class="fa fa-star" aria-hidden="true"></i></span>
-                                                <span><i class="fa fa-star" aria-hidden="true"></i></span>
-                                                <span><i class="fa fa-star" aria-hidden="true"></i></span>
-                                            </span>
-                                            <div style="border-bottom: 1px solid #eee; margin-top: -14px;"></div>
-                                        </div>
-                                        <br>
-                                        <div class="italic">
-                                            <span style="font-size: 30px">" </span>Great online booking. Needed tickets
-                                            in a pinch and was able to secure them with fast confirmation. <span
-                                                style="font-size: 30px"> "</span>
-                                        </div>
-                                    </div>
-                                </article>
-                                <article class="item card__item">
-                                    <div class="card__thumbnail lazyload"
-                                        data-bg="http://booking.baolau.com/images/towns/low_res/REP.jpg"
-                                        style="position: relative;">
-                                        <div style="background-color: rgba(0,0,0,.2);width: 100%;height: 100%"></div>
-                                        <div class="img-card-top text-center">
-                                            <h3 class="refrigerator">SIEM REAP</h3>
-                                        </div>
-                                    </div>
-                                    <div class="card__item__avatar img-circle">
-                                        <i class="icon icon-plane"></i>
-                                    </div>
-                                    <div class="card__item__content text-center"
-                                        style="margin-top: -20px;padding-top: 0">
-                                        <div class="big-text bold text-capitalize">
-                                            Jacqueline </div>
 
-                                        <div style="margin: 10px 0">
-                                            <span style="background: #fff; padding-left: 20px; padding-right: 20px"
-                                                class="rating">
-                                                <span><i class="fa fa-star" aria-hidden="true"></i></span>
-                                                <span><i class="fa fa-star" aria-hidden="true"></i></span>
-                                                <span><i class="fa fa-star" aria-hidden="true"></i></span>
-                                                <span><i class="fa fa-star" aria-hidden="true"></i></span>
-                                                <span><i class="fa fa-star" aria-hidden="true"></i></span>
-                                            </span>
-                                            <div style="border-bottom: 1px solid #eee; margin-top: -14px;"></div>
-                                        </div>
-                                        <br>
-                                        <div class="italic">
-                                            <span style="font-size: 30px">" </span>Thanks for keeping us informed about
-                                            changes to our future flight. It removed stress.<span
-                                                style="font-size: 30px"> "</span>
-                                        </div>
-                                    </div>
-                                </article>
-                                <article class="item card__item">
-                                    <div class="card__thumbnail lazyload"
-                                        data-bg="http://booking.baolau.com/images/towns/low_res/HUI.jpg"
-                                        style="position: relative;">
-                                        <div style="background-color: rgba(0,0,0,.2);width: 100%;height: 100%"></div>
-                                        <div class="img-card-top text-center">
-                                            <h3 class="refrigerator">HUE</h3>
-                                        </div>
-                                    </div>
-                                    <div class="card__item__avatar img-circle">
-                                        <i class="icon icon-train"></i>
-                                    </div>
-                                    <div class="card__item__content text-center"
-                                        style="margin-top: -20px;padding-top: 0">
-                                        <div class="big-text bold text-capitalize">
-                                            Carmen Lee Lai </div>
-
-                                        <div style="margin: 10px 0">
-                                            <span style="background: #fff; padding-left: 20px; padding-right: 20px"
-                                                class="rating">
-                                                <span><i class="fa fa-star" aria-hidden="true"></i></span>
-                                                <span><i class="fa fa-star" aria-hidden="true"></i></span>
-                                                <span><i class="fa fa-star" aria-hidden="true"></i></span>
-                                                <span><i class="fa fa-star" aria-hidden="true"></i></span>
-                                                <span><i class="fa fa-star" aria-hidden="true"></i></span>
-                                            </span>
-                                            <div style="border-bottom: 1px solid #eee; margin-top: -14px;"></div>
-                                        </div>
-                                        <br>
-                                        <div class="italic">
-                                            <span style="font-size: 30px">" </span>Very easy booking service and gives
-                                            foreign travelers and ease of mind regarding the booking on train tickets in
-                                            Vietnam. <span style="font-size: 30px"> "</span>
-                                        </div>
-                                    </div>
-                                </article>
+                        <!-- FIND YOUR WAY -->
+                        <div class="landing-section__tab hidden-xs js-carto-scroll">
+                            <div style="background-color: #2d3e52" class="landing-section--pattern container-fluid">
+                                <div class="container">
+                                    <h2 class="refrigerator" style="color:white">FIND YOUR WAY</h2>
+                                    <p class="landing-section__subtitle">We provide extensive coverage of the
+                                        transportation
+                                        network in Asia, connecting airports, railway stations, bus stations and
+                                        passenger
+                                        ports.</p>
+                                </div>
                             </div>
-                            <div class="gap gap-footer"></div>
+                        </div>
+
+                        <!-- REVIEW -->
+                        <div class="panel-dark hidden-xs">
+                            <div class="container">
+                                <div class="text-center">
+                                    <div class="gap gap-section"></div>
+                                    <h2 class="refrigerator uppercase">What do our customers have to say?</h2>
+
+                                    <p class="landing-section__subtitle" style="color: #65696e">If you need more reasons
+                                        to
+                                        book with us, read the latest reviews sent by our customers and get inspired by
+                                        their trips.</p>
+                                    <div class="gap gap-small-small"></div>
+                                </div>
+                            </div>
+
+                            <div class="gallery__wrapper">
+                                <div id="js_landing_cs_reviews__carousel"
+                                    class="js_3col_carousel owl-carousel owl-theme card__list" style="z-index: 0">
+                                    <article class="item card__item">
+                                        <div class="card__thumbnail lazyload"
+                                            data-bg="http://booking.baolau.com/images/towns/low_res/VDH.jpg"
+                                            style="position: relative;">
+                                            <div style="background-color: rgba(0,0,0,.2);width: 100%;height: 100%">
+                                            </div>
+                                            <div class="img-card-top text-center">
+                                                <h3 class="refrigerator">DONG HOI</h3>
+                                            </div>
+                                        </div>
+                                        <div class="card__item__avatar img-circle">
+                                            <i class="icon icon-train"></i>
+                                        </div>
+                                        <div class="card__item__content text-center"
+                                            style="margin-top: -20px;padding-top: 0">
+                                            <div class="big-text bold text-capitalize">
+                                                Chang Yong </div>
+
+                                            <div style="margin: 10px 0">
+                                                <span style="background: #fff; padding-left: 20px; padding-right: 20px"
+                                                    class="rating">
+                                                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                                                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                                                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                                                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                                                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                                                </span>
+                                                <div style="border-bottom: 1px solid #eee; margin-top: -14px;"></div>
+                                            </div>
+                                            <br>
+                                            <div class="italic">
+                                                <span style="font-size: 30px">" </span>Great online booking. Needed
+                                                tickets
+                                                in a pinch and was able to secure them with fast confirmation. <span
+                                                    style="font-size: 30px"> "</span>
+                                            </div>
+                                        </div>
+                                    </article>
+                                    <article class="item card__item">
+                                        <div class="card__thumbnail lazyload"
+                                            data-bg="http://booking.baolau.com/images/towns/low_res/REP.jpg"
+                                            style="position: relative;">
+                                            <div style="background-color: rgba(0,0,0,.2);width: 100%;height: 100%">
+                                            </div>
+                                            <div class="img-card-top text-center">
+                                                <h3 class="refrigerator">SIEM REAP</h3>
+                                            </div>
+                                        </div>
+                                        <div class="card__item__avatar img-circle">
+                                            <i class="icon icon-plane"></i>
+                                        </div>
+                                        <div class="card__item__content text-center"
+                                            style="margin-top: -20px;padding-top: 0">
+                                            <div class="big-text bold text-capitalize">
+                                                Jacqueline </div>
+
+                                            <div style="margin: 10px 0">
+                                                <span style="background: #fff; padding-left: 20px; padding-right: 20px"
+                                                    class="rating">
+                                                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                                                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                                                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                                                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                                                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                                                </span>
+                                                <div style="border-bottom: 1px solid #eee; margin-top: -14px;"></div>
+                                            </div>
+                                            <br>
+                                            <div class="italic">
+                                                <span style="font-size: 30px">" </span>Thanks for keeping us informed
+                                                about
+                                                changes to our future flight. It removed stress.<span
+                                                    style="font-size: 30px"> "</span>
+                                            </div>
+                                        </div>
+                                    </article>
+                                    <article class="item card__item">
+                                        <div class="card__thumbnail lazyload"
+                                            data-bg="http://booking.baolau.com/images/towns/low_res/HUI.jpg"
+                                            style="position: relative;">
+                                            <div style="background-color: rgba(0,0,0,.2);width: 100%;height: 100%">
+                                            </div>
+                                            <div class="img-card-top text-center">
+                                                <h3 class="refrigerator">HUE</h3>
+                                            </div>
+                                        </div>
+                                        <div class="card__item__avatar img-circle">
+                                            <i class="icon icon-train"></i>
+                                        </div>
+                                        <div class="card__item__content text-center"
+                                            style="margin-top: -20px;padding-top: 0">
+                                            <div class="big-text bold text-capitalize">
+                                                Carmen Lee Lai </div>
+
+                                            <div style="margin: 10px 0">
+                                                <span style="background: #fff; padding-left: 20px; padding-right: 20px"
+                                                    class="rating">
+                                                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                                                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                                                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                                                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                                                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                                                </span>
+                                                <div style="border-bottom: 1px solid #eee; margin-top: -14px;"></div>
+                                            </div>
+                                            <br>
+                                            <div class="italic">
+                                                <span style="font-size: 30px">" </span>Very easy booking service and
+                                                gives
+                                                foreign travelers and ease of mind regarding the booking on train
+                                                tickets in
+                                                Vietnam. <span style="font-size: 30px"> "</span>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </div>
+                                <div class="gap gap-footer"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- FOOTER -->
-            <%- include('footer')%>
-            <!-- END FOOTER -->
+                <!-- FOOTER -->
+                <%- include('footer')%>
+                <!-- END FOOTER -->
+
+            </div>
+            <!-- END GLOBAL WRAP -->
 
         </div>
-        <!-- END GLOBAL WRAP -->
-
-    </div>
-    <!-- END FILTER -->
+        <!-- END FILTER -->
 
     </div>
     <!-- END MAIN -->
@@ -640,10 +754,11 @@
     <script src="../dist/vue.js"></script>
     <script src="../dist/vue-router.js"></script>
     <script src="../dist/axios.js"></script>
-    
+
     <script src="../dist/vuejs-datepickker.js"></script>
     <script type="text/javascript" src="../dist/baolau.min6ffc.js?v=2020-02-21"></script>
-    <script src="../dist/indexVue.js"></script>
+    <script type="module" src="../dist/indexVue.js"></script>
+    <script type="module" src="../dist/carousel.js"></script>
     <script src="../dist/khong-dau/lib/khongdau.js"></script>
     <script src="../dist/myDate.js"></script>
     <script src="../dist/moment.js"></script>
