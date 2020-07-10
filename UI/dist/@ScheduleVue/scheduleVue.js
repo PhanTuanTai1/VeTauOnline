@@ -27,6 +27,9 @@ new Vue({
   },
   methods: {
     formatTime(Time) {
+      if (Time.toString().length <= 5) {
+        return Time;
+      }
       return moment(Time).subtract(7, 'hour').format('HH:mm');
     },
 
@@ -162,7 +165,7 @@ new Vue({
           });
           $('.js-example-basic-multiple').select2();
         },
-        preConfirm: () => {
+        preConfirm: async () => {
           if (document.getElementById('train').value == "") {
             Swal.showValidationMessage('Train name can not be empty!');
             return;
@@ -188,22 +191,7 @@ new Vue({
             return;
           }
           let trainExistArr = this.Schedules.filter(x => x.TrainID == document.getElementById('train').value);
-          trainExistArr.map(async train => {
-            let start = (new Date(train.DateDeparture)).getTime();
-            let a = await (await axios.get(window.origin + "/getAllScheduleDetail?ScheduleID=" + train.ID)).data;
-            if (a != null) {
-              a.map(e => {
-                if ((new Date(document.getElementById('date').value).getTime()) >= start && (new Date(document.getElementById('date').value).getTime()) <= (new Date((moment(start).add(e.Time, "hours"))).getTime())) {
-                  Swal.showValidationMessage(`This train ${$("#train option:selected").text()} is on duty this date`);
-                  return;
-                }
-              })
-            }
-            console.log(start)
-          });
-          // if ((new Date(document.getElementById('date').value).getTime()) >= Math.max(lengthArr)) {
-          //   Swal.showValidationMessage('This train is busy on this date!')
-          // }
+          await this.checkBusyTrain(trainExistArr, document.getElementById('date').value).then()
           if (document.getElementById('time').value == "") {
             Swal.showValidationMessage('Time can not be empty!');
             return;
@@ -230,16 +218,35 @@ new Vue({
           detailList.sort()
         }
         let abc = await (await axios.post(window.origin + '/admin/schedule?TimeDeparture=' + schedule[4] + '&DateDeparture=' + schedule[3] + '&TrainID=' + schedule[0])).data;
+        let time = abc.TimeDeparture;
         this.create(abc, detailList, schedule[3], schedule[4]);
-        this.Schedules.push({
-          "ID": abc.ID,
-          "TimeDeparture": moment(abc.TimeDeparture).add(-8, "hours").format("HH:mm").toString(),
-          "DateDeparture": abc.DateDeparture,
-          Train: {
-            "Name": this.Trains.find(x => x.ID == abc.TrainID).Name
-          }
-        })
+        this.pustSche(abc.ID, time, abc.DateDeparture, this.Trains.find(x => x.ID == abc.TrainID).Name);
       }
+    },
+    async checkBusyTrain(train, date) {
+      for (let item of train) {
+        let start = (new Date(item.DateDeparture)).getTime();
+        let a = await (await axios.get(window.origin + "/getAllScheduleDetail?ScheduleID=" + item.ID)).data;
+        if (a != null) {
+          for (let item1 of a) {
+            if ((new Date(date).getTime()) >= start && (new Date(date).getTime()) <= (new Date((moment(start).add(item1.Time, "hours"))).getTime())) {
+              await Swal.showValidationMessage(`This train ${$("#train option:selected").text()} is on duty this date`);
+              return;
+            }
+          }
+        }
+      }
+    },
+    async pustSche(id, time, date, name) {
+      const sche = await {
+        "ID": id,
+        "TimeDeparture": time,
+        "DateDeparture": date,
+        Train: {
+          "Name": name,
+        }
+      }
+      this.Schedules.push(sche);
     },
     async create(abc, detailList, date, time) {
       for (let i = 0; i < (detailList.length - 1); i++) {
