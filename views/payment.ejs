@@ -44,7 +44,7 @@
             <input hidden type="text" value="<%=TicketInfo2.DepartureStationID%>" id="DepartureStationID2">
             <input hidden type="text" value="<%=TicketInfo2.ArrivalStationID%>" id="ArrivalStationID2">
         <%}%>
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog" role="document" id="errors">
             <div class="modal-content">
                <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -55,6 +55,7 @@
                         Error                    </div>
                     <div class="gap gap-small"></div>
                     <div class="message" style="letter-spacing: 1px; color: #f5f5f5" class="message big-text italic">
+                        Please accept our policy
                                             </div>
                 </div><!-- /.modal-content -->
                 <div class="gap gap-super-small"></div>
@@ -895,7 +896,7 @@
                     <div class="panel-light">
                         <div class="padded-heading">
                             <div class="checkbox inline">
-                                <input id="check-confirm-cancellation" class="payment_checkbox" type="checkbox" name="check-confirm-cancellation" value="check-confirm-cancellation">
+                                <input id="check-confirm-cancellation" class="payment_checkbox" type="checkbox" name="check-confirm-cancellation">
                                 <label class="inline" for="check-confirm-cancellation">I confirm that the information I provide is correct and I understand that once the booking request is submitted any change or cancellation may incur additional fees</label>
                             </div>
                         </div>
@@ -905,7 +906,7 @@
     
                     <input type="hidden" name="submitting" value="submitting">
     
-                    <a id="submit_payment" class="btn green full-width" href="/RedirectToNganLuong">Proceed to payment</a>
+                    <a id="submit_payment" class="btn green full-width" style="cursor: pointer;" v-on:click="Redirect()">Proceed to payment</a>
     
                     <input type="hidden" name="stripeSource" value="">
     

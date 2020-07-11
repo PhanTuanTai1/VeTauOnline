@@ -106,7 +106,7 @@
                 <img src="../dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block">Alexander Pierce</a>
+                <a href="#" class="d-block"><%=Staff.Name%></a>
             </div>
 
         </div>
@@ -179,45 +179,47 @@
                                 <p>Customer</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a id="menustation" href="./station" class="nav-link" style="color: #00ffff;">
-                                <i class="fa fa-map nav-icon"></i>
-                                <p>Station</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a id="menutrain" href="./train" class="nav-link" style="color: #00bfff;">
-                                <i class="fa fa-train nav-icon"></i>
-                                <p id="t">Train</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a id="menucarriage" href="./carriage" class="nav-link" style="color: 	#8000ff;">
-                                <i class="fa fa-shopping-cart nav-icon"></i>
-                                <p id="t">Carriage</p>
-                            </a>
-                        </li>
-                        <li class="nav-item has-treeview  menu-open">
-                            <a class="nav-link" style="color: #ff00ff;">
-                                <i class="nav-icon fa fa-chair"></i>
-                                <p>
-                                    Seat
-                                    <i class="right fa fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview" style="margin-left: 15px;">
-                                <li class="nav-item">
-                                    <a id="menuseat" href="./seat" class="nav-link" style="color: #ff8000;">
-                                        <p>Seat</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a id="menuseattype" href="./seattype" class="nav-link" style="color: #ff8000;">
-                                        <p>Seat Type</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                        <%if(Staff.Role == 3){%>
+                            <li class="nav-item">
+                                <a id="menustation" href="./station" class="nav-link" style="color: #00ffff;">
+                                    <i class="fa fa-map nav-icon"></i>
+                                    <p>Station</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="menutrain" href="./train" class="nav-link" style="color: #00bfff;">
+                                    <i class="fa fa-train nav-icon"></i>
+                                    <p id="t">Train</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="menucarriage" href="./carriage" class="nav-link" style="color: 	#8000ff;">
+                                    <i class="fa fa-shopping-cart nav-icon"></i>
+                                    <p id="t">Carriage</p>
+                                </a>
+                            </li>
+                            <li class="nav-item has-treeview  menu-open">
+                                <a class="nav-link" style="color: #ff00ff;">
+                                    <i class="nav-icon fa fa-chair"></i>
+                                    <p>
+                                        Seat
+                                        <i class="right fa fa-angle-left"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview" style="margin-left: 15px;">
+                                    <li class="nav-item">
+                                        <a id="menuseat" href="./seat" class="nav-link" style="color: #ff8000;">
+                                            <p>Seat</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a id="menuseattype" href="./seattype" class="nav-link" style="color: #ff8000;">
+                                            <p>Seat Type</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        <%}%>
                     </ul>
                 </li>
                 <%}%>

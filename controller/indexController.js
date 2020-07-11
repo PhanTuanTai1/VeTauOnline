@@ -504,23 +504,43 @@ module.exports.createSession = async function (req, res) {
             'DateBooking': moment(moment()._d).format('YYYY-MM-DD')
         })
 
-        CreateListPassengerModel(ListPassenger, RepresentativeID).then(data => {
-            CreateTicket(data, TicketInfo, ListSeat).then(data2 => {
-                TicketInfo.PassengerQuantity = data.length;
-                TicketInfo.SeatID = data2[0].SeatID;
-                res.cookie('data', RepresentativeModel, { maxAge: 600000 }); // Representative
-                res.cookie('data2', data, { maxAge: 600000 }); // ListPassenger
-                res.cookie('data3', data2, { maxAge: 600000 }); // Ticket
-                res.cookie('data4', TicketInfo, { maxAge: 600000 });
-                CreateTicket(data, TicketInfo2, ListSeat2).then(data3 => {
-                    TicketInfo2.PassengerQuantity = data.length;
-                    TicketInfo2.SeatID = data3[0].SeatID;
-                    res.cookie('data5', data3, { maxAge: 600000 }); // Ticket 2
-                    res.cookie('data6', TicketInfo2, { maxAge: 600000 });
-                    res.end('/payment');
-                })
-            })
-        });
+        var listPassenger = await CreateListPassengerModel(ListPassenger, RepresentativeID);
+        var listTicket = []
+        while(listTicket.length < ListSeat.length) {
+            listTicket = await CreateTicket(listPassenger, TicketInfo, ListSeat);
+        }
+        TicketInfo.PassengerQuantity = listPassenger.length;
+        TicketInfo.SeatID = listTicket[0].SeatID;
+        res.cookie('data', RepresentativeModel);
+        res.cookie('data2', listPassenger);
+        res.cookie('data3', listTicket);
+        res.cookie('data4', TicketInfo);
+        var listTicket2 = [];
+        while(listTicket2.length < ListSeat2.length) {
+            listTicket2 = await CreateTicket(listPassenger, TicketInfo2, ListSeat2);
+        }
+        TicketInfo2.PassengerQuantity = listPassenger.length;
+        TicketInfo2.SeatID = listTicket2[0].SeatID;
+        res.cookie('data5', listTicket2); // Ticket 2
+        res.cookie('data6', TicketInfo2);
+        res.end('/payment');
+        // CreateListPassengerModel(ListPassenger, RepresentativeID).then(data => {
+        //     CreateTicket(data, TicketInfo, ListSeat).then(data2 => {
+        //         TicketInfo.PassengerQuantity = data.length;
+        //         TicketInfo.SeatID = data2[0].SeatID;
+        //         res.cookie('data', RepresentativeModel); // Representative
+        //         res.cookie('data2', data); // ListPassenger
+        //         res.cookie('data3', data2); // Ticket
+        //         res.cookie('data4', TicketInfo);
+        //         CreateTicket(data, TicketInfo2, ListSeat2).then(data3 => {
+        //             TicketInfo2.PassengerQuantity = data.length;
+        //             TicketInfo2.SeatID = data3[0].SeatID;
+        //             res.cookie('data5', data3); // Ticket 2
+        //             res.cookie('data6', TicketInfo2);
+        //             res.end('/payment');
+        //         })
+        //     })
+        // });
     }
     else {
         var RepresentativeModel = db.Representative.build({
@@ -532,18 +552,30 @@ module.exports.createSession = async function (req, res) {
             'TotalCost': total,
             'DateBooking': moment(moment()._d).format('YYYY-MM-DD')
         })
-        console.log(JSON.stringify(TicketInfo));
-        CreateListPassengerModel(ListPassenger, RepresentativeID).then(data => {
-            CreateTicket(data, TicketInfo, ListSeat).then(data2 => {
-                TicketInfo.PassengerQuantity = data.length;
-                TicketInfo.SeatID = data2[0].SeatID;
-                res.cookie('data', RepresentativeModel, { maxAge: 600000 }); // Representative
-                res.cookie('data2', data, { maxAge: 600000 }); // ListPassenger
-                res.cookie('data3', data2, { maxAge: 600000 }); // Ticket
-                res.cookie('data4', TicketInfo, { maxAge: 600000 });
-                res.end('/payment');
-            })
-        });
+        var listPassenger = await CreateListPassengerModel(ListPassenger, RepresentativeID);
+        var listTicket = []
+        while(listTicket.length < ListSeat.length) {
+            listTicket = await CreateTicket(listPassenger, TicketInfo, ListSeat);
+        }
+        TicketInfo.PassengerQuantity = listPassenger.length;
+        TicketInfo.SeatID = listTicket[0].SeatID;
+        res.cookie('data', RepresentativeModel);
+        res.cookie('data2', listPassenger);
+        res.cookie('data3', listTicket);
+        res.cookie('data4', TicketInfo);
+        res.end('/payment');
+        // console.log(JSON.stringify(TicketInfo));
+        // CreateListPassengerModel(ListPassenger, RepresentativeID).then(data => {
+        //     CreateTicket(data, TicketInfo, ListSeat).then(data2 => {
+        //         TicketInfo.PassengerQuantity = data.length;
+        //         TicketInfo.SeatID = data2[0].SeatID;
+        //         res.cookie('data', RepresentativeModel); // Representative
+        //         res.cookie('data2', data); // ListPassenger
+        //         res.cookie('data3', data2); // Ticket
+        //         res.cookie('data4', TicketInfo);
+        //         res.end('/payment');
+        //     })
+        // });
     }
 
 
@@ -594,8 +626,8 @@ module.exports.getSeatTypeBySeatID = function (req, res) {
 }
 
 module.exports.RedirectToNganLuong = function (req, res) {
-    let return_url = "https://trainticketonlinevn.herokuapp.com/paymentSuccess";
-    //let return_url = "http://localhost:3000/paymentSuccess";
+    //let return_url = "https://trainticketonlinevn.herokuapp.com/paymentSuccess";
+    let return_url = "http://localhost:3000/paymentSuccess";
     let url = 'https://sandbox.nganluong.vn:8088/nl35/checkout.php?';
     url += 'merchant_site_code=48847&';
     url += 'return_url=' + return_url + '&';
@@ -636,17 +668,28 @@ function SendMail(email ,html, option){
         }
     })
 }
-module.exports.InsertData = async function (req, res) {
+function unblockSeat(ListTicket, listBlock) {
+    var filter;
+    ListTicket.forEach(seat => {
+        filter = listBlock.filter(x => {
+            return x.id != seat.SeatID
+        })
+        listBlock = filter;
+    })
+}
+module.exports.InsertData = async function (req, res, listBlock) {
     //console.log(req.cookies);
     var Representative = req.cookies.data;
     var ListPassenger = req.cookies.data2;
     var ListTicket = req.cookies.data3;
+    await unblockSeat(ListTicket, listBlock);
     console.log("req.query:" + JSON.stringify(req.query));
     var ListTicket2;
     var html2;
     var option = "One Way";
     if (typeof(req.cookies.data5) != "undefined") {
         ListTicket2 = req.cookies.data5;
+        await unblockSeat(ListTicket2, listBlock);
         html2 = await createTableListCustomer(Representative, ListPassenger, ListTicket2, req.query.payment_id);
         option = "Round Trip";
         SendMail(Representative.Email, html2, option)
@@ -1158,8 +1201,9 @@ async function createTableListCustomer(Representative, ListPassenger, ListTicket
         + "<p>Payment ID: " + PaymentID + "</p>"
         + "<p>Passport: " + Representative.Passport + "</p>"
         + "<p style='color:red;'>Note: <span style='font-weight:bold'>PAYMENT ID</span> used to refund money in case of error</p></div>";
-        var listCustomer = "<h2>List Customer</h2> <table> <tr><th>Ticket ID</th> <th>Full Name</th> <th>Passport</th> <th>Departure Station</th> <th>Price (VND)</th></tr>";
+        var listCustomer = "<h2>List Customer</h2> <table> <tr><th>Ticket ID</th> <th>Full Name</th> <th>Passport</th> <th>Departure Station</th> <th>Destination Station</th> <th>Price (VND)</th></tr>";
         var DepartureStation = await getStationByID(ListTicket[0].DepartureStationID);
+        var DestinationStation = await getStationByID(ListTicket[0].ArrivalStationID);
         ListPassenger.forEach((passenger,index,array) => {
             var ticket = ListTicket.filter(ticket => {
                 return ticket.CustomerID == passenger.ID
@@ -1170,6 +1214,7 @@ async function createTableListCustomer(Representative, ListPassenger, ListTicket
                          +"<td>"+ passenger.Name+"</td>"
                          +"<td>"+ passenger.Passport+"</td>"
                          +"<td>"+ DepartureStation[0].Name+"</td>"
+                         +"<td>"+ DestinationStation[0].Name+"</td>"
                          +"<td>"+ JSON.stringify(ticket[0].Price).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")+"</td>"
                          +"</tr>"           
             if(index + 1 === array.length) {

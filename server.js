@@ -41,7 +41,7 @@ app.use(session({
 
 app.get("/", function (req, res) {
     var session_id = req.cookies.session_id;
-
+    res.cookie('data6', "", { maxAge: 0 });
     if(session_id != "undefined"){
         let data =  listSeatBlock.filter(x => {
             return x.session_id != session_id;
@@ -151,7 +151,7 @@ app.get('/getSeatTypeBySeatID', function (req, res) {
 
 app.get('/paymentSuccess', function (req, res) {
     //console.log(req);
-    controller.InsertData(req, res);
+    controller.InsertData(req, res, listSeatBlock);
 })
 
 app.get('/RedirectToNganLuong', function (req, res) {

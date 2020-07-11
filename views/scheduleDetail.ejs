@@ -40,7 +40,7 @@
                                         <%var index = 0%>
                                         <%result[0].ScheduleDetails[0].TableCosts.forEach(function(cost){%>
                                             <%if(typeof(ListSeatSold.get(cost.SeatTypeID)) != "undefined"){%>
-                                                <%if(dic.get(cost.SeatTypeID).TotalSeat - ListSeatSold.get(cost.SeatTypeID).SeatSold > 0){%>
+                                                <%if(dic.get(cost.SeatTypeID).TotalSeat - (ListSeatSold.get(cost.SeatTypeID).SeatSold + parseInt(PASSENGERS))> 0){%>
                                                 <div class="relative fares-choose-items" >
                                                     <div class="fares-choose radio">
                                                         <%if(index == 0){%>
@@ -247,7 +247,7 @@
                                 <%var index = 0%>
                                 <%result[0].ScheduleDetails[0].TableCosts.forEach(function(cost){%>
                                     <%if(typeof(ListSeatSold.get(cost.SeatTypeID)) != "undefined"){%>
-                                        <%if(dic.get(cost.SeatTypeID).TotalSeat - ListSeatSold.get(cost.SeatTypeID).SeatSold > 0){%>
+                                        <%if(dic.get(cost.SeatTypeID).TotalSeat - (ListSeatSold.get(cost.SeatTypeID).SeatSold + parseInt(PASSENGERS)) > 0){%>
                                         <div class="relative fares-choose-items" >
                                             <div class="fares-choose radio">
                                                 <%if(index == 0){%>

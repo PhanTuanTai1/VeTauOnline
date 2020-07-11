@@ -21,7 +21,7 @@ function getCookie(cname) {
 
 socket.on('response', data => {
     try {
-        alert(JSON.stringify(data));
+        //alert(JSON.stringify(data));
         if(typeof(data.data) == "undefined"){
             listBlock = data;
             var filter = data.filter(seat => {
@@ -43,7 +43,7 @@ socket.on('response', data => {
                 document.getElementById(seat.id).setAttribute('class', seat.class);              
             })
 
-            alert(JSON.stringify(data));
+            //alert(JSON.stringify(data));
             
             vm.listSelected.forEach(seat => {
                 if(seat.split('_')[3]  == data.data.id && data.data.number != 1) {
@@ -188,10 +188,10 @@ var vm = new Vue({
         
     },
     updated: function(){
-        this.loadSeat(this.carriageDisplay, this.seatSold);
+        this.loadSeat(this.carriageDisplay, this.seatSold, 1);
        
         if(typeof(this.result2) != "undefined" && this.result2 != null) {
-         this.loadSeat(this.carriageDisplay2, this.seatSold2);
+         this.loadSeat(this.carriageDisplay2, this.seatSold2, 2);
         }
         document.body.style['overflow'] = "scroll";
         document.getElementById('waiting_overlay').style['display'] = "none";
@@ -203,7 +203,7 @@ var vm = new Vue({
         var listFilterBlock = listBlock.filter(data => {
             return data.session_id != getCookie("session_id")
         })
-
+        //alert(JSON.stringify(listBlock));
         var listFilterSelected = listBlock.filter(data => {
             return data.session_id == getCookie("session_id") && data.number == 1;
         })
@@ -214,11 +214,12 @@ var vm = new Vue({
             //document.getElementById(data.id).setAttribute('class',data.class);
             this.SelectedSeat(1, document.getElementById(data.id))
         })
-
+        //alert(JSON.stringify(listFilterSelected))
         if(typeof(this.result2) != "undefined" && this.result2 != null) {
             var listFilterSelected2 = listBlock.filter(data => {
                 return data.session_id == getCookie("session_id") && data.number == 2;
             })
+            //alert(JSON.stringify(listFilterSelected2))
             listFilterSelected2.forEach(data => {
                 //document.getElementById(data.id).setAttribute('class',data.class);
                 this.SelectedSeat(2, document.getElementById(data.id))
@@ -304,7 +305,7 @@ var vm = new Vue({
             this.carriageDisplay2 = result;
         },
 
-        loadSeat: function(listCarriage, seatSold){
+        loadSeat: function(listCarriage, seatSold, number){
 
             listCarriage.forEach(element => {
                 var object = document.getElementsByName('carriage_' + element.ID);
@@ -319,20 +320,39 @@ var vm = new Vue({
                     })
 
                     if(result.length > 0){
-                        if(this.seatTypeDisplay[0].ID == 1 || this.seatTypeDisplay[0].ID == 6){
+                        if(number == 1) {
+                            if(this.seatTypeDisplay[0].ID == 1 || this.seatTypeDisplay[0].ID == 6){
                             
-                            if(object[i].getAttribute('class').search("soft_bed_left") != -1){
-                                object[i].setAttribute('class','train_bed_cell bed can_block soft_bed_left sold_out');
-                                object[i].setAttribute('style','pointer-events: none;');
+                                if(object[i].getAttribute('class').search("soft_bed_left") != -1){
+                                    object[i].setAttribute('class','train_bed_cell bed can_block soft_bed_left sold_out');
+                                    object[i].setAttribute('style','pointer-events: none;');
+                                }
+                                else if(object[i].getAttribute('class').search("soft_bed_right") != -1) {
+                                    object[i].setAttribute('class','train_bed_cell bed can_block soft_bed_right sold_out');
+                                    object[i].setAttribute('style','pointer-events: none;');
+                                }
                             }
-                            else if(object[i].getAttribute('class').search("soft_bed_right") != -1) {
-                                object[i].setAttribute('class','train_bed_cell bed can_block soft_bed_right sold_out');
+                            else {
+                                object[i].setAttribute('class','train_cell seat can_block soft_seat_right sold_out');
                                 object[i].setAttribute('style','pointer-events: none;');
                             }
                         }
                         else {
-                            object[i].setAttribute('class','train_cell seat can_block soft_seat_right sold_out');
-                            object[i].setAttribute('style','pointer-events: none;');
+                            if(this.seatTypeDisplay1[0].ID == 1 || this.seatTypeDisplay1[0].ID == 6){
+                            
+                                if(object[i].getAttribute('class').search("soft_bed_left") != -1){
+                                    object[i].setAttribute('class','train_bed_cell bed can_block soft_bed_left sold_out');
+                                    object[i].setAttribute('style','pointer-events: none;');
+                                }
+                                else if(object[i].getAttribute('class').search("soft_bed_right") != -1) {
+                                    object[i].setAttribute('class','train_bed_cell bed can_block soft_bed_right sold_out');
+                                    object[i].setAttribute('style','pointer-events: none;');
+                                }
+                            }
+                            else {
+                                object[i].setAttribute('class','train_cell seat can_block soft_seat_right sold_out');
+                                object[i].setAttribute('style','pointer-events: none;');
+                            }
                         }
                     }
                     object[i].setAttribute('id' , seat[0].ID);
@@ -354,6 +374,11 @@ var vm = new Vue({
                     element.setAttribute('class','train_bed_cell bed can_block soft_bed_right selected');
                     //changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: document.cookie});
                 }
+                else {
+                    let attrClass = element.getAttribute('class').replace('available','selected');
+                    //alert(attrClass)
+                    element.setAttribute('class', attrClass);
+                }
                 //alert(element.children().html());
                 this.listSelected.push(element.getAttribute('name') + "_" + element.children[0].innerHTML + '_' +  element.getAttribute('id'));
             }
@@ -364,125 +389,249 @@ var vm = new Vue({
                 else if(element.getAttribute('class').search("soft_bed_right") != -1) {
                     element.setAttribute('class','train_bed_cell bed can_block soft_bed_right selected');
                 }
-
+                else {
+                    let attrClass = element.getAttribute('class').replace('available','selected');
+                    //alert(attrClass)
+                    element.setAttribute('class', attrClass);
+                }
                 this.listSelected2.push(element.getAttribute('name') + "_" + element.children[0].innerHTML + '_' +  element.getAttribute('id'));
             }
         },
         selectSeat: function(element, number){
             
-            if(this.seatTypeDisplay[0].ID == 1 || this.seatTypeDisplay[0].ID == 6) {
-                if($(element).attr('class') == 'train_bed_cell bed can_block hard_bed_left sold_out' || $(element).attr('class').search('reserved') != -1) return;
-                
-                if($(element).attr('class').search("available") != -1)
-                {
-                    if(number == 1 && this.numberPass.length > this.listSelected.length){
-                        if($(element).attr('class').search("soft_bed_left") != -1){
-                            $(element).attr('class','train_bed_cell bed can_block soft_bed_left selected');
-                            changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: getCookie("session_id"), number: number});
-                            this.listSelected.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
-                        }
-                        else if($(element).attr('class').search("soft_bed_right") != -1) {
-                            $(element).attr('class','train_bed_cell bed can_block soft_bed_right selected');
-                            changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: getCookie("session_id"), number: number});
-                            this.listSelected.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
-                        }
-                        //alert($(element).children().html());
-                        
-                    }
-                    else if(number == 2 && this.numberPass.length > this.listSelected2.length){
-                        if($(element).attr('class').search("soft_bed_left") != -1){
-                            $(element).attr('class','train_bed_cell bed can_block soft_bed_left selected');
-                            changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: getCookie("session_id"), number: number});
-                            this.listSelected2.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
-                        }
-                        else if($(element).attr('class').search("soft_bed_right") != -1) {
-                            $(element).attr('class','train_bed_cell bed can_block soft_bed_right selected');
-                            changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: getCookie("session_id"), number: number});
-                            this.listSelected2.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
-                        }
-
-                        
-                    }
-                    else 
+            if(number == 1 ) {
+                if(this.seatTypeDisplay[0].ID == 1 || this.seatTypeDisplay[0].ID == 6) {
+                    if($(element).attr('class') == 'train_bed_cell bed can_block hard_bed_left sold_out' || $(element).attr('class').search('reserved') != -1) return;
+                    
+                    if($(element).attr('class').search("available") != -1)
                     {
-                        this.error = "Exceeded quantity passengers";
-                        $("#errors").modal({
-                            fadeDuration: 100
-                        });
-                        //alert("Exceeded quantity passengers");
+                        if(number == 1 && this.numberPass.length > this.listSelected.length){
+                            if($(element).attr('class').search("soft_bed_left") != -1){
+                                $(element).attr('class','train_bed_cell bed can_block soft_bed_left selected');
+                                changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: getCookie("session_id"), number: number});
+                                this.listSelected.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                            }
+                            else if($(element).attr('class').search("soft_bed_right") != -1) {
+                                $(element).attr('class','train_bed_cell bed can_block soft_bed_right selected');
+                                changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: getCookie("session_id"), number: number});
+                                this.listSelected.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                            }
+                            //alert($(element).children().html());
+                            
+                        }
+                        else if(number == 2 && this.numberPass.length > this.listSelected2.length){
+                            if($(element).attr('class').search("soft_bed_left") != -1){
+                                $(element).attr('class','train_bed_cell bed can_block soft_bed_left selected');
+                                changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: getCookie("session_id"), number: number});
+                                this.listSelected2.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                            }
+                            else if($(element).attr('class').search("soft_bed_right") != -1) {
+                                $(element).attr('class','train_bed_cell bed can_block soft_bed_right selected');
+                                changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: getCookie("session_id"), number: number});
+                                this.listSelected2.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                            }
+    
+                            
+                        }
+                        else 
+                        {
+                            this.error = "Exceeded quantity passengers";
+                            $("#errors").modal({
+                                fadeDuration: 100
+                            });
+                            //alert("Exceeded quantity passengers");
+                        }
+                    }
+                    else {
+                        if(number == 1) {
+                            if($(element).attr('class').search("soft_bed_left") != -1){
+                                $(element).attr('class','train_bed_cell bed can_block soft_bed_left available');
+                            }
+                            else if($(element).attr('class').search("soft_bed_right ") != -1){
+                                $(element).attr('class','train_bed_cell bed can_block soft_bed_right available');
+                            }
+    
+                            //$(element).attr('class','train_cell seat can_block soft_seat_right available');
+                        var filteredItems  = this.listSelected.filter(data => {
+                            return data != ($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                        })
+                        this.listSelected = filteredItems;
+                        changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), unblock: true, session_id: getCookie("session_id"), number: number});
+                        }
+                        else if(number == 2){
+                            if($(element).attr('class').search("soft_bed_left") != -1){
+                                $(element).attr('class','train_bed_cell bed can_block soft_bed_left available');
+                            }
+                            else if($(element).attr('class').search("soft_bed_right") != -1) {
+                                $(element).attr('class','train_bed_cell bed can_block soft_bed_right available');
+                            }
+                            var filteredItems  = this.listSelected2.filter(data => {
+                                return data != ($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                            })
+                            this.listSelected2 = filteredItems;
+                            changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), unblock: true, session_id: getCookie("session_id"), number: number});
+                        }
                     }
                 }
                 else {
-                    if(number == 1) {
-                        if($(element).attr('class').search("soft_bed_left") != -1){
-                            $(element).attr('class','train_bed_cell bed can_block soft_bed_left available');
+                    if($(element).attr('class') == 'train_cell seat can_block soft_seat_right sold_out') return;
+                    
+                    if($(element).attr('class') == "train_cell seat can_block soft_seat_right available")
+                    {
+                        if(number == 1 && this.numberPass.length > this.listSelected.length){
+                            $(element).attr('class','train_cell seat can_block soft_seat_right selected');
+                            changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: getCookie("session_id"), number: number});
+                            this.listSelected.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
                         }
-                        else if($(element).attr('class').search("soft_bed_right ") != -1){
-                            $(element).attr('class','train_bed_cell bed can_block soft_bed_right available');
+                        else if(number == 2 && this.numberPass.length > this.listSelected2.length){
+                            $(element).attr('class','train_cell seat can_block soft_seat_right selected');
+                            changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: getCookie("session_id"), number: number});
+                            this.listSelected2.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
                         }
-
-                        //$(element).attr('class','train_cell seat can_block soft_seat_right available');
-                    var filteredItems  = this.listSelected.filter(data => {
-                        return data != ($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
-                    })
-                    this.listSelected = filteredItems;
-                    changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), unblock: true, session_id: getCookie("session_id"), number: number});
+                        else 
+                        {
+                            this.error = "Exceeded quantity passengers";
+                            $("#errors").modal({
+                                fadeDuration: 100
+                            });
+                            //alert("Exceeded quantity passengers");
+                        }
                     }
-                    else if(number == 2){
-                        if($(element).attr('class').search("soft_bed_left") != -1){
-                            $(element).attr('class','train_bed_cell bed can_block soft_bed_left available');
-                        }
-                        else if($(element).attr('class').search("soft_bed_right") != -1) {
-                            $(element).attr('class','train_bed_cell bed can_block soft_bed_right available');
-                        }
-                        var filteredItems  = this.listSelected2.filter(data => {
+                    else {
+                        if(number == 1) {
+                            $(element).attr('class','train_cell seat can_block soft_seat_right available');
+                            var filteredItems  = this.listSelected.filter(data => {
                             return data != ($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
                         })
-                        this.listSelected2 = filteredItems;
+                        this.listSelected = filteredItems;
                         changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), unblock: true, session_id: getCookie("session_id"), number: number});
+                        }
+                        else if(number == 2){
+                            $(element).attr('class','train_cell seat can_block soft_seat_right available');
+                            var filteredItems  = this.listSelected2.filter(data => {
+                                return data != ($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                            })
+                            this.listSelected2 = filteredItems;
+                            changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), unblock: true, session_id: getCookie("session_id"), number: number});
+                        }
                     }
                 }
             }
-            else {
-                if($(element).attr('class') == 'train_cell seat can_block soft_seat_right sold_out') return;
-                
-                if($(element).attr('class') == "train_cell seat can_block soft_seat_right available")
-                {
-                    if(number == 1 && this.numberPass.length > this.listSelected.length){
-                        $(element).attr('class','train_cell seat can_block soft_seat_right selected');
-                        changeStatus($(element));
-                        this.listSelected.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
-                    }
-                    else if(number == 2 && this.numberPass.length > this.listSelected2.length){
-                        $(element).attr('class','train_cell seat can_block soft_seat_right selected');
-                        changeStatus($(element));
-                        this.listSelected2.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
-                    }
-                    else 
+            else if(number == 2) {
+                if(this.seatTypeDisplay1[0].ID == 1 || this.seatTypeDisplay1[0].ID == 6) {
+                    if($(element).attr('class') == 'train_bed_cell bed can_block hard_bed_left sold_out' || $(element).attr('class').search('reserved') != -1) return;
+                    
+                    if($(element).attr('class').search("available") != -1)
                     {
-                        this.error = "Exceeded quantity passengers";
-                        $("#errors").modal({
-                            fadeDuration: 100
-                        });
-                        //alert("Exceeded quantity passengers");
+                        if(number == 1 && this.numberPass.length > this.listSelected.length){
+                            if($(element).attr('class').search("soft_bed_left") != -1){
+                                $(element).attr('class','train_bed_cell bed can_block soft_bed_left selected');
+                                changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: getCookie("session_id"), number: number});
+                                this.listSelected.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                            }
+                            else if($(element).attr('class').search("soft_bed_right") != -1) {
+                                $(element).attr('class','train_bed_cell bed can_block soft_bed_right selected');
+                                changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: getCookie("session_id"), number: number});
+                                this.listSelected.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                            }
+                            //alert($(element).children().html());
+                            
+                        }
+                        else if(number == 2 && this.numberPass.length > this.listSelected2.length){
+                            if($(element).attr('class').search("soft_bed_left") != -1){
+                                $(element).attr('class','train_bed_cell bed can_block soft_bed_left selected');
+                                changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: getCookie("session_id"), number: number});
+                                this.listSelected2.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                            }
+                            else if($(element).attr('class').search("soft_bed_right") != -1) {
+                                $(element).attr('class','train_bed_cell bed can_block soft_bed_right selected');
+                                changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: getCookie("session_id"), number: number});
+                                this.listSelected2.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                            }
+    
+                            
+                        }
+                        else 
+                        {
+                            this.error = "Exceeded quantity passengers";
+                            $("#errors").modal({
+                                fadeDuration: 100
+                            });
+                            //alert("Exceeded quantity passengers");
+                        }
+                    }
+                    else {
+                        if(number == 1) {
+                            if($(element).attr('class').search("soft_bed_left") != -1){
+                                $(element).attr('class','train_bed_cell bed can_block soft_bed_left available');
+                            }
+                            else if($(element).attr('class').search("soft_bed_right ") != -1){
+                                $(element).attr('class','train_bed_cell bed can_block soft_bed_right available');
+                            }
+    
+                            //$(element).attr('class','train_cell seat can_block soft_seat_right available');
+                        var filteredItems  = this.listSelected.filter(data => {
+                            return data != ($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                        })
+                        this.listSelected = filteredItems;
+                        changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), unblock: true, session_id: getCookie("session_id"), number: number});
+                        }
+                        else if(number == 2){
+                            if($(element).attr('class').search("soft_bed_left") != -1){
+                                $(element).attr('class','train_bed_cell bed can_block soft_bed_left available');
+                            }
+                            else if($(element).attr('class').search("soft_bed_right") != -1) {
+                                $(element).attr('class','train_bed_cell bed can_block soft_bed_right available');
+                            }
+                            var filteredItems  = this.listSelected2.filter(data => {
+                                return data != ($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                            })
+                            this.listSelected2 = filteredItems;
+                            changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), unblock: true, session_id: getCookie("session_id"), number: number});
+                        }
                     }
                 }
                 else {
-                    if(number == 1) {
-                        $(element).attr('class','train_cell seat can_block soft_seat_right available');
-                        var filteredItems  = this.listSelected.filter(data => {
-                        return data != ($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
-                    })
-                    this.listSelected = filteredItems;
-                    changeStatus($(element));
+                    if($(element).attr('class') == 'train_cell seat can_block soft_seat_right sold_out') return;
+                    
+                    if($(element).attr('class') == "train_cell seat can_block soft_seat_right available")
+                    {
+                        if(number == 1 && this.numberPass.length > this.listSelected.length){
+                            $(element).attr('class','train_cell seat can_block soft_seat_right selected');
+                            changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: getCookie("session_id"), number: number});
+                            this.listSelected.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                        }
+                        else if(number == 2 && this.numberPass.length > this.listSelected2.length){
+                            $(element).attr('class','train_cell seat can_block soft_seat_right selected');
+                            changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), block: true, session_id: getCookie("session_id"), number: number});
+                            this.listSelected2.push($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                        }
+                        else 
+                        {
+                            this.error = "Exceeded quantity passengers";
+                            $("#errors").modal({
+                                fadeDuration: 100
+                            });
+                            //alert("Exceeded quantity passengers");
+                        }
                     }
-                    else if(number == 2){
-                        $(element).attr('class','train_cell seat can_block soft_seat_right available');
-                        var filteredItems  = this.listSelected2.filter(data => {
+                    else {
+                        if(number == 1) {
+                            $(element).attr('class','train_cell seat can_block soft_seat_right available');
+                            var filteredItems  = this.listSelected.filter(data => {
                             return data != ($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
                         })
-                        this.listSelected2 = filteredItems;
-                        changeStatus($(element));
+                        this.listSelected = filteredItems;
+                        changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), unblock: true, session_id: getCookie("session_id"), number: number});
+                        }
+                        else if(number == 2){
+                            $(element).attr('class','train_cell seat can_block soft_seat_right available');
+                            var filteredItems  = this.listSelected2.filter(data => {
+                                return data != ($(element).attr('name') + "_" + $(element).children().html() + '_' +  $(element).attr('id'));
+                            })
+                            this.listSelected2 = filteredItems;
+                            changeStatus({id: $(element).attr('id'), class: $(element).attr('class'), unblock: true, session_id: getCookie("session_id"), number: number});
+                        }
                     }
                 }
             }
@@ -556,12 +705,21 @@ var vm = new Vue({
             
             return true;
         },
+        validatePasport: function(beforePassport, afterPassport) {
+            if(beforePassport == afterPassport) {
+                this.error = "Passport can't duplicate";
+                return false;
+            }
+            return true;
+        },
         submitForm: function(){
             var formData = new FormData();
             var data;
             var ListPassenger = new Array();
             
             for(var i = 0; i < this.numberPass.length;i++){
+                let beforePassport;
+                let afterPassport;
                 var fullName = document.getElementById('passenger_' + (i + 1) + '_first_name').value + " "
                                 + document.getElementById('passenger_' + (i + 1) + '_last_name').value
 
@@ -570,7 +728,6 @@ var vm = new Vue({
                             document.getElementById('passenger_' + (i + 1) + '_passport').value,
                             document.getElementById('TypeObjectID' + (i + 1)).value,
                             i + 1);
-                            
                 if(check){
                     var Passenger = {
                         "Name" : fullName,
@@ -587,6 +744,18 @@ var vm = new Vue({
                 }
             }
             
+            for(let i = 0; i< ListPassenger.length;i++) {
+                for(let j = 1 + i; j < ListPassenger.length;j++){
+                    let check = this.validatePasport(ListPassenger[i].Passport,ListPassenger[j].Passport);
+                    if(!check) {
+                        $("#errors").modal({
+                            fadeDuration: 100
+                        });
+                        return;
+                    } 
+                }
+            }
+
             var Representative = {
                 "FullName" : document.getElementById('book_full_name').value,
                 "Passport" : document.getElementById('book_passport').value,

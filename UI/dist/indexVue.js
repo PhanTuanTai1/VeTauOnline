@@ -129,6 +129,14 @@ new Vue({
         this.errors = "Departure and destination station aren't the same";
         return false;
       }
+
+      if(this.round_trip) {
+        if(this.depart_date > this.return_date) {
+          this.errors = "Departure date cannot be greater than return date";
+          return false;
+        }
+      }
+
       return true;
     },
 

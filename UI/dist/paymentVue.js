@@ -29,7 +29,9 @@ new Vue({
         seatType: null,
         seatType2: null,
         hrefDeparture: localStorage.getItem('departure'),
-        hrefPassengers: localStorage.getItem('passenger')
+        hrefPassengers: localStorage.getItem('passenger'),
+        checkbox: null,
+        checkbox1: null
     },
     methods: {
         displaySeatTypeName: function(){
@@ -63,6 +65,17 @@ new Vue({
                 document.getElementById('DepartureID2').innerHTML = data2[0].Name
             }
             document.getElementById('DepartureID').innerHTML = data[0].Name
+        },
+        Redirect: function() {
+            //alert(document.getElementById("checkbox"));
+            if(document.getElementById("check-confirm-termofuse").checked && document.getElementById("check-confirm-cancellation").checked) {
+                location.href = '/RedirectToNganLuong';
+            }
+            else {
+                $("#errors").modal({
+                    fadeDuration: 100
+                });
+            }
         }
     }
 })
