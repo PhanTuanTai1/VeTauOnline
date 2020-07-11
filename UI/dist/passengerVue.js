@@ -21,7 +21,7 @@ function getCookie(cname) {
 
 socket.on('response', data => {
     try {
-        //alert(typeof(data.data));
+        alert(JSON.stringify(data));
         if(typeof(data.data) == "undefined"){
             listBlock = data;
             var filter = data.filter(seat => {
@@ -43,15 +43,17 @@ socket.on('response', data => {
                 document.getElementById(seat.id).setAttribute('class', seat.class);              
             })
 
+            alert(JSON.stringify(data));
+            
             vm.listSelected.forEach(seat => {
-                if(seat.split('_')[3]  == data.data.id) {
+                if(seat.split('_')[3]  == data.data.id && data.data.number != 1) {
                     vm.listSelected.pop();
                 }
             })
             
             vm.listSelected2.forEach(data => {
                 data.split('_')[3]
-                if(data.split('_')[3]  == data.data.id) {
+                if(data.split('_')[3]  == data.data.id && data.data.number != 2) {
                     vm.listSelected2.pop();
                     //break;
                 }

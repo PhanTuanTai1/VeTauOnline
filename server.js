@@ -473,7 +473,7 @@ var io = io.on('connection', (socket) => {
     socket.on('changeStatus', (data) => {
         var check = false;
         listSeatBlock.forEach(seat => {
-            if (data.id == seat.id) {
+            if (data.id == seat.id && data.number == seat.number) {
                 if (data.class.search('soft_bed_left') != -1) {
                     data.class = 'train_bed_cell bed can_block soft_bed_left reserved';
                 }
@@ -561,6 +561,7 @@ app.get('/admin/logout', (req,res) => {
     res.cookie('uid', "");
     res.end(JSON.stringify("/login"));
 })
+
 // //TEST CHAT 
 // app.get("/chat", function (req, res) {
 //     res.render('chat');
