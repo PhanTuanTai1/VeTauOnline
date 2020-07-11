@@ -682,22 +682,22 @@ module.exports.InsertData = async function (req, res, listBlock) {
     var Representative = req.cookies.data;
     var ListPassenger = req.cookies.data2;
     var ListTicket = req.cookies.data3;
-    await unblockSeat(ListTicket, listBlock);
+    
     console.log("req.query:" + JSON.stringify(req.query));
     var ListTicket2;
     var html2;
     var option = "One Way";
     if (typeof(req.cookies.data5) != "undefined") {
-        ListTicket2 = req.cookies.data5;
-        await unblockSeat(ListTicket2, listBlock);
+        ListTicket2 = req.cookies.data5;     
         html2 = await createTableListCustomer(Representative, ListPassenger, ListTicket2, req.query.payment_id);
         option = "Round Trip";
         SendMail(Representative.Email, html2, option)
+        await unblockSeat(ListTicket2, listBlock);
     }
 
     var html = await createTableListCustomer(Representative, ListPassenger, ListTicket, req.query.payment_id);
     SendMail(Representative.Email, html, option)
-
+    await unblockSeat(ListTicket, listBlock);
     db.Representative.create(Representative).then(data => {
         InsertPassenger(ListPassenger).then(data => {
             if (data) {

@@ -41,7 +41,13 @@ app.use(session({
 
 app.get("/", function (req, res) {
     var session_id = req.cookies.session_id;
+    res.cookie('data', "", { maxAge: 0 });
+    res.cookie('data2', "", { maxAge: 0 });
+    res.cookie('data3', "", { maxAge: 0 });
+    res.cookie('data4', "", { maxAge: 0 });
+    res.cookie('data5', "", { maxAge: 0 });
     res.cookie('data6', "", { maxAge: 0 });
+    res.cookie('step1', "", { maxAge: 0 });
     if(session_id != "undefined"){
         let data =  listSeatBlock.filter(x => {
             return x.session_id != session_id;
