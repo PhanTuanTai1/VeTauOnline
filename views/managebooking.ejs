@@ -264,8 +264,10 @@
                                             <td name="ArrivalStationID" data-id="<%=result.Customers[i].Tickets[j].ArrivalStationID%>"><%=result.Customers[i].Tickets[j].ArrivalStationID%></td>
                                             <td><%=JSON.stringify(result.Customers[i].Tickets[j].Price).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")%> VND%></td>
                                             <td name="StatusTicket" data-status="<%=result.Customers[i].Tickets[j].Status%>"><%=result.Customers[i].Tickets[j].Status%></td>
-                                            <%if(result.Customers[i].Tickets[j].Status == 1 ){%>
-                                            <td id="parent<%=index%>" style="text-align: center;"><input style="background-color: red;" type="button" value="Cancel" class="btn btn-danger" name="btnCancel" onclick="Cancel(this, '<%=result.Customers[i].Tickets[j].ID%>', '<%=index%>')"/></td>
+                                            <%if(result.Customers[i].Tickets[j].Status == 1 && (moment(Date) - moment(result.Customers[i].Tickets[j].DepartureDate)) < 86400000){%>
+                                            <td id="parent<%=index%>" style="text-align: center;">
+                                                <input style="background-color: red;" type="button" value="Cancel" class="btn btn-danger" name="btnCancel" onclick="Cancel(this, '<%=result.Customers[i].Tickets[j].ID%>', '<%=index%>')"/>
+                                            </td>
                                             <%index++%>
                                             <%}else{%>
                                                 <td></td>
