@@ -741,11 +741,11 @@ module.exports.ManageBooking = function (req, res) {
             attributes: ['ID', 'Name','TypeObjectID', 'Passport'],
             include: {
                 model: db.Ticket,
-                attributes: ['ID', 'CustomerID', 'Price','Status','DepartureStationID','ArrivalStationID']
+                attributes: ['ID', 'CustomerID', 'Price','Status','DepartureStationID','ArrivalStationID','DepartureDate']
             }
         }
     }).then(data => {
-        res.render('managebooking', {result: data});
+        res.render('managebooking', {result: data, Date: new Date(), moment: moment});
     })
 }
 
