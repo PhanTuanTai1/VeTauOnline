@@ -1,11 +1,4 @@
 # VeTauOnline
-- File DB la TrainTicketDatabase
-- Chinh lai mat khau trong file DataAccess.js
-- Ghế ngồi (cứng, mềm) 56 ghế
-- Ghế Nằm Khoang 4 28 ghế
-- Ghế Nằm Khoang 6 42 ghế
-- dtthuha79@gmail.com
-- Link google doc: https://docs.google.com/document/d/1qUMNcZl9H5yn4pF-s1CfiojHJQeI9_jUSZ1LR-eM2NY/edit
 - Tài khoản admin google firebase: admin@gmail.com;admin1234
 - Tài khoản nhân viên quản lý: managementstaff@gmail.com;managementstaff1234
 - Tài khoản nhân viên bán vé: staff@gmail.com;staff1234
