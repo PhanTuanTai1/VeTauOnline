@@ -623,7 +623,7 @@
       "resolved": "https://registry.npmjs.org/execa/-/execa-0.7.0.tgz",
       "version": "0.7.0"
     },
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-session": "^1.17.1",
     "extend": {
       "integrity": "sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==",
